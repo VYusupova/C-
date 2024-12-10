@@ -1,5 +1,4 @@
 #include "s21_matrix_oop.h"
-
 #include <gtest/gtest.h>
 
 using namespace std;
@@ -123,6 +122,36 @@ TEST(createTest, memoryReall_1) {
   EXPECT_EQ(matrix.getColumns(), 2);
   EXPECT_EQ(matrix(1, 1), 0.0);  // Новая матрица инициализирована нулями
 }
+// Тест на проверку освобождения памяти при повторном выделении
+// Тест на конструктор перемещения
+TEST(createTest, MoveConstructor) {
+  S21Matrix matrix1(2, 2);
+  matrix1(0, 0) = 1.0;
+  matrix1(0, 1) = 2.0;
+
+  S21Matrix matrix2(std::move(matrix1));  // Перемещение matrix1 в matrix2
+
+  EXPECT_EQ(matrix2.getRows(), 2);
+  EXPECT_EQ(matrix2.getColumns(), 2);
+  EXPECT_DOUBLE_EQ(matrix2(0, 0), 1.0);
+  EXPECT_DOUBLE_EQ(matrix2(0, 1), 2.0);
+
+  // Проверяем, что matrix1 стал пустым после перемещения
+  EXPECT_EQ(matrix1.getRows(), 0);
+  EXPECT_EQ(matrix1.getColumns(), 0);
+}
+// Тестирование параметризированного конструктора на выброс исключений при
+// некорректных размерах
+TEST(createTest, throw_0) {
+  EXPECT_THROW(S21Matrix(-1, 5),
+               std::invalid_argument);  // Отрицательное количество строк
+  EXPECT_THROW(S21Matrix(4, 0),
+               std::invalid_argument);  // Количество столбцов равно нулю
+  EXPECT_THROW(S21Matrix(0, 0),
+               std::invalid_argument);  // Оба параметра равны нулю
+  EXPECT_THROW(S21Matrix(-3, -3),
+               std::invalid_argument);  // Отрицательные значения
+}
 // Тест на деструктор
 TEST(destructorTest, test_1) {
   // Создаем матрицу внутри блока, чтобы проверить, что по завершению блока
@@ -132,7 +161,7 @@ TEST(destructorTest, test_1) {
     // Заполним матрицу для теста
     for (int i = 0; i < 10; ++i) {
       for (int j = 0; j < 10; ++j) {
-        matrix.setMatrixEl(i, j, i + j);
+        matrix(i, j) = i + j;
       }
     }
 
@@ -148,7 +177,7 @@ TEST(destructorTest, test_2) {
 
   // Проверяем, что память выделена
   // Метод не должен выбрасывать исключение
-  EXPECT_NO_THROW(matrix.DeallocateMemory());
+  EXPECT_NO_THROW(matrix.deallocateMemory());
 
   // Проверяем, что размеры матрицы теперь 0
   EXPECT_EQ(matrix.getRows(), 0);
@@ -298,15 +327,14 @@ TEST(sumMatrixTest, sum_test_2) {
   S21Matrix m1(2, 2);
   S21Matrix m2(2, 2);
 
-  m1.setMatrixEl(0, 0, 1.0);
-  m1.setMatrixEl(0, 1, 2.0);
-  m1.setMatrixEl(1, 0, 3.0);
-  m1.setMatrixEl(1, 1, 4.0);
-
-  m2.setMatrixEl(0, 0, 5.0);
-  m2.setMatrixEl(0, 1, 6.0);
-  m2.setMatrixEl(1, 0, 7.0);
-  m2.setMatrixEl(1, 1, 8.0);
+  m1(0, 0) = 1.0;
+  m1(0, 1) = 2.0;
+  m1(1, 0) = 3.0;
+  m1(1, 1) = 4.0;
+  m2(0, 0) = 5.0;
+  m2(0, 1) = 6.0;
+  m2(1, 0) = 7.0;
+  m2(1, 1) = 8.0;
 
   m1.SumMatrix(m2);
 
@@ -716,34 +744,31 @@ TEST(assignmentMatrix, test_1) {
   EXPECT_DOUBLE_EQ(matrix(0, 1), 6.0);
   EXPECT_DOUBLE_EQ(matrix(1, 0), 7.0);
   EXPECT_DOUBLE_EQ(matrix(1, 1), 8.0);
-   matrix_ptr->printMatrix();
-  //  for (int i{} ; i < matrix_ptr->getRows() ;i ++)
-  //  for (int j{} ; j < matrix_ptr->getColumns() ; j ++)
-  //  cout << matrix_ptr->operator(i,j);
-  // EXPECT_DOUBLE_EQ(matrix_ptr(0, 0), 5.0);
-  // EXPECT_DOUBLE_EQ(matrix_ptr(0, 1), 6.0);
-  // EXPECT_DOUBLE_EQ(matrix_ptr(1, 0), 7.0);
-  // EXPECT_DOUBLE_EQ(matrix_ptr(1, 1), 8.0);
+
+   for (int i{} ; i < matrix_ptr->getRows() ;i ++)
+   for (int j{} ; j < matrix_ptr->getColumns() ; j ++)
+   EXPECT_DOUBLE_EQ(matrix_ptr->operator()(i,j), matrix(i,j));
+
 }
 // Тест для метода Transpose
-TEST(MatrixFunctionTest, Transpose) {
+TEST(Transpose, Transpose) {
   S21Matrix matrix(2, 3);
 
-  matrix.setMatrixEl(0, 0, 1.0);
-  matrix.setMatrixEl(0, 1, 2.0);
-  matrix.setMatrixEl(0, 2, 3.0);
-  matrix.setMatrixEl(1, 0, 4.0);
-  matrix.setMatrixEl(1, 1, 5.0);
-  matrix.setMatrixEl(1, 2, 6.0);
+  matrix(0, 0) = 1.0;
+  matrix(0, 1) = 2.0;
+  matrix(0, 2) = 3.0;
+  matrix(1, 0) = 4.0;
+  matrix(1, 1) = 5.0;
+  matrix(1, 2) = 6.0;
 
   S21Matrix transposed = matrix.Transpose();
 
-  EXPECT_DOUBLE_EQ(transposed.getMatrixEl(0, 0), 1.0);
-  EXPECT_DOUBLE_EQ(transposed.getMatrixEl(1, 0), 2.0);
-  EXPECT_DOUBLE_EQ(transposed.getMatrixEl(2, 0), 3.0);
-  EXPECT_DOUBLE_EQ(transposed.getMatrixEl(0, 1), 4.0);
-  EXPECT_DOUBLE_EQ(transposed.getMatrixEl(1, 1), 5.0);
-  EXPECT_DOUBLE_EQ(transposed.getMatrixEl(2, 1), 6.0);
+  EXPECT_DOUBLE_EQ(transposed(0, 0), 1.0);
+  EXPECT_DOUBLE_EQ(transposed(1, 0), 2.0);
+  EXPECT_DOUBLE_EQ(transposed(2, 0), 3.0);
+  EXPECT_DOUBLE_EQ(transposed(0, 1), 4.0);
+  EXPECT_DOUBLE_EQ(transposed(1, 1), 5.0);
+  EXPECT_DOUBLE_EQ(transposed(2, 1), 6.0);
 }
 // Тест для метода GetMinor на матрице 2x2
 TEST(GetMinorTest, test_2x2) {
@@ -803,22 +828,22 @@ TEST(GetMinorTest, test2_3x3) {
 // Тест для метода GetMinor на матрице 4x4
 TEST(GetMinorTest, test_4x4) {
   S21Matrix matrix(4, 4);
-  matrix.setMatrixEl(0, 0, 1.0);
-  matrix.setMatrixEl(0, 1, 2.0);
-  matrix.setMatrixEl(0, 2, 3.0);
-  matrix.setMatrixEl(0, 3, 4.0);
-  matrix.setMatrixEl(1, 0, 5.0);
-  matrix.setMatrixEl(1, 1, 6.0);
-  matrix.setMatrixEl(1, 2, 7.0);
-  matrix.setMatrixEl(1, 3, 8.0);
-  matrix.setMatrixEl(2, 0, 9.0);
-  matrix.setMatrixEl(2, 1, 10.0);
-  matrix.setMatrixEl(2, 2, 11.0);
-  matrix.setMatrixEl(2, 3, 12.0);
-  matrix.setMatrixEl(3, 0, 13.0);
-  matrix.setMatrixEl(3, 1, 14.0);
-  matrix.setMatrixEl(3, 2, 15.0);
-  matrix.setMatrixEl(3, 3, 16.0);
+  matrix(0, 0) = 1.0;
+  matrix(0, 1) = 2.0;
+  matrix(0, 2) = 3.0;
+  matrix(0, 3) = 4.0;
+  matrix(1, 0) = 5.0;
+  matrix(1, 1) = 6.0;
+  matrix(1, 2) = 7.0;
+  matrix(1, 3) = 8.0;
+  matrix(2, 0) = 9.0;
+  matrix(2, 1) = 10.0;
+  matrix(2, 2) = 11.0;
+  matrix(2, 3) = 12.0;
+  matrix(3, 0) = 13.0;
+  matrix(3, 1) = 14.0;
+  matrix(3, 2) = 15.0;
+  matrix(3, 3) = 16.0;
 
   S21Matrix minor = matrix.GetMinor(0, 0);  // Минор для первого элемента
 
@@ -841,7 +866,7 @@ TEST(GetMinorTest, test_5x5) {
   int value = 1;
   for (int i = 0; i < 5; ++i) {
     for (int j = 0; j < 5; ++j) {
-      matrix.setMatrixEl(i, j, value++);
+      matrix(i, j) = value++;
     }
   }
 
@@ -861,14 +886,188 @@ TEST(GetMinorTest, throw_test) {
   EXPECT_THROW(matrix.GetMinor(1, -1), std::out_of_range);
   EXPECT_THROW(matrix.GetMinor(1, 3), std::out_of_range);
 }
+// Тест для метода CalcComplements: алгебраические дополнения для матрицы 2x2
+TEST(CalcComplements, test2x2) {
+  // Создаем квадратную матрицу 2x2
+  S21Matrix matrix(2, 2);
+  matrix(0, 0) = 4.0;
+  matrix(0, 1) = 7;
+  matrix(1, 0) = 2;
+  matrix(1, 1) = 6;
 
+  // Ожидаем, что вызов CalcComplements не выбросит исключение
+  EXPECT_NO_THROW({
+    S21Matrix complements = matrix.CalcComplements();
+
+    EXPECT_EQ(complements(0, 0), 6);  // Алгебраическое дополнение для (0, 0)
+    EXPECT_EQ(complements(0, 1), -2);  // Алгебраическое дополнение для (0,1)
+    EXPECT_EQ(complements(1, 0), -7);  // Алгебраическое дополнение для (1, 0)
+    EXPECT_EQ(complements(1, 1), 4);  // Алгебраическое дополнение для (1, 1)
+  });
+}
+
+// проверка вычисления для единичной матрицы
+TEST(CalcComplements, test_2x2) {
+  // Создаем единичную матрицу 2x2
+  S21Matrix identity(2, 2);
+  identity(0, 0) = 1;
+  identity(0, 1) = 0;
+  identity(1, 0) = 0;
+  identity(1, 1) = 1;
+
+  // Ожидаем, что вызов CalcComplements не выбросит исключение
+  EXPECT_NO_THROW({
+    S21Matrix complements = identity.CalcComplements();
+
+    // Для единичной матрицы алгебраические дополнения должны совпадать с ней
+    EXPECT_EQ(complements(0, 0), 1);
+    EXPECT_EQ(complements(0, 1), 0);
+    EXPECT_EQ(complements(1, 0), 0);
+    EXPECT_EQ(complements(1, 1), 1);
+  });
+}
+TEST(CalcComplements, test_1x1) {
+  // Создаем единичную матрицу 2x2
+  S21Matrix identity(1, 1);
+  identity(0, 0) = 10.2;
+  S21Matrix calcComp = identity.CalcComplements();
+
+  EXPECT_EQ(calcComp(0, 0), 1);
+}
+// Тест для метода CalcComplements: проверка на матрицу с нулями
+TEST(CalcComplements, test_1) {
+  S21Matrix matrix(3, 3);
+  matrix(0, 0) = 0;
+  matrix(0, 1) = 2;
+  matrix(0, 2) = 0;
+  matrix(1, 0) = 0;
+  matrix(1, 1) = 1;
+  matrix(1, 2) = 4;
+  matrix(2, 0) = 5;
+  matrix(2, 1) = 0;
+  matrix(2, 2) = 0;
+
+  EXPECT_NO_THROW({
+    S21Matrix complements = matrix.CalcComplements();
+
+    // Проверяем алгебраические дополнения
+    EXPECT_EQ(complements(0, 0), 0);  // Алгебраическое дополнение для (0,0)
+    EXPECT_EQ(complements(0, 1), 20);  // Алгебраическое дополнение для (0,1)
+    EXPECT_EQ(complements(0, 2), -5);  // Алгебраическое дополнение для (0,2)
+    EXPECT_EQ(complements(1, 0), 0);  // Алгебраическое дополнение для (1,0)
+    EXPECT_EQ(complements(1, 1), 0);  // Алгебраическое дополнение для (1,1)
+    EXPECT_EQ(complements(1, 2), 10);  // Алгебраическое дополнение для (1,2)
+    EXPECT_EQ(complements(2, 0), 8);  // Алгебраическое дополнение для (2,0)
+    EXPECT_EQ(complements(2, 1), 0);  // Алгебраическое дополнение для (2,1)
+    EXPECT_EQ(complements(2, 2), 0);  // Алгебраическое дополнение для (2,2)
+  });
+}
+// сключения для неквадратной матрицы
+TEST(CalcComplements, throw_cc) {
+  S21Matrix matrix(2, 3);
+  EXPECT_THROW(matrix.CalcComplements(), std::invalid_argument);
+}
+//  Тест для метода Determinant: матрица 1x1
+TEST(DeterminantTest, test1x1) {
+  S21Matrix matrix(1, 1);
+  matrix(0, 0) = 42.0;
+
+  double determinant = matrix.Determinant();
+  EXPECT_DOUBLE_EQ(determinant, 42.0);
+}
+// Тест для метода Determinant: матрица 2x2
+TEST(DeterminantTest, test2x2) {
+  S21Matrix matrix(2, 2);
+  matrix(0, 0) = 1.0;
+  matrix(0, 1) = 2.0;
+  matrix(1, 0) = 3.0;
+  matrix(1, 1) = 4.0;
+
+  EXPECT_DOUBLE_EQ(matrix.Determinant(), -2.0);
+}
+// Тест для метода Determinant: матрица 3x3 (чередование знаков)
+TEST(DeterminantTest, test3x3) {
+  S21Matrix matrix(3, 3);
+  matrix(0, 0) = 1.0;
+  matrix(0, 1) = 2.0;
+  matrix(0, 2) = 3.0;
+  matrix(1, 0) = 0.0;
+  matrix(1, 1) = 1.0;
+  matrix(1, 2) = 4.0;
+  matrix(2, 0) = 5.0;
+  matrix(2, 1) = 6.0;
+  matrix(2, 2) = 0.0;
+
+  double determinant = matrix.Determinant();
+  EXPECT_DOUBLE_EQ(determinant, 1.0);  // Ожидаемое значение для матрицы 3x3
+}
+// Тест для метода Determinant: для неквадратной матрицы
+TEST(DeterminantTest, test2x3) {
+  S21Matrix matrix(2, 3);  // Неквадратная матрица 2x3
+  matrix(0, 0) = 1.0;
+  matrix(0, 1) = 2.0;
+  matrix(0, 2) = 3.0;
+  matrix(1, 0) = 4.0;
+  matrix(1, 1) = 5.0;
+  matrix(1, 2) = 6.0;
+
+  // Ожидаем выброс исключения invalid_argument
+  EXPECT_THROW(matrix.Determinant(), std::invalid_argument);
+}
+// Тест для метода Inverse: инверсия матрицы 1x1
+TEST(InverseMatrix, test1x1) {
+  // Тест для инверсии матрицы 1x1 с ненулевым значением
+  S21Matrix one_by_one(1, 1);
+  one_by_one(0, 0) = 5.0;
+
+  S21Matrix inverse = one_by_one.InverseMatrix();
+  EXPECT_NEAR(inverse(0, 0), 1.0 / 5.0, 1e-5);
+}
+// Тест для метода Inverse: инверсия матрицы 2x2
+TEST(InverseMatrix, test2x2) {
+  S21Matrix two_by_two(2, 2);
+  two_by_two(0, 0) = 4.0;
+  two_by_two(0, 1) = 7.0;
+  two_by_two(1, 0) = 2.0;
+  two_by_two(1, 1) = 6.0;
+
+  S21Matrix inverse = two_by_two.InverseMatrix();
+
+  EXPECT_NEAR(inverse(0, 0), 0.6, 1e-5);
+  EXPECT_NEAR(inverse(0, 1), -0.7, 1e-5);
+  EXPECT_NEAR(inverse(1, 0), -0.2, 1e-5);
+  EXPECT_NEAR(inverse(1, 1), 0.4, 1e-5);
+}
+// Тест для метода Inverse: для вырожденной матрицы (определитель равен 0)
+TEST(InverseMatrix, throws_1) {
+  S21Matrix singular(2, 2);
+  singular(0, 0) = 1.0;
+  singular(0, 1) = 2.0;
+  singular(1, 0) = 2.0;
+  singular(1, 1) = 4.0;
+
+  EXPECT_THROW(singular.InverseMatrix(), std::invalid_argument);
+}
+
+// Тест для метода Inverse: для неквадратной матрицы
+TEST(InverseMatrix, throw_1) {
+  S21Matrix non_square(2, 3);
+  non_square(0, 0) = 1.0;
+  non_square(0, 1) = 2.0;
+  non_square(0, 2) = 3.0;
+  non_square(1, 0) = 4.0;
+  non_square(1, 1) = 5.0;
+  non_square(1, 2) = 6.0;
+
+  EXPECT_THROW(non_square.InverseMatrix(), std::invalid_argument);
+}
 // Тест для мутатора: Изменение размера матрицы на больший
 TEST(sizeTest, test_1) {
   S21Matrix matrix(2, 2);  // Создаем матрицу 2x2
-  matrix.setMatrixEl(0, 0, 1.0);
-  matrix.setMatrixEl(0, 1, 2.0);
-  matrix.setMatrixEl(1, 0, 3.0);
-  matrix.setMatrixEl(1, 1, 4.0);
+  matrix(0, 0) = 1.0;
+  matrix(0, 1) = 2.0;
+  matrix(1, 0) = 3.0;
+  matrix(1, 1) = 4.0;
 
   // Изменяем размер на 4x4 с помощью SetSize
   matrix.setSize(4, 4);
@@ -886,11 +1085,11 @@ TEST(sizeTest, test_1) {
 // Тест для мутатора: Изменение размера матрицы на меньший
 TEST(sizeTest, test_2) {
   S21Matrix matrix(4, 4);  // Создаем матрицу 4x4
-  matrix.setMatrixEl(0, 0, 1.0);
-  matrix.setMatrixEl(0, 1, 2.0);
-  matrix.setMatrixEl(1, 0, 3.0);
-  matrix.setMatrixEl(1, 1, 4.0);
-  matrix.setMatrixEl(3, 3, 5.0);
+  matrix(0, 0) = 1.0;
+  matrix(0, 1) = 2.0;
+  matrix(1, 0) = 3.0;
+  matrix(1, 1) = 4.0;
+  matrix(3, 3) = 5.0;
 
   // Изменяем размер на 2x2
   matrix.setSize(2, 2);
@@ -902,15 +1101,14 @@ TEST(sizeTest, test_2) {
   EXPECT_EQ(matrix(1, 1), 4.0);
 
   // Проверяем, что матрица стала меньше
-  EXPECT_THROW(matrix(2, 2),
-               std::out_of_range);  // Элемента (2, 2) больше не должно быть
+  EXPECT_THROW(matrix(2, 2), std::out_of_range);  
 }
 // Тест для мутатора: Изменение размера на ту же матрицу
 TEST(sizeTest, test_3) {
   S21Matrix matrix(3, 3);
-  matrix.setMatrixEl(0, 0, 1.0);
-  matrix.setMatrixEl(1, 1, 2.0);
-  matrix.setMatrixEl(2, 2, 3.0);
+  matrix(0, 0) = 1.0;
+  matrix(1, 1) = 2.0;
+  matrix(2, 2) = 3.0;
 
   // Изменяем размер на такой же (3x3)
   matrix.setSize(3, 3);
@@ -927,91 +1125,25 @@ int main(int argc, char **argv) {
   return RUN_ALL_TESTS();
 }
 
-// Тестирование параметризированного конструктора на выброс исключений при
-// некорректных размерах
-TEST(S21MatrixTest, ConstructorInvalidSize) {
-  EXPECT_THROW(S21Matrix(-1, 5),
-               std::invalid_argument);  // Отрицательное количество строк
-  EXPECT_THROW(S21Matrix(4, 0),
-               std::invalid_argument);  // Количество столбцов равно нулю
-  EXPECT_THROW(S21Matrix(0, 0),
-               std::invalid_argument);  // Оба параметра равны нулю
-  EXPECT_THROW(S21Matrix(-3, -3),
-               std::invalid_argument);  // Отрицательные значения
-}
-// Тест на проверку освобождения памяти при повторном выделении
-// Тест на конструктор перемещения
-TEST(MatrixConstructorTest, MoveConstructor) {
-  S21Matrix matrix1(2, 2);
-  matrix1.setMatrixEl(0, 0, 1.0);
-  matrix1.setMatrixEl(0, 1, 2.0);
 
-  S21Matrix matrix2(std::move(matrix1));  // Перемещение matrix1 в matrix2
 
-  EXPECT_EQ(matrix2.getRows(), 2);
-  EXPECT_EQ(matrix2.getColumns(), 2);
-  EXPECT_DOUBLE_EQ(matrix2(0, 0), 1.0);
-  EXPECT_DOUBLE_EQ(matrix2(0, 1), 2.0);
-
-  // Проверяем, что matrix1 стал пустым после перемещения
-  EXPECT_EQ(matrix1.getRows(), 0);
-  EXPECT_EQ(matrix1.getColumns(), 0);
-}
 
 // Тесты для оператора индексации
 TEST(MatrixOperatorTests, IndexInBounds) {
   S21Matrix matrix(3, 3);
-  matrix(1, 1) = 5.0;  // Устанавливаем значение по индексу (1, 1)
-  EXPECT_EQ(matrix(1, 1),
-            5.0);  // Проверяем, что значение установлено корректно
+  matrix(1, 1) = 5.0;  
+  EXPECT_EQ(matrix(1, 1), 5.0); 
 }
-
 // Тест для оператора индексации с выходом за пределы
 TEST(MatrixOperatorTests, IndexOutOfBoundsThrows) {
   S21Matrix matrix(3, 3);
 
-  // Ожидаем, что будет выброшено исключение при попытке доступа к
-  // недопустимым индексам
-  EXPECT_THROW(matrix(3, 3), std::out_of_range);  // Индекс вне границ
-  EXPECT_THROW(matrix(-1, 0), std::out_of_range);  // Отрицательный индекс
-  EXPECT_THROW(matrix(0, 3), std::out_of_range);  // Индекс столбца вне границ
-  EXPECT_THROW(matrix(-1, -1), std::out_of_range);  // Обе индекса отрицательные
+  EXPECT_THROW(matrix(3, 3), std::out_of_range);  
+  EXPECT_THROW(matrix(-1, 0), std::out_of_range); 
+  EXPECT_THROW(matrix(0, 3), std::out_of_range); 
+  EXPECT_THROW(matrix(-1, -1), std::out_of_range);  
 }
 
-// Тест для метода EqMatrix, проверка на равенство матриц одного размера
-TEST(MatrixFunctionTest, EqMatrixSameSizeEqual) {
-  S21Matrix matrix1(2, 2);
-  matrix1(0, 0) = 1.0;
-  matrix1(0, 1) = 2.0;
-  matrix1(1, 0) = 3.0;
-  matrix1(1, 1) = 4.0;
-
-  S21Matrix matrix2(2, 2);
-  matrix2(0, 0) = 1.0;
-  matrix2(0, 1) = 2.0;
-  matrix2(1, 0) = 3.0;
-  matrix2(1, 1) = 4.0;
-
-  EXPECT_TRUE(matrix1.EqMatrix(matrix2));  // Ожидаем, что матрицы равны
-}
-
-// Тест для метода EqMatrix, проверка на равенство матриц одного размера с
-// неравными элементами
-TEST(MatrixFunctionTest, EqMatrixSameSizeNotEqual) {
-  S21Matrix matrix1(2, 2);
-  matrix1(0, 0) = 1.0;
-  matrix1(0, 1) = 2.0;
-  matrix1(1, 0) = 3.0;
-  matrix1(1, 1) = 4.0;
-
-  S21Matrix matrix2(2, 2);
-  matrix2(0, 0) = 1.0;
-  matrix2(0, 1) = 2.0;
-  matrix2(1, 0) = 3.0;
-  matrix2(1, 1) = 5.0;  // Измененный элемент
-
-  EXPECT_FALSE(matrix1.EqMatrix(matrix2));  // Ожидаем, что матрицы не равны
-}
 
 /*********************************************************************************
  * ********************************************************************************
@@ -1020,191 +1152,3 @@ TEST(MatrixFunctionTest, EqMatrixSameSizeNotEqual) {
  * ********************************************************************************
  */
 
-// Тест для метода CalcComplements: алгебраические дополнения для матрицы 2x2
-TEST(MatrixComplementTests, CalcComplementsValidFor2x2) {
-  // Создаем квадратную матрицу 2x2
-  S21Matrix matrix(2, 2);
-  matrix(0, 0) = 4.0;
-  matrix(0, 1) = 7;
-  matrix(1, 0) = 2;
-  matrix(1, 1) = 6;
-
-  // Ожидаем, что вызов CalcComplements не выбросит исключение
-  EXPECT_NO_THROW({
-    S21Matrix complements = matrix.CalcComplements();
-
-    // Проверка вычисленных алгебраических дополнений
-    EXPECT_EQ(complements(0, 0), 6);  // Алгебраическое дополнение для (0, 0)
-    EXPECT_EQ(complements(0, 1), -2);  // Алгебраическое дополнение для (0,1)
-    EXPECT_EQ(complements(1, 0), -7);  // Алгебраическое дополнение для (1, 0)
-    EXPECT_EQ(complements(1, 1), 4);  // Алгебраическое дополнение для (1, 1)
-  });
-}
-
-// проверка вычисления для единичной матрицы
-TEST(CalcComplements, test_2x2) {
-  // Создаем единичную матрицу 2x2
-  S21Matrix identity(2, 2);
-  identity.setMatrixEl(0, 0, 1);
-  identity.setMatrixEl(0, 1, 0);
-  identity.setMatrixEl(1, 0, 0);
-  identity.setMatrixEl(1, 1, 1);
-
-  // Ожидаем, что вызов CalcComplements не выбросит исключение
-  EXPECT_NO_THROW({
-    S21Matrix complements = identity.CalcComplements();
-
-    // Для единичной матрицы алгебраические дополнения должны совпадать с ней
-    EXPECT_EQ(complements(0, 0), 1);
-    EXPECT_EQ(complements(0, 1), 0);
-    EXPECT_EQ(complements(1, 0), 0);
-    EXPECT_EQ(complements(1, 1), 1);
-  });
-}
-
-TEST(CalcComplements, test_1x1) {
-  // Создаем единичную матрицу 2x2
-  S21Matrix identity(1, 1);
-  identity(0, 0) = 10.2;
-  S21Matrix calcComp = identity.CalcComplements();
-
-  EXPECT_EQ(calcComp(0, 0), 1);
-}
-
-// Тест для метода CalcComplements: проверка на матрицу с нулями
-TEST(CalcComplements, test_1) {
-  S21Matrix matrix(3, 3);
-  matrix.setMatrixEl(0, 0, 0);
-  matrix.setMatrixEl(0, 1, 2);
-  matrix.setMatrixEl(0, 2, 0);
-  matrix.setMatrixEl(1, 0, 0);
-  matrix.setMatrixEl(1, 1, 1);
-  matrix.setMatrixEl(1, 2, 4);
-  matrix.setMatrixEl(2, 0, 5);
-  matrix.setMatrixEl(2, 1, 0);
-  matrix.setMatrixEl(2, 2, 0);
-
-  // Ожидаем, что CalcComplements выполнится без исключений
-  EXPECT_NO_THROW({
-    S21Matrix complements = matrix.CalcComplements();
-
-    // Проверяем алгебраические дополнения
-    EXPECT_EQ(complements(0, 0), 0);  // Алгебраическое дополнение для (0,0)
-    EXPECT_EQ(complements(0, 1), 20);  // Алгебраическое дополнение для (0,1)
-    EXPECT_EQ(complements(0, 2), -5);  // Алгебраическое дополнение для (0,2)
-    EXPECT_EQ(complements(1, 0), 0);  // Алгебраическое дополнение для (1,0)
-    EXPECT_EQ(complements(1, 1), 0);  // Алгебраическое дополнение для (1,1)
-    EXPECT_EQ(complements(1, 2), 10);  // Алгебраическое дополнение для (1,2)
-    EXPECT_EQ(complements(2, 0), 8);  // Алгебраическое дополнение для (2,0)
-    EXPECT_EQ(complements(2, 1), 0);  // Алгебраическое дополнение для (2,1)
-    EXPECT_EQ(complements(2, 2), 0);  // Алгебраическое дополнение для (2,2)
-  });
-}
-
-// сключения для неквадратной матрицы
-TEST(CalcComplements, throw_cc) {
-  S21Matrix matrix(2, 3);
-  EXPECT_THROW(matrix.CalcComplements(), std::invalid_argument);
-}
-
-//  Тест для метода Determinant: матрица 1x1
-TEST(MatrixFunctionTest, DeterminantTest1x1) {
-  S21Matrix matrix(1, 1);
-  matrix.setMatrixEl(0, 0, 42.0);
-
-  double determinant = matrix.Determinant();
-  EXPECT_DOUBLE_EQ(determinant, 42.0);
-}
-
-// Тест для метода Determinant: матрица 2x2
-TEST(MatrixFunctionTest, DeterminantTest2x2) {
-  S21Matrix matrix(2, 2);
-  matrix.setMatrixEl(0, 0, 1.0);
-  matrix.setMatrixEl(0, 1, 2.0);
-  matrix.setMatrixEl(1, 0, 3.0);
-  matrix.setMatrixEl(1, 1, 4.0);
-
-  double determinant = matrix.Determinant();
-  EXPECT_DOUBLE_EQ(determinant, -2.0);
-}
-
-// Тест для метода Determinant: матрица 3x3 (чередование знаков)
-TEST(MatrixFunctionTest, DeterminantSignAlternationTest) {
-  S21Matrix matrix(3, 3);
-  matrix.setMatrixEl(0, 0, 1.0);
-  matrix.setMatrixEl(0, 1, 2.0);
-  matrix.setMatrixEl(0, 2, 3.0);
-  matrix.setMatrixEl(1, 0, 0.0);
-  matrix.setMatrixEl(1, 1, 1.0);
-  matrix.setMatrixEl(1, 2, 4.0);
-  matrix.setMatrixEl(2, 0, 5.0);
-  matrix.setMatrixEl(2, 1, 6.0);
-  matrix.setMatrixEl(2, 2, 0.0);
-
-  double determinant = matrix.Determinant();
-  EXPECT_DOUBLE_EQ(determinant, 1.0);  // Ожидаемое значение для матрицы 3x3
-}
-
-// Тест для метода Determinant: для неквадратной матрицы
-TEST(MatrixFunctionTest, DeterminantNonSquareMatrixTest) {
-  S21Matrix matrix(2, 3);  // Неквадратная матрица 2x3
-  matrix.setMatrixEl(0, 0, 1.0);
-  matrix.setMatrixEl(0, 1, 2.0);
-  matrix.setMatrixEl(0, 2, 3.0);
-  matrix.setMatrixEl(1, 0, 4.0);
-  matrix.setMatrixEl(1, 1, 5.0);
-  matrix.setMatrixEl(1, 2, 6.0);
-
-  // Ожидаем выброс исключения invalid_argument
-  EXPECT_THROW(matrix.Determinant(), std::invalid_argument);
-}
-
-// Тест для метода Inverse: инверсия матрицы 1x1
-TEST(MatrixFunctionTest, InverseMatrix1x1) {
-  // Тест для инверсии матрицы 1x1 с ненулевым значением
-  S21Matrix one_by_one(1, 1);
-  one_by_one(0, 0) = 5.0;
-
-  S21Matrix inverse = one_by_one.InverseMatrix();
-  EXPECT_NEAR(inverse(0, 0), 1.0 / 5.0, 1e-5);
-}
-
-// Тест для метода Inverse: инверсия матрицы 2x2
-TEST(MatrixFunctionTest, InverseMatrix2x2) {
-  S21Matrix two_by_two(2, 2);
-  two_by_two(0, 0) = 4.0;
-  two_by_two(0, 1) = 7.0;
-  two_by_two(1, 0) = 2.0;
-  two_by_two(1, 1) = 6.0;
-
-  S21Matrix inverse = two_by_two.InverseMatrix();
-
-  EXPECT_NEAR(inverse(0, 0), 0.6, 1e-5);
-  EXPECT_NEAR(inverse(0, 1), -0.7, 1e-5);
-  EXPECT_NEAR(inverse(1, 0), -0.2, 1e-5);
-  EXPECT_NEAR(inverse(1, 1), 0.4, 1e-5);
-}
-
-// Тест для метода Inverse: для вырожденной матрицы (определитель равен 0)
-TEST(MatrixFunctionTest, SingularMatrixThrowsException) {
-  S21Matrix singular(2, 2);
-  singular(0, 0) = 1.0;
-  singular(0, 1) = 2.0;
-  singular(1, 0) = 2.0;
-  singular(1, 1) = 4.0;
-
-  EXPECT_THROW(singular.InverseMatrix(), std::invalid_argument);
-}
-
-// Тест для метода Inverse: для неквадратной матрицы
-TEST(MatrixFunctionTest, NonSquareMatrixThrowsException) {
-  S21Matrix non_square(2, 3);
-  non_square(0, 0) = 1.0;
-  non_square(0, 1) = 2.0;
-  non_square(0, 2) = 3.0;
-  non_square(1, 0) = 4.0;
-  non_square(1, 1) = 5.0;
-  non_square(1, 2) = 6.0;
-
-  EXPECT_THROW(non_square.InverseMatrix(), std::invalid_argument);
-}
