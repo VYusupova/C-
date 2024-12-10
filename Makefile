@@ -52,8 +52,8 @@ formated_code:
 	clang-format -i *.cpp
 	clang-format -i *.h
 cppcheck:
-	cppcheck --enable=all --suppress=missingIncludeSystem *.cpp
-
+	#cppcheck --enable=all --suppress=missingIncludeSystem *.cpp
+	cppcheck -q --enable=all --inconclusive *.cpp
 
 rebuild: clean all
 
