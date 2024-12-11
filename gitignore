@@ -1,0 +1,9 @@
+.gitignore
+.clang-format
+.vscode/
+*.kate-swp
+*.*[ao]
+gcov
+dop.cpp
+run_tests
+
