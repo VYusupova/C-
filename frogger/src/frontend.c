@@ -22,29 +22,26 @@ void initColors() {
 void print_overlay(void) {
   print_rectangle(0, BOARD_N + 1, 0, BOARD_M + 1); // отрисовка игрового поля
   print_rectangle(0, BOARD_N + 1, BOARD_M + 2, BOARD_M + HUD_WIDTH); // отрисовка информационного поля
-  print_rectangle(R_NEXT, 7, BOARD_M + 3, BOARD_M + HUD_WIDTH);
+  print_rectangle(R_NEXT, R_NEXT_H, BOARD_M + 3, BOARD_M + HUD_WIDTH - 1); // отрисовка поля под новую фигуру
 
-  
   MVPRINTW(R_LEV, BOARD_M + SHIFT_MESSAGE, "LEVEL");
   MVPRINTW(R_SCORE, BOARD_M + SHIFT_MESSAGE, "SCORE");
   MVPRINTW(R_SPEED, BOARD_M + SHIFT_MESSAGE,"SPEED");  
   MVPRINTW(R_LIVES, BOARD_M + SHIFT_MESSAGE, "LIVES");
-  MVPRINTW(BOARD_N/2, 0, INTRO_MESSAGE);
+  showIntro();
+}
+
+void showIntro(void){
+MVPRINTW(BOARD_N/2, MAP_PADDING, INTRO_MESSAGE1);
+MVPRINTW(BOARD_N/2+1, MAP_PADDING, INTRO_MESSAGE2);
 }
 
 void hideIntro(void){
 bkgdset(COLOR_PAIR(FIGURE_HIDE));
-MVPRINTW(BOARD_N/2, 0, HIDE_INTRO);
+MVPRINTW(BOARD_N/2, MAP_PADDING, HIDE_INTRO);
+MVPRINTW(BOARD_N/2+1, MAP_PADDING, HIDE_INTRO);
 }
 
-void print_levelerror(void) {
-  clear();
-  MVPRINTW(0, 0, "An error occured openning level file!");
-  MVPRINTW(2, 0, "Please check ./tests/ directory.");
-  MVPRINTW(3, 0, "There should be 5 level files named level_(1-5).txt.");
-  MVPRINTW(4, 0, "Also try to open the game nearby ./tests/ directory.");
-  MVPRINTW(6, 0, "Press any key to exit.");
-}
 
 // отрисовка прямоугольника с координатми
 void print_rectangle(int top_y, int bottom_y, int left_x, int right_x) {
@@ -65,6 +62,7 @@ void print_rectangle(int top_y, int bottom_y, int left_x, int right_x) {
   for (; i < right_x; i++) MVADDCH(bottom_y, i, ACS_HLINE);
   MVADDCH(bottom_y, i, ACS_LRCORNER);
 }
+
 // отрисовка уровня и очков
 void print_stats(game_stats_t *stats) {
   bkgdset(COLOR_PAIR(FIGURE_HIDE));
@@ -75,10 +73,7 @@ void print_stats(game_stats_t *stats) {
   MVPRINTW(R_LIVES + 1, BOARD_M + SHIFT_MESSAGE, "%d", stats->lives);
 }
 
-void print_board(board_t *game, player_pos *frog) {
-  // print_cars(game);
-  PRINT(frog->x, frog->y);
-}
+
 
 // отрисвка чего то
 void print_cars(board_t *game) {
@@ -148,21 +143,21 @@ int read_banner(game_stats_t *stats, banner_t *banner) {
 }
 
 
-void printFigure(figura *position){
+void printFigure(figura *f){
   for (int i = 0; i < 4; i++)
     for (int j = 0; j < 4; j++) {
-      if ( position->figur[i][j] == 1)  PRINT(position->x+j, position->y+i);
+      if ( f->figur[i][j] == 1)  PRINT(f->x+j, f->y+i);
   }
 }
 
-void hideFigure(figura *position){ 
+void hideFigure(figura *f){ 
    bkgdset(COLOR_PAIR(FIGURE_HIDE));
-   printFigure(position);
+   printFigure(f);
 }
 
-void showFigure(figura *position){ 
-  bkgdset(COLOR_PAIR(position->typeFigure));
-  printFigure(position);
+void showFigure(figura *f){ 
+  bkgdset(COLOR_PAIR(f->typeFigure));
+  printFigure(f);
 }
 
 void printGameField(game_stats_t *gameBakend){
@@ -181,4 +176,19 @@ void refreshFigure(figura *f, int dx, int dy){
     f->y += dy;
     f->x += dx;
     showFigure(f);
+}
+
+void print_levelerror(void) {
+  clear();
+  MVPRINTW(0, 0, "An error occured openning level file!");
+  MVPRINTW(2, 0, "Please check ./tests/ directory.");
+  MVPRINTW(3, 0, "There should be 5 level files named level_(1-5).txt.");
+  MVPRINTW(4, 0, "Also try to open the game nearby ./tests/ directory.");
+  MVPRINTW(6, 0, "Press any key to exit.");
+}
+
+// сложно сказать но функция кажется не используется и ее можно удалить 
+void print_board(board_t *game, player_pos *frog) {
+  // print_cars(game);
+  PRINT(frog->x, frog->y);
 }
