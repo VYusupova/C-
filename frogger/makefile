@@ -1,26 +1,58 @@
 CC := gcc
 CFLAGS := -I inc -std=c11 -Wall -Werror -Wpedantic
-OBJS_FSMSWITCHCASE := out/frogger.o out/fsm.o out/backend.o out/frontend.o  out/tetris.o
-OBJS_FSMTABLE := out/frogger.o out/fsm_matrix.o out/backend.o out/frontend.o 
+OBJS_FSMSWITCHCASE :=  out/frogger.o out/fsm.o out/backend.o out/frontend.o  out/brick_game/tetris_init.o
+OBJS_FSMTABLE := out/frogger.o out/fsm_matrix.o out/backend.o out/frontend.o
 
-frogger: $(OBJS_FSMSWITCHCASE)
-	#clang-format -i src/*.c
+GCOV_FLAGS = -fprofile-arcs -ftest-coverage
+PATH_TEST = test
+TEST_BIN = run_tests
+CHECK_LIBS = -lcheck -lm -pthread -lrt -lsubunit
+
+all: mkdir frogger
+
+frogger:  $(OBJS_FSMSWITCHCASE)
+	clang-format -i src/*.c
 	$(CC) $(CFLAGS) $^ -o $@ -lncurses
 
-# $^ это набор зависимых файлов, используемых для создания чего-то другого.
-# $@ это имя цели, которая будет построена.
+
+
 
 frogger_fsmtable: $(OBJS_FSMTABLE)
 	$(CC) $(CFLAGS) $^ -o $@ -lncurses
 
-out/%.o: src/%.c  
+out/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-out/tetris.o: src/brick_game/tetris.c  # попробуй это сделать под шаблон , т.е ошничек должен положиться в подпапочку Еще надо проверить создаст она подпапку если нет надо ее создать отдельным правилом
-	$(CC) $(CFLAGS) -c $< -o $@
+mkdir:
+	mkdir out/brick_game/
 
 clean:
 	$(RM) out/*.o frogger frogger_fsmtable
+	rm -r out/brick_game/
+
+iif:
+	@if [ 1,1 ]; then @echo "123"; fi
+	else
+		@echo "321"
+	endif
+
+.PHONY: clean
+
+test_file:
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c src/brick_game/tetris_init.c -o $(PATH_TEST)/tetris_init.gcov.o
+
+test: test_file
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -o $(TEST_BIN) $(PATH_TEST)/*.gcov.o  frogger $(CHECK_LIBS)
+	@echo "\e[0;35m"
+	@echo "┏=========================================┓"
+	@echo "┃   START TESTING ...  ...  ...  ...      ┃"
+	@echo "┗=========================================┛"
+	@echo "\e[0;30m"
+	./$(TEST_BIN)
+
+# $^ это набор зависимых файлов, используемых для создания чего-то другого.
+# $@ это имя цели, которая будет построена.
+
 # $(RM) - переменная в Makefile. Существуют явные переменные (которые определяются внутри Makefile) и неявные переменные (определяются make и могут быть переопределены вами)
 # Вы можете увидеть список неявных переменных с этим флагом: make -p
 # Некоторые из наиболее распространённых переменных можно найти по адресу: 10.3 Переменные, используемые неявными правилами
