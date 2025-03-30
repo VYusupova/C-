@@ -19,82 +19,124 @@ next one.
 signals get_signal(int user_input) {
   signals rc = NOSIG;
 
-  switch (user_input){
-case KEY_DOWN : rc = MOVE_DOWN; break;
-case KEY_LEFT : rc = MOVE_LEFT; break;
-case  KEY_RIGHT : rc = MOVE_RIGHT; break;
-case ESCAPE : rc = ESCAPE_BTN; break;
-case ENTER_KEY : rc = ENTER_BTN; break;
-case ' ' : rc = ROTOR; break;
-default : break;
+  switch (user_input) {
+    case KEY_DOWN:
+      rc = MOVE_DOWN;
+      break;
+    case KEY_LEFT:
+      rc = MOVE_LEFT;
+      break;
+    case KEY_RIGHT:
+      rc = MOVE_RIGHT;
+      break;
+    case ESCAPE:
+      rc = ESCAPE_BTN;
+      break;
+    case ENTER_KEY:
+      rc = ENTER_BTN;
+      break;
+    case ' ':
+      rc = ROTOR;
+      break;
+    default:
+      break;
   }
   return rc;
 }
 
-
-
-
 /*фигура задана массивом 4 на 4 из 0 и 1, 1 это часть фигуры
 нам надо найти где в массиве крайний левый угол область фигуры
 что бы слева фигура пристыковалась к левому краю игровой области
-не выходя за него или не доходя до него 
-перебор матрицы делаем по столбцам, зтем по строкам, 
+не выходя за него или не доходя до него
+перебор матрицы делаем по столбцам, зтем по строкам,
 как только найдена позиция стобика запоминаем его и циклы прекращаются
 потому что переменная pos перестает равняться -1 */
-int leftExtremPos(figura *f){
-  int positon = -1;
-  for (int j = 0 ; j < 4 && positon == -1; j++)
-    for (int i = 0 ; i < 4 && positon == -1; i++)
-      if (f->figur[i][j]) positon = j;
-  return positon;
-}
-int rigtExtremPos(figura *posStart){
-   int pos = -1;
- for (int j = 3 ; j >= 0 && pos == -1; j--)
-    for (int i = 0 ; i < 4 && pos == -1; i++)
-      if (posStart->figur[i][j]) pos = j;
-  return pos;
-}
-int downExtremPos(figura *posStart){
- int pos = -1;
- for (int i = 3 ; i >= 0 && pos == -1; i--)
-    for (int j = 0 ; j < 4 && pos == -1; j++)
-      if (posStart->figur[i][j]) pos = i;
-  return pos;
-}
-
-void moveleft(player_pos *frog_pos, figura *f) {
-  if (f->x + leftExtremPos(f) != 1){
-    refreshFigure(f, -1, 0);
-  }
-}
-void moveright(player_pos *frog_pos, figura *posStart) {
-  if (posStart->x + rigtExtremPos(posStart) != BOARD_M)
-    refreshFigure(posStart, 1, 0);
-}
-
-int check(figura *f,  game_stats_t *gb){
-  int result = 0;
-  for (int i = f->y+1, k = 0; i < BOARD_N && k <  FSIZE; i++, k++)
-     for(int j = f->x, l = 0; j < BOARD_M && l <  FSIZE; j++, l++)
-     if(gb->gameField[i][j] != 0 && f->figur[k][l] == 1 )
-     result = 1;
+int check(figura *f, game_stats_t *gb) {
+  int result = SUCCESS;
+  for (int i = f->y + 1, k = 0; i < BOARD_N && k < FSIZE; i++, k++)
+    for (int j = f->x, l = 0; j < BOARD_M && l < FSIZE; j++, l++)
+      if (gb->gameField[i][j] != 0 && f->figur[k][l] == 1) result = ERROR;
   return result;
-
 }
-void movedown(player_pos *frog_pos,  figura *f,  game_stats_t *gb) {
-  if (f->y + downExtremPos(f) < BOARD_N  &&  !check(f,gb))
+
+int collisionLeft(figura *f, game_stats_t *gb) {
+  int positonX = -1;
+  int positonY = -1;
+  int result = SUCCESS;
+  for (int j = 0; j < 4 && positonX == -1; j++)
+    for (int i = 0; i < 4 && positonX == -1; i++)
+      if (f->figur[i][j]) {
+        positonX = j;
+        positonY = i;
+      }
+  if ((f->x + positonX) <= 1) result = ERROR;
+  // Если крайняя левая позиция фигуры слева встретит игровое поле занятое
+  // фигурой, тут нужен цикл проверить для I
+  if (gb->gameField[positonY][positonX - 1]) result = ERROR;
+  // if (check(f, gb)) result = ERROR;  // тут надо проверять новую позицию
+  // фигуры
+  return result;
+}
+int collisionRight(figura *f, game_stats_t *gb) {
+  int positon = -1;
+  int result = SUCCESS;
+  for (int j = 3; j >= 0 && positon == -1; j--)
+    for (int i = 0; i < 4 && positon == -1; i++)
+      if (f->figur[i][j]) positon = j;
+  if (f->x + positon >= BOARD_M) result = ERROR;
+  if (check(f, gb)) result = ERROR;
+  return result;
+}
+int collisionDown(figura *f, game_stats_t *gb) {
+  int pos = -1;
+  int result = SUCCESS;
+  for (int i = 3; i >= 0 && pos == -1; i--)
+    for (int j = 0; j < 4 && pos == -1; j++)
+      if (f->figur[i][j]) pos = i;
+  if (f->y + pos == BOARD_N) result = ERROR;
+  if (check(f, gb)) result = ERROR;
+  return result;
+}
+
+void moveleft(figura *f, game_stats_t *gb) {
+  if (!collisionLeft(f, gb)) refreshFigure(f, -1, 0);
+}
+void moveright(figura *f, game_stats_t *gb) {
+  if (!collisionRight(f, gb)) refreshFigure(f, 1, 0);
+}
+void movedown(figura *f, game_stats_t *gb) {
+  timeout(1200);
+  if (!collisionDown(f, gb))
     refreshFigure(f, 0, 1);
   else {
     figuraGamefield(gb, f);
-    initFigure(f);   
+    initFigure(f);
   }
 }
-void rotate(player_pos *frog_pos, figura *f) {
-    hideFigure(f);
-    rotateFigure(f);
-    showFigure(f);
+void rotate(figura *f, game_stats_t *gb) {
+  hideFigure(f);
+  // rotateFigure(f, gb);
+  showFigure(f);
 }
+// void rotateFigure(figura *f, game_stats_t *gb) {
+//   // figura new;
+//   // new.x = f->x;
+//   // new.y = f->y;
+//   // initMatrix(&new);
+//   // // int tmp[4][4] = {0};
+//   // for (int i = 0; i < FSIZE; i++)
+//   //   for (int j = 0; j < FSIZE; j++) new.figur[i][j] = f->figur[4 - i -
+//   1][j];
+//   // // добавить условие что если новая позиция фигуры не выходит за рамки
+//   // игрового
+//   // // поля и не сталкивается с уже занятыми на поле ячейками (т.е другими
+//   // // фигурами) выполнить поворот
+//   // // if (!collisionRight(f, gb) && !collisionLeft(f, gb) &&
+//   // //     !collisionDown(f, gb)) {
+//   // for (int i = 0; i < 4; i++)
+//   //   for (int j = 0; j < 4; j++) f->figur[j][i] = new.figur[i][j];
+//   // //}
+// }
 
 void on_start_state(signals sig, frog_state *state) {
   switch (sig) {
@@ -105,50 +147,51 @@ void on_start_state(signals sig, frog_state *state) {
       *state = EXIT_STATE;
       break;
     default:
-      *state = START; // а мне это надо? 
+      *state = START;  // а мне это надо?
       break;
   }
 }
-//отрисовка начало игры 
+// отрисовка начало игры
 void on_spawn_state(frog_state *state, game_stats_t *stats, board_t *map,
                     player_pos *frog_pos, figura *posStart) {
-  //if (stats->level > LEVEL_CNT) *state = GAMEOVER;
-  //else if (!lvlproc(map, stats)) {
-  //fill_finish(map->finish);
-  //  print_finished(map);
-  //  frogpos_init(frog_pos);
-    hideIntro();
-    initFigure(posStart); // инициализируем фигуру
-    showFigure(posStart);
-    *state = MOVING;
+  // if (stats->level > LEVEL_CNT) *state = GAMEOVER;
+  // else if (!lvlproc(map, stats)) {
+  // fill_finish(map->finish);
+  //   print_finished(map);
+  //   frogpos_init(frog_pos);
+  hideIntro();
+  initFigure(posStart);  // инициализируем фигуру
+  showFigure(posStart);
+  *state = MOVING;
   //} else
   //  *state = FILE_ERROR_STATE;
 }
 
 void on_moving_state(signals sig, frog_state *state, board_t *map,
-                     player_pos *frog_pos, figura *posStart,  game_stats_t *gamestats) {
-
+                     player_pos *frog_pos, figura *f, game_stats_t *gamestats) {
   switch (sig) {
-    // case MOVE_UP:
-    //   moveup(frog_pos); // не используется т.е. убрать
-    //   break;
+      // case MOVE_UP:
+      //   moveup(frog_pos); // не используется т.е. убрать
+      //   break;
+
     case MOVE_DOWN:
-      movedown(frog_pos, posStart, gamestats);
+      movedown(f, gamestats);
       break;
     case MOVE_RIGHT:
-      moveright(frog_pos, posStart); // сдвинуть фигуру вправо
+      moveright(f, gamestats);  // сдвинуть фигуру вправо
       break;
     case MOVE_LEFT:
-      moveleft(frog_pos, posStart);
+      moveleft(f, gamestats);
       break;
     case ROTOR:
-      rotate(frog_pos, posStart);
-      break;      
+      rotate(f, gamestats);
+      break;
     case ESCAPE_BTN:
       *state = EXIT_STATE;
       break;
     default:
-    //printFigure(posStart); // фигура опускается ниже по игровому полю
+      movedown(f, gamestats);
+      //  printFigure(posStart); // фигура опускается ниже по игровому полю
       break;
   }
 
@@ -186,7 +229,7 @@ void on_reach_state(frog_state *state, game_stats_t *stats, board_t *map,
     *state = SPAWN;
   } else {
     frogpos_init(frog_pos);
-    //print_finished(map);
+    // print_finished(map);
     *state = MOVING;
   }
 }
@@ -201,9 +244,8 @@ void on_collide_state(frog_state *state, game_stats_t *stats,
     *state = GAMEOVER;
 }
 
-
-void sigact(signals sig, frog_state *state, game_stats_t *gamestats, board_t *map,
-            player_pos *frog_pos, figura *posStart) {
+void sigact(signals sig, frog_state *state, game_stats_t *gamestats,
+            board_t *map, player_pos *frog_pos, figura *posStart) {
   switch (*state) {
     case START:
       on_start_state(sig, state);
@@ -227,14 +269,14 @@ void sigact(signals sig, frog_state *state, game_stats_t *gamestats, board_t *ma
       print_banner(gamestats);
       break;
     default:
-          
+
       break;
   }
 }
 
-// сдвиг вверх мне не нужен 
+// сдвиг вверх мне не нужен
 /*
-void moveup(player_pos *frog_pos ) { 
+void moveup(player_pos *frog_pos ) {
   if (frog_pos->y != 1)
 
   {
