@@ -59,6 +59,12 @@ int check(figura *f, game_stats_t *gb) {
   return result;
 }
 
+// проверяем что фигура появилась и не упирается вниз
+int collisionUp(figura *f, game_stats_t *gb){
+ if (f->y == 0 && collisionDown(f,gb)) return ERROR;
+}
+
+
 int collisionLeft(figura *f, game_stats_t *gb) {
   int positonX = -1;
   int positonY = -1;
@@ -104,13 +110,27 @@ void moveleft(figura *f, game_stats_t *gb) {
 void moveright(figura *f, game_stats_t *gb) {
   if (!collisionRight(f, gb)) refreshFigure(f, 1, 0);
 }
-void movedown(figura *f, game_stats_t *gb) {
+
+
+// void on_collide_state(frog_state *state, game_stats_t *stats,
+//                       player_pos *frog_pos) {
+//   if (stats->lives) {
+//     stats->lives--;
+//     frogpos_init(frog_pos);
+//     *state = MOVING;
+//   } else
+//     *state = GAMEOVER;
+// }
+
+void movedown(frog_state *state, figura *f, game_stats_t *gb) {
   timeout(1200);
   if (!collisionDown(f, gb))
     refreshFigure(f, 0, 1);
   else {
     figuraGamefield(gb, f);
-    initFigure(f);
+      if (!collisionUp(f, gb))
+                initFigure(f);
+      else state = GAMEOVER;
   }
 }
 void rotate(figura *f, game_stats_t *gb) {
@@ -151,7 +171,7 @@ void on_start_state(signals sig, frog_state *state) {
       break;
   }
 }
-// отрисовка начало игры
+// отрисовка начало игры появление фигруы
 void on_spawn_state(frog_state *state, game_stats_t *stats, board_t *map,
                     player_pos *frog_pos, figura *posStart) {
   // if (stats->level > LEVEL_CNT) *state = GAMEOVER;
@@ -175,7 +195,7 @@ void on_moving_state(signals sig, frog_state *state, board_t *map,
       //   break;
 
     case MOVE_DOWN:
-      movedown(f, gamestats);
+      movedown(state, f, gamestats);
       break;
     case MOVE_RIGHT:
       moveright(f, gamestats);  // сдвинуть фигуру вправо
@@ -190,7 +210,7 @@ void on_moving_state(signals sig, frog_state *state, board_t *map,
       *state = EXIT_STATE;
       break;
     default:
-      movedown(f, gamestats);
+      movedown(state, f, gamestats);
       //  printFigure(posStart); // фигура опускается ниже по игровому полю
       break;
   }
@@ -232,16 +252,6 @@ void on_reach_state(frog_state *state, game_stats_t *stats, board_t *map,
     // print_finished(map);
     *state = MOVING;
   }
-}
-
-void on_collide_state(frog_state *state, game_stats_t *stats,
-                      player_pos *frog_pos) {
-  if (stats->lives) {
-    stats->lives--;
-    frogpos_init(frog_pos);
-    *state = MOVING;
-  } else
-    *state = GAMEOVER;
 }
 
 void sigact(signals sig, frog_state *state, game_stats_t *gamestats,
