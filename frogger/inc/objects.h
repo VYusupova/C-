@@ -44,7 +44,7 @@ typedef struct
     int m;
     int x ;
     int y ;
-    int figur[n][m]; // может не работать 
+    int figur[FSIZE][FSIZE]; // может не работать 
 //  int **figur;     //тогда надо писать доп функцию выделения памяти потом
     int typeFigure;
 } figura;

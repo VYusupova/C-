@@ -30,6 +30,7 @@ void print_finished(board_t *game);
 void print_banner(game_stats_t *stats);
 int read_banner(game_stats_t *stats, banner_t *banner);
 
+void showIntro(void);
 
 
 #endif

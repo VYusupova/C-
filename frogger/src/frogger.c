@@ -37,7 +37,7 @@ void game_loop() {
     sigact(get_signal(signal), &state, &gameBakend, &map, &frog, &posStart);
       timeout (1200);
     // delay_output(200);
-     movedown(&frog, &posStart, &gameBakend);
+     movedown(&state, &posStart, &gameBakend);
 
     if (state == MOVING || state == START) signal = GET_USER_INPUT;
   }

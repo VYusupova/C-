@@ -62,6 +62,7 @@ int check(figura *f, game_stats_t *gb) {
 // проверяем что фигура появилась и не упирается вниз
 int collisionUp(figura *f, game_stats_t *gb){
  if (f->y == 0 && collisionDown(f,gb)) return ERROR;
+ return SUCCESS;
 }
 
 
@@ -130,7 +131,7 @@ void movedown(frog_state *state, figura *f, game_stats_t *gb) {
     figuraGamefield(gb, f);
       if (!collisionUp(f, gb))
                 initFigure(f);
-      else state = GAMEOVER;
+      else *state = GAMEOVER;
   }
 }
 void rotate(figura *f, game_stats_t *gb) {
@@ -210,7 +211,7 @@ void on_moving_state(signals sig, frog_state *state, board_t *map,
       *state = EXIT_STATE;
       break;
     default:
-      movedown(state, f, gamestats);
+      //movedown(state, f, gamestats);
       //  printFigure(posStart); // фигура опускается ниже по игровому полю
       break;
   }
@@ -273,7 +274,7 @@ void sigact(signals sig, frog_state *state, game_stats_t *gamestats,
       on_reach_state(state, gamestats, map, frog_pos);
       break;
     case COLLIDE:
-      on_collide_state(state, gamestats, frog_pos);
+      //on_collide_state(state, gamestats, frog_pos);
       break;
     case GAMEOVER:
       print_banner(gamestats);

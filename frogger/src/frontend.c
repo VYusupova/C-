@@ -22,7 +22,7 @@ void initColors() {
 void print_overlay(void) {
   print_rectangle(0, BOARD_N + 1, 0, BOARD_M + 1); // отрисовка игрового поля
   print_rectangle(0, BOARD_N + 1, BOARD_M + 2, BOARD_M + HUD_WIDTH); // отрисовка информационного поля
-  print_rectangle(R_NEXT, R_NEXT_H, BOARD_M + 3, BOARD_M + HUD_WIDTH - 1); // отрисовка поля под новую фигуру
+  print_rectangle(R_NEXT, R_NEXT, BOARD_M + 3, BOARD_M + HUD_WIDTH - 1); // отрисовка поля под новую фигуру
 
   MVPRINTW(R_LEV, BOARD_M + SHIFT_MESSAGE, "LEVEL");
   MVPRINTW(R_SCORE, BOARD_M + SHIFT_MESSAGE, "SCORE");
@@ -32,8 +32,8 @@ void print_overlay(void) {
 }
 
 void showIntro(void){
-MVPRINTW(BOARD_N/2, MAP_PADDING, INTRO_MESSAGE1);
-MVPRINTW(BOARD_N/2+1, MAP_PADDING, INTRO_MESSAGE2);
+MVPRINTW(BOARD_N/2, MAP_PADDING, INTRO_MESSAGE);
+MVPRINTW(BOARD_N/2+1, MAP_PADDING, INTRO_MESSAGE);
 }
 
 void hideIntro(void){
