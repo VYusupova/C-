@@ -1,6 +1,6 @@
 CC := gcc
 CFLAGS := -I inc -std=c11 -Wall -Werror -Wpedantic
-OBJS_FSMSWITCHCASE :=  out/frogger.o out/fsm.o out/backend.o out/frontend.o  out/brick_game/tetris_init.o
+OBJS_FSMSWITCHCASE :=  out/frogger.o out/fsm.o out/backend.o out/frontend.o  out/brick_game/tetris_init.o out/brick_game/tetris_moving.o
 OBJS_FSMTABLE := out/frogger.o out/fsm_matrix.o out/backend.o out/frontend.o
 
 GCOV_FLAGS = -fprofile-arcs -ftest-coverage
@@ -8,14 +8,11 @@ PATH_TEST = test
 TEST_BIN = run_tests
 CHECK_LIBS = -lcheck -lm -pthread -lrt -lsubunit
 
-all: mkdir frogger
+all: clean mkdir frogger
 
 frogger:  $(OBJS_FSMSWITCHCASE)
 	clang-format -i src/*.c
 	$(CC) $(CFLAGS) $^ -o $@ -lncurses
-
-
-
 
 frogger_fsmtable: $(OBJS_FSMTABLE)
 	$(CC) $(CFLAGS) $^ -o $@ -lncurses
@@ -28,7 +25,7 @@ mkdir:
 
 clean:
 	$(RM) out/*.o frogger frogger_fsmtable
-	rm -r out/brick_game/
+	rm -rf out/brick_game/
 
 iif:
 	@if [ 1,1 ]; then @echo "123"; fi
