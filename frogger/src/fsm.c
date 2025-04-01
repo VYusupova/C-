@@ -51,59 +51,6 @@ signals get_signal(int user_input) {
 перебор матрицы делаем по столбцам, зтем по строкам,
 как только найдена позиция стобика запоминаем его и циклы прекращаются
 потому что переменная pos перестает равняться -1 */
-int check(figura *f, game_stats_t *gb) {
-  int result = SUCCESS;
-  for (int i = f->y + 1, k = 0; i < BOARD_N && k < FSIZE; i++, k++)
-    for (int j = f->x, l = 0; j < BOARD_M && l < FSIZE; j++, l++)
-      if (gb->gameField[i][j] != 0 && f->figur[k][l] == 1) result = ERROR;
-  return result;
-}
-
-// проверяем что фигура появилась и не упирается вниз
-int collisionUp(figura *f, game_stats_t *gb){
- if (f->y == 0 && collisionDown(f,gb)) return ERROR;
- return SUCCESS;
-}
-
-
-int collisionLeft(figura *f, game_stats_t *gb) {
-  int positonX = -1;
-  int positonY = -1;
-  int result = SUCCESS;
-  for (int j = 0; j < 4 && positonX == -1; j++)
-    for (int i = 0; i < 4 && positonX == -1; i++)
-      if (f->figur[i][j]) {
-        positonX = j;
-        positonY = i;
-      }
-  if ((f->x + positonX) <= 1) result = ERROR;
-  // Если крайняя левая позиция фигуры слева встретит игровое поле занятое
-  // фигурой, тут нужен цикл проверить для I
-  if (gb->gameField[positonY][positonX - 1]) result = ERROR;
-  // if (check(f, gb)) result = ERROR;  // тут надо проверять новую позицию
-  // фигуры
-  return result;
-}
-int collisionRight(figura *f, game_stats_t *gb) {
-  int positon = -1;
-  int result = SUCCESS;
-  for (int j = 3; j >= 0 && positon == -1; j--)
-    for (int i = 0; i < 4 && positon == -1; i++)
-      if (f->figur[i][j]) positon = j;
-  if (f->x + positon >= BOARD_M) result = ERROR;
-  if (check(f, gb)) result = ERROR;
-  return result;
-}
-int collisionDown(figura *f, game_stats_t *gb) {
-  int pos = -1;
-  int result = SUCCESS;
-  for (int i = 3; i >= 0 && pos == -1; i--)
-    for (int j = 0; j < 4 && pos == -1; j++)
-      if (f->figur[i][j]) pos = i;
-  if (f->y + pos == BOARD_N) result = ERROR;
-  if (check(f, gb)) result = ERROR;
-  return result;
-}
 
 void moveleft(figura *f, game_stats_t *gb) {
   if (!collisionLeft(f, gb)) refreshFigure(f, -1, 0);
@@ -111,16 +58,13 @@ void moveleft(figura *f, game_stats_t *gb) {
 void moveright(figura *f, game_stats_t *gb) {
   if (!collisionRight(f, gb)) refreshFigure(f, 1, 0);
 }
-
-
-// void on_collide_state(frog_state *state, game_stats_t *stats,
-//                       player_pos *frog_pos) {
-//   if (stats->lives) {
-//     stats->lives--;
-//     frogpos_init(frog_pos);
-//     *state = MOVING;
-//   } else
-//     *state = GAMEOVER;
+// void movedown(figura *f, game_stats_t *gb) {
+//   if (!collisionDown(f, gb))
+//     refreshFigure(f, 0, 1);
+//   else {
+//     figuraGamefield(gb, f);
+//     initFigure(f);
+//   }
 // }
 
 void movedown(frog_state *state, figura *f, game_stats_t *gb) {
@@ -129,35 +73,18 @@ void movedown(frog_state *state, figura *f, game_stats_t *gb) {
     refreshFigure(f, 0, 1);
   else {
     figuraGamefield(gb, f);
-      if (!collisionUp(f, gb))
-                initFigure(f);
-      else *state = GAMEOVER;
+    if (!collisionUp(f, gb))
+      initFigure(f);
+    else
+      *state = GAMEOVER;
   }
 }
+
 void rotate(figura *f, game_stats_t *gb) {
   hideFigure(f);
-  // rotateFigure(f, gb);
+  rotateFigure(f, gb);
   showFigure(f);
 }
-// void rotateFigure(figura *f, game_stats_t *gb) {
-//   // figura new;
-//   // new.x = f->x;
-//   // new.y = f->y;
-//   // initMatrix(&new);
-//   // // int tmp[4][4] = {0};
-//   // for (int i = 0; i < FSIZE; i++)
-//   //   for (int j = 0; j < FSIZE; j++) new.figur[i][j] = f->figur[4 - i -
-//   1][j];
-//   // // добавить условие что если новая позиция фигуры не выходит за рамки
-//   // игрового
-//   // // поля и не сталкивается с уже занятыми на поле ячейками (т.е другими
-//   // // фигурами) выполнить поворот
-//   // // if (!collisionRight(f, gb) && !collisionLeft(f, gb) &&
-//   // //     !collisionDown(f, gb)) {
-//   // for (int i = 0; i < 4; i++)
-//   //   for (int j = 0; j < 4; j++) f->figur[j][i] = new.figur[i][j];
-//   // //}
-// }
 
 void on_start_state(signals sig, frog_state *state) {
   switch (sig) {
@@ -172,7 +99,7 @@ void on_start_state(signals sig, frog_state *state) {
       break;
   }
 }
-// отрисовка начало игры появление фигруы
+// отрисовка начало игры
 void on_spawn_state(frog_state *state, game_stats_t *stats, board_t *map,
                     player_pos *frog_pos, figura *posStart) {
   // if (stats->level > LEVEL_CNT) *state = GAMEOVER;
@@ -211,8 +138,7 @@ void on_moving_state(signals sig, frog_state *state, board_t *map,
       *state = EXIT_STATE;
       break;
     default:
-      //movedown(state, f, gamestats);
-      //  printFigure(posStart); // фигура опускается ниже по игровому полю
+      // movedown(state, f, gamestats);
       break;
   }
 
@@ -255,6 +181,16 @@ void on_reach_state(frog_state *state, game_stats_t *stats, board_t *map,
   }
 }
 
+void on_collide_state(frog_state *state, game_stats_t *stats,
+                      player_pos *frog_pos) {
+  if (stats->lives) {
+    stats->lives--;
+    frogpos_init(frog_pos);
+    *state = MOVING;
+  } else
+    *state = GAMEOVER;
+}
+
 void sigact(signals sig, frog_state *state, game_stats_t *gamestats,
             board_t *map, player_pos *frog_pos, figura *posStart) {
   switch (*state) {
@@ -274,7 +210,7 @@ void sigact(signals sig, frog_state *state, game_stats_t *gamestats,
       on_reach_state(state, gamestats, map, frog_pos);
       break;
     case COLLIDE:
-      //on_collide_state(state, gamestats, frog_pos);
+      on_collide_state(state, gamestats, frog_pos);
       break;
     case GAMEOVER:
       print_banner(gamestats);
@@ -284,16 +220,3 @@ void sigact(signals sig, frog_state *state, game_stats_t *gamestats,
       break;
   }
 }
-
-// сдвиг вверх мне не нужен
-/*
-void moveup(player_pos *frog_pos ) {
-  if (frog_pos->y != 1)
-
-  {
-    sleep(10);
-    CLEAR_BACKPOS(frog_pos->y, frog_pos->x);
-    frog_pos->y -= 2;
-  }
-}
-*/
