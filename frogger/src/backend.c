@@ -53,6 +53,7 @@ bool check_level_compl(board_t *map) {
   return rc;
 }
 
+// проверка что не врезались в верх 0 
 bool check_collide(player_pos *frog, board_t *map) {
   bool rc = FALSE;
 
@@ -60,7 +61,7 @@ bool check_collide(player_pos *frog, board_t *map) {
       map->ways[frog->y - MAP_PADDING - 1][frog->x - 1] == ']')
     rc = TRUE;
 
-  return rc;  // проверка что не врезались в верх 0
+  return rc;  
 }
 
 void frogpos_init(player_pos *frog) {

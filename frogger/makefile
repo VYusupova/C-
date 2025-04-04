@@ -11,7 +11,7 @@ CHECK_LIBS = -lcheck -lm -pthread -lrt -lsubunit
 all: clean mkdir frogger
 
 frogger:  $(OBJS_FSMSWITCHCASE)
-	clang-format -i src/*.c
+	#clang-format -i src/*.c
 	$(CC) $(CFLAGS) $^ -o $@ -lncurses
 
 frogger_fsmtable: $(OBJS_FSMTABLE)

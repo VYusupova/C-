@@ -44,14 +44,6 @@ signals get_signal(int user_input) {
   return rc;
 }
 
-/*фигура задана массивом 4 на 4 из 0 и 1, 1 это часть фигуры
-нам надо найти где в массиве крайний левый угол область фигуры
-что бы слева фигура пристыковалась к левому краю игровой области
-не выходя за него или не доходя до него
-перебор матрицы делаем по столбцам, зтем по строкам,
-как только найдена позиция стобика запоминаем его и циклы прекращаются
-потому что переменная pos перестает равняться -1 */
-
 void moveleft(figura *f, game_stats_t *gb) {
   if (!collisionLeft(f, gb)) refreshFigure(f, -1, 0);
 }
@@ -101,15 +93,21 @@ void on_start_state(signals sig, frog_state *state) {
 }
 // отрисовка начало игры
 void on_spawn_state(frog_state *state, game_stats_t *stats, board_t *map,
-                    player_pos *frog_pos, figura *posStart) {
+                    player_pos *frog_pos, figura *now) {
   // if (stats->level > LEVEL_CNT) *state = GAMEOVER;
   // else if (!lvlproc(map, stats)) {
   // fill_finish(map->finish);
   //   print_finished(map);
   //   frogpos_init(frog_pos);
   hideIntro();
-  initFigure(posStart);  // инициализируем фигуру
-  showFigure(posStart);
+  //figura next;
+	//  initFigure(&next);
+	//  next.x = 0;
+	//  next.y = 0;
+	//  showFigure(&next);	    
+    //initFigure(stats->fnext);
+  initFigure(now);  // инициализируем фигуру
+  showFigure(now);
   *state = MOVING;
   //} else
   //  *state = FILE_ERROR_STATE;

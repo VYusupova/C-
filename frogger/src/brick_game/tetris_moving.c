@@ -10,7 +10,7 @@ int collisionDown(figura *f, game_stats_t *gb) {
 
 // проверяем что фигура появилась и не упирается вниз
 int collisionUp(figura *f, game_stats_t *gb){
- if (f->y == 0 && collisionDown(f,gb)) return ERROR;
+ if (f->y == START_Y && collisionDown(f,gb)) return ERROR;
  return SUCCESS;
 }
 

@@ -17,7 +17,8 @@ void game_loop() {
   board_t map;
   game_stats_t gameBakend; // здесь лежит массив с описанием игрового поля
   player_pos frog;
-  figura posStart;
+  figura fnow;
+  //figura fnext;
 
 
   bool break_flag = TRUE;
@@ -34,10 +35,10 @@ void game_loop() {
     
    
     printGameField(&gameBakend);
-    sigact(get_signal(signal), &state, &gameBakend, &map, &frog, &posStart);
+    sigact(get_signal(signal), &state, &gameBakend, &map, &frog, &fnow);
       timeout (1200);
     // delay_output(200);
-     movedown(&state, &posStart, &gameBakend);
+     movedown(&state, &fnow, &gameBakend);
 
     if (state == MOVING || state == START) signal = GET_USER_INPUT;
   }

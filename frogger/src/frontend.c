@@ -3,45 +3,45 @@
 void initColors() {
   if (!has_colors()) {
     endwin();
-    MVPRINTW(BOARD_N/2, BOARD_N/2, "COLORS NOT SUPPORTED");
+    MVPRINTW(BOARD_N / 2, BOARD_N / 2, "COLORS NOT SUPPORTED");
   }
- // bkgdset(COLOR_PAIR()); включи что бы посмотреть эелменты которые надо убрать 
- // COLOR_MAGENTA - милиновый
- // COLOR_CYAN
+  // bkgdset(COLOR_PAIR()); включи что бы посмотреть эелменты которые надо
+  // убрать COLOR_MAGENTA - милиновый COLOR_CYAN
   start_color();
   init_pair(FIGURE_HIDE, COLOR_BLACK, COLOR_BLACK);
   init_pair(FIGURE_Q, COLOR_BLACK, COLOR_YELLOW);
   init_pair(FIGURE_I, COLOR_BLACK, COLOR_CYAN);
   init_pair(FIGURE_S, COLOR_BLACK, COLOR_RED);
   init_pair(FIGURE_Z, COLOR_BLACK, COLOR_GREEN);
-  init_pair(FIGURE_L, COLOR_YELLOW, COLOR_RED); 
-  init_pair(FIGURE_J, COLOR_BLACK, COLOR_MAGENTA); 
-  init_pair(FIGURE_T, COLOR_YELLOW, COLOR_CYAN); 
+  init_pair(FIGURE_L, COLOR_YELLOW, COLOR_RED);
+  init_pair(FIGURE_J, COLOR_BLACK, COLOR_MAGENTA);
+  init_pair(FIGURE_T, COLOR_YELLOW, COLOR_CYAN);
 }
 
 void print_overlay(void) {
-  print_rectangle(0, BOARD_N + 1, 0, BOARD_M + 1); // отрисовка игрового поля
-  print_rectangle(0, BOARD_N + 1, BOARD_M + 2, BOARD_M + HUD_WIDTH); // отрисовка информационного поля
-  print_rectangle(R_NEXT, R_NEXT, BOARD_M + 3, BOARD_M + HUD_WIDTH - 1); // отрисовка поля под новую фигуру
+  print_rectangle(0, BOARD_N + 1, 0, BOARD_M + 1);  // отрисовка игрового поля
+  print_rectangle(0, BOARD_N + 1, BOARD_M + 2,
+                  BOARD_M + HUD_WIDTH);  // отрисовка информационного поля
+  print_rectangle(R_NEXT, R_NEXT_H, BOARD_M + 3,
+                  BOARD_M + HUD_WIDTH - 1);  // отрисовка поля под новую фигуру
 
   MVPRINTW(R_LEV, BOARD_M + SHIFT_MESSAGE, "LEVEL");
   MVPRINTW(R_SCORE, BOARD_M + SHIFT_MESSAGE, "SCORE");
-  MVPRINTW(R_SPEED, BOARD_M + SHIFT_MESSAGE,"SPEED");  
+  MVPRINTW(R_SPEED, BOARD_M + SHIFT_MESSAGE, "SPEED");
   MVPRINTW(R_LIVES, BOARD_M + SHIFT_MESSAGE, "LIVES");
   showIntro();
 }
 
-void showIntro(void){
-MVPRINTW(BOARD_N/2, MAP_PADDING, INTRO_MESSAGE);
-MVPRINTW(BOARD_N/2+1, MAP_PADDING, INTRO_MESSAGE);
+void showIntro(void) {
+  MVPRINTW(BOARD_N / 2, MAP_PADDING, INTRO_MESSAGE1);
+  MVPRINTW(BOARD_N / 2 + 1, MAP_PADDING, INTRO_MESSAGE2);
 }
 
-void hideIntro(void){
-bkgdset(COLOR_PAIR(FIGURE_HIDE));
-MVPRINTW(BOARD_N/2, MAP_PADDING, HIDE_INTRO);
-MVPRINTW(BOARD_N/2+1, MAP_PADDING, HIDE_INTRO);
+void hideIntro(void) {
+  bkgdset(COLOR_PAIR(FIGURE_HIDE));
+  MVPRINTW(BOARD_N / 2, MAP_PADDING, HIDE_INTRO);
+  MVPRINTW(BOARD_N / 2 + 1, MAP_PADDING, HIDE_INTRO);
 }
-
 
 // отрисовка прямоугольника с координатми
 void print_rectangle(int top_y, int bottom_y, int left_x, int right_x) {
@@ -72,8 +72,6 @@ void print_stats(game_stats_t *stats) {
   MVPRINTW(R_SPEED + 1, BOARD_M + SHIFT_MESSAGE, "%d", stats->speed);
   MVPRINTW(R_LIVES + 1, BOARD_M + SHIFT_MESSAGE, "%d", stats->lives);
 }
-
-
 
 // отрисвка чего то
 void print_cars(board_t *game) {
@@ -142,40 +140,39 @@ int read_banner(game_stats_t *stats, banner_t *banner) {
   return rc;
 }
 
-
-void printFigure(figura *f){
-  for (int i = 0; i < 4; i++)
-    for (int j = 0; j < 4; j++) {
-      if ( f->figur[i][j] == 1)  PRINT(f->x+j, f->y+i);
-  }
+void printFigure(figura *f) {
+  for (int i = 0; i < f->n; i++)
+    for (int j = 0; j < f->m; j++) {
+      if (f->figur[i][j] == 1) PRINT(f->x + j, f->y + i);
+    }
 }
 
-void hideFigure(figura *f){ 
-   bkgdset(COLOR_PAIR(FIGURE_HIDE));
-   printFigure(f);
+void hideFigure(figura *f) {
+  bkgdset(COLOR_PAIR(FIGURE_HIDE));
+  printFigure(f);
 }
 
-void showFigure(figura *f){ 
+void showFigure(figura *f) {
   bkgdset(COLOR_PAIR(f->typeFigure));
   printFigure(f);
 }
 
-void printGameField(game_stats_t *gameBakend){
+void printGameField(game_stats_t *gameBakend) {
   for (int i = 0; i < BOARD_N; i++)
     for (int j = 0; j < BOARD_M; j++) {
-      if (gameBakend->gameField[i][j])  {
+      if (gameBakend->gameField[i][j]) {
         bkgdset(COLOR_PAIR(gameBakend->gameField[i][j]));
         PRINT(j, i);
         bkgdset(COLOR_PAIR(0));
       }
-  }
+    }
 }
 
-void refreshFigure(figura *f, int dx, int dy){
-    hideFigure(f);
-    f->y += dy;
-    f->x += dx;
-    showFigure(f);
+void refreshFigure(figura *f, int dx, int dy) {
+  hideFigure(f);
+  f->y += dy;
+  f->x += dx;
+  showFigure(f);
 }
 
 void print_levelerror(void) {
@@ -187,7 +184,7 @@ void print_levelerror(void) {
   MVPRINTW(6, 0, "Press any key to exit.");
 }
 
-// сложно сказать но функция кажется не используется и ее можно удалить 
+// сложно сказать но функция кажется не используется и ее можно удалить
 void print_board(board_t *game, player_pos *frog) {
   // print_cars(game);
   PRINT(frog->x, frog->y);

@@ -16,21 +16,6 @@ typedef struct
     char ways[21 + 2][21 + 2];
 } board_t;
 
-typedef struct
-{
-    int score;
-    int level;
-    int speed;
-    int lives;
-    int won;
-    int gameField[BOARD_N][BOARD_M];
-} game_stats_t;
-
-typedef struct
-{
-    char matrix[BANNER_N + 1][BANNER_M + 1];
-} banner_t;
-
 
 /*
 * Переписываем структуру фигур добавив размер N*M 
@@ -48,6 +33,26 @@ typedef struct
 //  int **figur;     //тогда надо писать доп функцию выделения памяти потом
     int typeFigure;
 } figura;
+
+typedef struct
+{
+    int score;
+    int level;
+    int speed;
+    int lives;
+    int won;
+    int gameField[BOARD_N][BOARD_M];
+    struct figura *fnow;
+    figura *fnext;
+} game_stats_t;
+
+typedef struct
+{
+    char matrix[BANNER_N + 1][BANNER_M + 1];
+} banner_t;
+
+
+
 
 typedef enum
 {
