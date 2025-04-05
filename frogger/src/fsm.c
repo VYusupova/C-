@@ -67,7 +67,7 @@ void movedown(frog_state *state, figura *f, game_stats_t *gb) {
     figuraGamefield(gb, f);
     if (!collisionUp(f, gb)){
       swapFigure(gb->fnow, gb->fnext) ;
-      initFigureNow(gb->fnow);
+      //initFigureNow(gb->fnow);
       //f = gb->fnow;
         hideFigure(gb->fnext);
       initFigure(gb->fnext);

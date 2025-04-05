@@ -40,7 +40,9 @@ void initFigureNow(figura *fnow){
 }
 
 void swapFigure(figura *fnow, figura *fnext){
-fnow->n = fnext->n;
+    fnow->x = START_X;
+    fnow->y = START_Y;
+   fnow->n = fnext->n;
    fnow->m = fnext->m;
    fnow->typeFigure = fnext->typeFigure;
     for (int x = 0; x < FSIZE; x++)
