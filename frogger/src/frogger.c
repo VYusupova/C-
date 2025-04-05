@@ -18,7 +18,7 @@ void game_loop() {
   game_stats_t gameBakend; // здесь лежит массив с описанием игрового поля
   player_pos frog;
   figura fnow;
-  //figura fnext;
+  figura fnext;
 
 
   bool break_flag = TRUE;
@@ -26,6 +26,8 @@ void game_loop() {
   frog_state state = START;
 
   stats_init(&gameBakend);  // задаем начальные значения левел и количество очков
+  gameBakend.fnow = &fnow;
+  gameBakend.fnext = &fnext;
   initColors();       // инициализация цветов
 
 

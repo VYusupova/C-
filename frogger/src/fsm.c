@@ -65,8 +65,15 @@ void movedown(frog_state *state, figura *f, game_stats_t *gb) {
     refreshFigure(f, 0, 1);
   else {
     figuraGamefield(gb, f);
-    if (!collisionUp(f, gb))
-      initFigure(f);
+    if (!collisionUp(f, gb)){
+      swapFigure(gb->fnow, gb->fnext) ;
+      initFigureNow(gb->fnow);
+      //f = gb->fnow;
+        hideFigure(gb->fnext);
+      initFigure(gb->fnext);
+      
+      refreshFigure(gb->fnext, 0, 0);
+      }
     else
       *state = GAMEOVER;
   }
@@ -92,7 +99,7 @@ void on_start_state(signals sig, frog_state *state) {
   }
 }
 // отрисовка начало игры
-void on_spawn_state(frog_state *state, game_stats_t *stats, board_t *map,
+void on_spawn_state(frog_state *state, game_stats_t *game, board_t *map,
                     player_pos *frog_pos, figura *now) {
   // if (stats->level > LEVEL_CNT) *state = GAMEOVER;
   // else if (!lvlproc(map, stats)) {
@@ -106,8 +113,17 @@ void on_spawn_state(frog_state *state, game_stats_t *stats, board_t *map,
 	//  next.y = 0;
 	//  showFigure(&next);	    
     //initFigure(stats->fnext);
-  initFigure(now);  // инициализируем фигуру
-  showFigure(now);
+  
+  initFigure(game->fnow);  // инициализируем фигуру
+  initFigure(game->fnext);
+  initFigureNow(game->fnow);
+  showFigure(game->fnow);
+
+  game->fnext->x = R_NEXT_X;
+  game->fnext->y = R_NEXT_Y;
+ 
+    
+  showFigure(game->fnext);
   *state = MOVING;
   //} else
   //  *state = FILE_ERROR_STATE;

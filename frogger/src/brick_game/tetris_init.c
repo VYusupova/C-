@@ -2,8 +2,6 @@
 // TO DO # 0 в отдельные методы вынесены операции инициализации фигуры по типу
 void initFigure(figura *f){
 
-    f->x = START_X;
-    f->y = START_Y;
     // TO DO в идеале надо сделать так что бы матрица выделялась динамически
     // TO DO выделение матрицы проиходить в функциях инициализации фигур
     for (int i = 0; i < FSIZE; i++)
@@ -36,6 +34,20 @@ void initFigure(figura *f){
     
 }
 
+void initFigureNow(figura *fnow){
+    fnow->x = START_X;
+    fnow->y = START_Y;
+}
+
+void swapFigure(figura *fnow, figura *fnext){
+fnow->n = fnext->n;
+   fnow->m = fnext->m;
+   fnow->typeFigure = fnext->typeFigure;
+    for (int x = 0; x < FSIZE; x++)
+        for (int y = 0; y < FSIZE; y++)
+            fnow->figur[y][x] = fnext->figur[y][x];
+}
+
 void initGameField(game_stats_t *gameBakend){
     for (int i = 0; i < BOARD_N; i++)
         for (int j = 0; j < BOARD_M; j++)
@@ -49,8 +61,8 @@ void stats_init(game_stats_t *gameBakend) {
   gameBakend->speed = 1;
   gameBakend->lives = 99;
   gameBakend->won = FALSE;
-  gameBakend->fnow = NULL;
-  gameBakend->fnext = NULL;
+  //gameBakend->fnow = NULL;
+  //gameBakend->fnext = NULL;
   //initFigure(gameBakend->fnext);
   initGameField(gameBakend);
 }

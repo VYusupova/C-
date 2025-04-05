@@ -42,7 +42,7 @@ typedef struct
     int lives;
     int won;
     int gameField[BOARD_N][BOARD_M];
-    struct figura *fnow;
+    figura *fnow;
     figura *fnext;
 } game_stats_t;
 

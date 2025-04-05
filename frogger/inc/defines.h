@@ -54,6 +54,8 @@
 #define SHIFT_MESSAGE 4
 #define R_NEXT 1   // координаты отрисовки поля под новую фигуру
 #define R_NEXT_H 7 
+#define R_NEXT_X BOARD_M + 5
+#define R_NEXT_Y 3 
 #define R_LEV 11
 #define R_SCORE 13
 #define R_SPEED 15
