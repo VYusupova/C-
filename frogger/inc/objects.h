@@ -4,6 +4,15 @@
 #include <ncurses.h>
 #include "defines.h"
 
+// конструктор для структуры 
+/*
+typedef struct Point
+{
+    Point (int x = START_X, int y = START_Y) : x(x) , y(y) {}
+    int x;
+    int y;
+};
+*/
 typedef struct
 {
     int x;
@@ -29,10 +38,14 @@ typedef struct
     int m;
     int x ;
     int y ;
+//Point point;
     int figur[FSIZE][FSIZE]; // может не работать 
 //  int **figur;     //тогда надо писать доп функцию выделения памяти потом
     int typeFigure;
 } figura;
+
+
+
 
 typedef struct
 {
@@ -45,6 +58,8 @@ typedef struct
     figura *fnow;
     figura *fnext;
 } game_stats_t;
+
+
 
 typedef struct
 {
