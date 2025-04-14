@@ -60,21 +60,18 @@ void moveright(figura *f, game_stats_t *gb) {
 // }
 
 void movedown(frog_state *state, figura *f, game_stats_t *gb) {
-  timeout(1200);
   if (!collisionDown(f, gb))
     refreshFigure(f, 0, 1);
   else {
     figuraGamefield(gb, f);
-    if (!collisionUp(f, gb)){
-      swapFigure(gb->fnow, gb->fnext) ;
-      //initFigureNow(gb->fnow);
-      //f = gb->fnow;
-        hideFigure(gb->fnext);
+    if (!collisionUp(f, gb)) {
+      swapFigure(gb->fnow, gb->fnext);
+      // f = gb->fnow;
+      hideFigure(gb->fnext);
       initFigure(gb->fnext);
-      
+
       refreshFigure(gb->fnext, 0, 0);
-      }
-    else
+    } else
       *state = GAMEOVER;
   }
 }
@@ -107,22 +104,20 @@ void on_spawn_state(frog_state *state, game_stats_t *game, board_t *map,
   //   print_finished(map);
   //   frogpos_init(frog_pos);
   hideIntro();
-  //figura next;
-	//  initFigure(&next);
-	//  next.x = 0;
-	//  next.y = 0;
-	//  showFigure(&next);	    
-    //initFigure(stats->fnext);
-  
+  // figura next;
+  //   initFigure(&next);
+  //   next.x = 0;
+  //   next.y = 0;
+  //   showFigure(&next);
+  // initFigure(stats->fnext);
+
   initFigure(game->fnow);  // инициализируем фигуру
   initFigure(game->fnext);
-  initFigureNow(game->fnow);
   showFigure(game->fnow);
 
   game->fnext->x = R_NEXT_X;
   game->fnext->y = R_NEXT_Y;
- 
-    
+
   showFigure(game->fnext);
   *state = MOVING;
   //} else
