@@ -11,7 +11,7 @@ CHECK_LIBS = -lcheck -lm -pthread -lrt -lsubunit
 all: clean mkdir frogger
 
 frogger:  $(OBJS_FSMSWITCHCASE)
-	#clang-format -i src/*.c
+	clang-format -i src/*.c
 	$(CC) $(CFLAGS) $^ -o $@ -lncurses
 
 frogger_fsmtable: $(OBJS_FSMTABLE)
@@ -27,25 +27,17 @@ clean:
 	$(RM) out/*.o frogger frogger_fsmtable
 	rm -rf out/brick_game/
 
-iif:
-	@if [ 1,1 ]; then @echo "123"; fi
-	else
-		@echo "321"
-	endif
-
 .PHONY: clean
 
 test_file:
-	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c src/brick_game/tetris_init.c -o $(PATH_TEST)/tetris_init.gcov.o
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c src/test/test.c -o  src/test/tests.gcov.o
 
 test: test_file
-	$(CC) $(CFLAGS) $(GCOV_FLAGS) -o $(TEST_BIN) $(PATH_TEST)/*.gcov.o  frogger $(CHECK_LIBS)
-	@echo "\e[0;35m"
-	@echo "┏=========================================┓"
-	@echo "┃   START TESTING ...  ...  ...  ...      ┃"
-	@echo "┗=========================================┛"
-	@echo "\e[0;30m"
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -o $(TEST_BIN) src/test/*.gcov.o out/brick_game/tetris_init.o  $(CHECK_LIBS)
+	@printf "\e[1;35;107m RUN FILE TESTING  \e[31;0m \n"
 	./$(TEST_BIN)
+	@printf "\n\e[1;35;107m END & DEL FILE TESTING    \e[31;0m \n"
+
 
 # $^ это набор зависимых файлов, используемых для создания чего-то другого.
 # $@ это имя цели, которая будет построена.
