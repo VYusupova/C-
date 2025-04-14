@@ -2,11 +2,12 @@
 
 #include "s21_test.h"
 
+
 START_TEST(test_init_tetris) {
   figura f;
-  initFigure(figura *f);
-  ck_assert_int_eq(f->x , START_X);
-  ck_assert_int_eq(f->y , START_Y);
+  initFigureNow(&f);
+  ck_assert_int_eq(f.x , START_X);
+  ck_assert_int_eq(f.y , START_Y);
   // TO DO освободить ресурсы если будут выделяться
 }
 END_TEST
@@ -20,4 +21,22 @@ Suite *test() {
   suite_add_tcase(s, test_case);
 
   return s;
+}
+
+
+int s21_test(Suite *s) {
+  int faild;
+  SRunner *run = srunner_create(s);
+
+  srunner_run_all(run, CK_NORMAL);
+
+  faild = srunner_ntests_failed(run);
+
+  srunner_free(run);
+
+  return (faild == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+}
+
+int main() {
+  s21_test(test());
 }
