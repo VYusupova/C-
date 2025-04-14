@@ -1,6 +1,6 @@
 #include <check.h>
 
-#include "../tetris.h"
+#include "../../inc/tetris.h"
 
 Suite *test(void);
-int test(Suite *s);
+int s21_test(Suite *s);
