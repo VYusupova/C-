@@ -39,7 +39,7 @@ signals get_signal(int user_input) {
       rc = ROTOR;
       break;
  //   case 'p':
- //     rc = PAUSE;
+ //     rc = PAUSE_BTN;
  //     break;
     default:
       //rc = NOSIG;
@@ -156,6 +156,9 @@ void on_moving_state(signals sig, frog_state *state, board_t *map,
     case ESCAPE_BTN:
       *state = EXIT_STATE;
       break;
+    //case PAUSE_BTN:
+    //  while (GET_USER_INPUT <> 'p') {}
+    //  break;
     default:
       // movedown(state, f, gamestats);
       break;
