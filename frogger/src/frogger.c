@@ -36,10 +36,10 @@ void game_loop() {
 
     printGameField(&gameBakend);
     sigact(get_signal(signal), &state, &gameBakend, &map, &frog, &fnow);
-    timeout(1200);
-    // delay_output(200);
-    movedown(&state, &fnow, &gameBakend);
-
+    timeout(1200); // THIS need go to sigact function
+    movedown(&state, &fnow, &gameBakend); // THIS need go to sigact function
+	    // delay_output(200);
+	    
     if (state == MOVING || state == START) signal = GET_USER_INPUT;
   }
 

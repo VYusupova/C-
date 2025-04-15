@@ -38,7 +38,11 @@ signals get_signal(int user_input) {
     case ' ':
       rc = ROTOR;
       break;
+ //   case 'p':
+ //     rc = PAUSE;
+ //     break;
     default:
+      //rc = NOSIG;
       break;
   }
   return rc;
@@ -47,6 +51,11 @@ signals get_signal(int user_input) {
 void moveleft(figura *f, game_stats_t *gb) {
   if (!collisionLeft(f, gb)) refreshFigure(f, -1, 0);
 }
+
+// void moveleft(game_stats_t *gb) {
+//  if (!collisionLeft(gb->fnow, gb)) refreshFigure(gb->fnow, -1, 0);
+//}
+
 void moveright(figura *f, game_stats_t *gb) {
   if (!collisionRight(f, gb)) refreshFigure(f, 1, 0);
 }
@@ -71,6 +80,7 @@ void movedown(frog_state *state, figura *f, game_stats_t *gb) {
       initFigure(gb->fnext);
 
       refreshFigure(gb->fnext, 0, 0);
+      // TO DO maybe  used showFigure();
     } else
       *state = GAMEOVER;
   }

@@ -39,8 +39,8 @@ typedef struct
     int x ;
     int y ;
 //Point point;
-    int figur[FSIZE][FSIZE]; // может не работать 
-//  int **figur;     //тогда надо писать доп функцию выделения памяти потом
+    int figur[FSIZE][FSIZE]; 
+//  int **figur;     //TO DO rewrite dynamic alloc memory 
     int typeFigure;
 } figura;
 
@@ -57,7 +57,8 @@ typedef struct
     int gameField[BOARD_N][BOARD_M];
     figura *fnow;
     figura *fnext;
-} game_stats_t;
+} game_stats_t;} 
+//game;
 
 
 
