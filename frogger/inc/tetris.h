@@ -32,7 +32,7 @@ void initGameField(game_stats_t *gameBakend);
 void initGame(game_stats_t *gameBakend);
 void figuraGamefield(game_stats_t *gb, figura *f);
 
-void stats_init(game_stats_t *gameBakend);
+void initGame(game_stats_t *gameBakend);
 
 int collisionLeft(figura *f, game_stats_t *gb);
 int collisionRight(figura *f, game_stats_t *gb);
@@ -43,3 +43,6 @@ int collisionGameField(figura *f,  game_stats_t *gb);
 void rotateFigure(figura *f, game_stats_t *gb);
 
 int collisionDown(figura *f, game_stats_t *gb);
+
+void score(game_stats_t *gb) ;
+void shiftField(game_stats_t *gb, int y);

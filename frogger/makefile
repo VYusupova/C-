@@ -6,7 +6,7 @@ OBJS_FSMTABLE := out/frogger.o out/fsm_matrix.o out/backend.o out/frontend.o
 GCOV_FLAGS = -fprofile-arcs -ftest-coverage
 PATH_TEST = test
 TEST_BIN = run_tests
-CHECK_LIBS = -lcheck -lm -pthread -lrt -lsubunit
+CHECK_LIBS = $(shell pkg-config --libs check) #-lcheck -lm -lpthread -lrt -lsubunit
 
 all: clean mkdir frogger
 
@@ -26,6 +26,7 @@ mkdir:
 clean:
 	$(RM) out/*.o frogger frogger_fsmtable
 	rm -rf out/brick_game/
+	rm -rf test/*.o
 
 .PHONY: clean
 
@@ -33,10 +34,16 @@ test_file:
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c test/test.c -o  test/tests.gcov.o
 
 test: test_file
-	$(CC) $(CFLAGS) $(GCOV_FLAGS) -o $(TEST_BIN) test/*.gcov.o out/brick_game/tetris_init.o  $(CHECK_LIBS)
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -o $(TEST_BIN) test/*.gcov.o out/brick_game/tetris.o  $(CHECK_LIBS)
 	@printf "\e[1;35;107m RUN FILE TESTING  \e[31;0m \n"
 	./$(TEST_BIN)
 	@printf "\n\e[1;35;107m END & DEL FILE TESTING    \e[31;0m \n"
+	
+	
+cppcheck:
+	#cppcheck --enable=all --suppress=missingIncludeSystem src/brick_game/*.c
+	cppcheck --enable=all --suppress=missingIncludeSystem src/*.c
+	#cppcheck -q --enable=all --inconclusive *.cpp
 
 
 # $^ это набор зависимых файлов, используемых для создания чего-то другого.

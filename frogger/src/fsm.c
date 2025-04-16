@@ -42,7 +42,7 @@ signals get_signal(int user_input) {
  //     rc = PAUSE_BTN;
  //     break;
     default:
-      rc = Action ; //NOSIG;
+      rc = NOSIG;//Action ; //
       break;
   }
   return rc;
@@ -82,7 +82,7 @@ void movedown(frog_state *state, figura *f, game_stats_t *gb) {
       refreshFigure(gb->fnext, 0, 0);
       // TO DO maybe  used showFigure();
     } else
-      *state = GAMEOVER;
+      *state = Terminate;
   }
 }
 
@@ -94,15 +94,9 @@ void rotate(figura *f, game_stats_t *gb) {
 
 void on_start_state(signals sig, frog_state *state, game_stats_t *game) {
   switch (sig) {
-    //case ENTER_BTN:
+    case ENTER_BTN:
     //  *state = SPAWN;
-    //  break;
-    case ESCAPE_BTN:
-      *state = Terminate; // EXIT_STATE;
-      break;
-    default:
-      //*state = Start;  // а мне это надо?
-        hideIntro();
+            hideIntro();
   initFigure(game->fnow);  // инициализируем фигуру
   initFigure(game->fnext);
   showFigure(game->fnow);
@@ -112,27 +106,16 @@ void on_start_state(signals sig, frog_state *state, game_stats_t *game) {
 
   showFigure(game->fnext);
   *state = Action; //MOVING;
+      break;
+    case ESCAPE_BTN:
+      *state = Terminate; // EXIT_STATE;
+      break;
+    default:
+      //*state = Start;  // а мне это надо?
+
 
       break;
   }
-}
-// отрисовка начало игры
-void on_spawn_state(frog_state *state, game_stats_t *game, board_t *map,
-                    player_pos *frog_pos, figura *now) {
-  // if (stats->level > LEVEL_CNT) *state = GAMEOVER;
-  // else if (!lvlproc(map, stats)) {
-  // fill_finish(map->finish);
-  //   print_finished(map);
-  //   frogpos_init(frog_pos);
-
-  // figura next;
-  //   initFigure(&next);
-  //   next.x = 0;
-  //   next.y = 0;
-  //   showFigure(&next);
-  // initFigure(stats->fnext);
-  //} else
-  //  *state = FILE_ERROR_STATE;
 }
 
 void on_moving_state(signals sig, frog_state *state, board_t *map,
@@ -165,44 +148,25 @@ void on_moving_state(signals sig, frog_state *state, board_t *map,
       break;
   }
 
-  if (*state != Terminate) { //EXIT_STATE
-    if (check_collide(frog_pos, map))
-      *state = COLLIDE;
-    else if (check_finish_state(frog_pos, map))
-      *state = REACH;
-    else
-      *state = SHIFTING;
-  }
+  //if (*state != Terminate) { //EXIT_STATE
+
+  //    *state = COLLIDE;
+  //  else if (check_finish_state(frog_pos, map))
+  //    *state = REACH;
+  //  else
+  //    *state = SHIFTING;
+  //}
 }
 
-//void on_shifting_state(frog_state *state, game_stats_t *stats, board_t *map,
-                    //   player_pos *frog_pos) {
-  // shift_map(map);
 
-  //if (check_collide(frog_pos, map))
- //   *state = COLLIDE;
- // else {
-  //  *state = MOVING;
-  //  print_board(map, frog_pos);
-  //  print_stats(stats);
-//  }
-//}
+//  add_proggress(map); // TO DO DEL
 
-void on_reach_state(frog_state *state, game_stats_t *stats, board_t *map,
-                    player_pos *frog_pos) {
-  stats->score += 1;
-  add_proggress(map); // TO DO DEL
 
-  if (check_level_compl(map)) {
-    stats->level++;
-    stats->speed++;
-    //*state = SPAWN;
-  } else {
-    frogpos_init(frog_pos);
-    // print_finished(map);
-    *state = Action;
-  }
-}
+//    stats->level++;
+//    stats->speed++;
+
+//    frogpos_init(frog_pos);
+//    // print_finished(map);
 
 void on_collide_state(frog_state *state, game_stats_t *stats,
                       player_pos *frog_pos) {
@@ -211,7 +175,7 @@ void on_collide_state(frog_state *state, game_stats_t *stats,
     frogpos_init(frog_pos);
     *state = Action; //MOVING;
   } else
-    *state = GAMEOVER;
+    *state = Terminate;
 }
 
 void sigact(signals sig, frog_state *state, game_stats_t *gamestats,
@@ -220,26 +184,24 @@ void sigact(signals sig, frog_state *state, game_stats_t *gamestats,
     case Start:
       on_start_state(sig, state, gamestats);
       break;
-    //case SPAWN:
-    //  on_spawn_state(state, gamestats, map, frog_pos, posStart);
-    //  break;
     case Action: //MOVING:
       on_moving_state(sig, state, map, frog_pos, posStart, gamestats);
       break;
     //case SHIFTING:  // сдвиг карты
     //  on_shifting_state(state, gamestats, map, frog_pos);
     //  break;
-    case REACH:
-      on_reach_state(state, gamestats, map, frog_pos);
-      break;
-    case COLLIDE:
-      on_collide_state(state, gamestats, frog_pos);
-      break;
-    case GAMEOVER:
+    //case REACH:
+    //  on_reach_state(state, gamestats, map, frog_pos);
+    //  break;
+    //case COLLIDE:
+    //  on_collide_state(state, gamestats, frog_pos);
+    //  break;
+    case Terminate:
       print_banner(gamestats);
       break;
     default:
 
       break;
   }
+  
 }

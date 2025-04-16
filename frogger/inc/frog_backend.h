@@ -11,9 +11,8 @@ void add_proggress(board_t *map);
 
 void frogpos_init(player_pos *frog);
 //void fill_finish(char *finish_line);
-//void shift_map(board_t *map);
 
-bool check_collide(player_pos *frog, board_t *map);
+
 bool check_finish_state(player_pos *frog, board_t *map);
 bool check_level_compl(board_t *map);
 

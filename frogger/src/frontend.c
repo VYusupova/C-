@@ -184,8 +184,3 @@ void print_levelerror(void) {
   MVPRINTW(6, 0, "Press any key to exit.");
 }
 
-// сложно сказать но функция кажется не используется и ее можно удалить
-void print_board(board_t *game, player_pos *frog) {
-  // print_cars(game);
-  PRINT(frog->x, frog->y);
-}

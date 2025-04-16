@@ -13,12 +13,12 @@ typedef enum
     Terminate, // GAMEOVER
     //SPAWN,
     Action, //MOVING,
-    SHIFTING,
-    REACH,
-    COLLIDE,
-    GAMEOVER,
+    //SHIFTING,
+    //REACH,
+    //COLLIDE,
+    // GAMEOVER,
     //EXIT_STATE,
-    FILE_ERROR_STATE  // TO END DELETE in tetris not use file
+    //FILE_ERROR_STATE  // TO END DELETE in tetris not use file
 } frog_state;
 
 typedef enum

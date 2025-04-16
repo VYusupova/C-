@@ -45,24 +45,7 @@ bool check_finish_state(player_pos *frog, board_t *map) {
   return rc;
 }
 
-bool check_level_compl(board_t *map) {
-  bool rc = TRUE;
-  for (int i = 0; i < BOARD_M && rc; i++)
-    if (map->finish[i] != '0') rc = FALSE;
 
-  return rc;
-}
-
-// проверка что не врезались в верх 0 
-bool check_collide(player_pos *frog, board_t *map) {
-  bool rc = FALSE;
-
-  if (frog->y > MAP_PADDING && frog->y < BOARD_N && //ROWS_MAP + MAP_PADDING + 1 &&  //
-      map->ways[frog->y - MAP_PADDING - 1][frog->x - 1] == ']')
-    rc = TRUE;
-
-  return rc;  
-}
 
 void frogpos_init(player_pos *frog) {
   frog->x = START_X;
@@ -77,11 +60,3 @@ void frogpos_init(player_pos *frog) {
 
 
 
-// void shift_map(board_t *map)
-// {
-//     for (int i = 1; i < ROWS_MAP; i += 2)
-//     {
-//         memmove(&map->ways[i][1], &map->ways[i][0], COLS_MAP * sizeof(char));
-//         map->ways[i][0] = map->ways[i][COLS_MAP];
-//     }
-// }
