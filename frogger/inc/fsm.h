@@ -9,14 +9,15 @@
 
 typedef enum
 {
-    START = 0,
-    SPAWN,
-    MOVING,
+    Start = 0,
+    Terminate, // GAMEOVER
+    //SPAWN,
+    Action, //MOVING,
     SHIFTING,
     REACH,
     COLLIDE,
     GAMEOVER,
-    EXIT_STATE,
+    //EXIT_STATE,
     FILE_ERROR_STATE  // TO END DELETE in tetris not use file
 } frog_state;
 
@@ -35,7 +36,7 @@ typedef enum
 
 signals get_signal(int user_input);
 void sigact(signals sig, frog_state *state, game_stats_t *stats, board_t *map, player_pos *frog_pos, figura *posStart);
-void on_start_state(signals sig, frog_state *state);
+void on_start_state(signals sig, frog_state *state, game_stats_t *game);
 void movedown(frog_state *state,  figura *moveFigure,  game_stats_t *gamestats);
 int check(figura *f,  game_stats_t *gb);
 

@@ -2,6 +2,19 @@
 #include "defines.h"
 #include <stdlib.h>
 #include <frog_frontend.h>
+/*
+typedef enum {
+	Start,
+	Pause,
+	Terminate, // GAMEOVER
+	Left,
+	Right,
+	Up,
+	Down,
+	Action
+} UserAction_t;
+*/
+
 
 void initFigure(figura *f);
 void initFigureNow(figura *f);
@@ -16,6 +29,7 @@ void iniFigura_T(figura *f);
 void swapFigure(figura *fnow, figura *fnext);
 
 void initGameField(game_stats_t *gameBakend);
+void initGame(game_stats_t *gameBakend);
 void figuraGamefield(game_stats_t *gb, figura *f);
 
 void stats_init(game_stats_t *gameBakend);

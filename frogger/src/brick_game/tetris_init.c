@@ -56,8 +56,8 @@ void initGameField(game_stats_t *gameBakend){
             gameBakend->gameField[i][j] = 0;
 }
 
-// TO DO переименовать метод в initGameField
-void stats_init(game_stats_t *gameBakend) { 
+// TO DO переименовать метод в stats_init initGameField
+void initGame(game_stats_t *gameBakend) { 
   gameBakend->level = 1;
   gameBakend->score = 0;
   gameBakend->speed = 1;

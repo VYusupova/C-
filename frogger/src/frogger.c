@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <time.h>
+#include <tetris.h>
 
 int main(void) {
   WIN_INIT(250);
@@ -22,7 +23,7 @@ void game_loop() {
 
   bool break_flag = TRUE;
   int signal = 0;
-  frog_state state = START;
+  frog_state state = Start;
   // задаем начальные значения левел и количество очков
   gameBakend.fnow = &fnow;
   gameBakend.fnext = &fnext;
@@ -31,7 +32,7 @@ void game_loop() {
   initColors();  // инициализация цветов
 
   while (break_flag) {  // GAMEOVER  - не должен заканчивать цикл???
-    if (state == GAMEOVER || state == EXIT_STATE || state == FILE_ERROR_STATE)
+    if (state == Terminate) //state == GAMEOVER || state == EXIT_STATE || state == FILE_ERROR_STATE
       break_flag = FALSE;
 
     printGameField(&gameBakend);
@@ -40,12 +41,12 @@ void game_loop() {
     movedown(&state, &fnow, &gameBakend); // THIS need go to sigact function
 	    // delay_output(200);
 	    
-    if (state == MOVING || state == START) signal = GET_USER_INPUT;
+    if (state != Terminate) signal = GET_USER_INPUT; //state == MOVING || state == Start
   }
 
-  if (state == FILE_ERROR_STATE) {
-    print_levelerror();
-    nodelay(stdscr, FALSE);
-    getch();
-  }
+  //if (state == FILE_ERROR_STATE) {
+  //  print_levelerror();
+  //  nodelay(stdscr, FALSE);
+  //  getch();
+  //}
 }

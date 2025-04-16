@@ -57,8 +57,8 @@ typedef struct
     int gameField[BOARD_N][BOARD_M];
     figura *fnow;
     figura *fnext;
-} game_stats_t;} 
-//game;
+} game_stats_t;
+//} game;
 
 
 
