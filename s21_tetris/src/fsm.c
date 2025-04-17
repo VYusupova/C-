@@ -20,36 +20,36 @@ signals get_signal(int user_input) {
   signals rc = NOSIG;
 
   switch (user_input) {
-    case KEY_DOWN:
-      rc = MOVE_DOWN;
+    
+        case KEY_UP:
+      rc = Up;
+      break;
+      case KEY_DOWN:
+      rc = Down;
       break;
     case KEY_LEFT:
-      rc = MOVE_LEFT;
+      rc = Left;
       break;
     case KEY_RIGHT:
-      rc = MOVE_RIGHT;
+      rc = Right;
       break;
     case ESCAPE:
-      rc = ESCAPE_BTN;
+      rc = Terminate;
       break;
     case ENTER_KEY:
-      rc = ENTER_BTN;
+      rc = Start;
       break;
     case ' ':
-      rc = ROTOR;
+      rc = Action;
       break;
- //   case 'p':
- //     rc = PAUSE_BTN;
- //     break;
+    case 'p':
+       rc = Pause;
+       break;
     default:
-      rc = NOSIG;//Action ; //
+      rc = Down; //NOSIG;// ; //
       break;
   }
   return rc;
-}
-
-void moveleft(figura *f, game_stats_t *gb) {
-  if (!collisionLeft(f, gb)) refreshFigure(f, -1, 0);
 }
 
 // void moveleft(game_stats_t *gb) {
@@ -59,20 +59,13 @@ void moveleft(figura *f, game_stats_t *gb) {
 void moveright(figura *f, game_stats_t *gb) {
   if (!collisionRight(f, gb)) refreshFigure(f, 1, 0);
 }
-// void movedown(figura *f, game_stats_t *gb) {
-//   if (!collisionDown(f, gb))
-//     refreshFigure(f, 0, 1);
-//   else {
-//     figuraGamefield(gb, f);
-//     initFigure(f);
-//   }
-// }
 
-void movedown(frog_state *state, figura *f, game_stats_t *gb) {
+void movedown(UserAction_t *state, figura *f, game_stats_t *gb) {
   if (!collisionDown(f, gb))
     refreshFigure(f, 0, 1);
   else {
     figuraGamefield(gb, f);
+    // TO DO score
     if (!collisionUp(f, gb)) {
       swapFigure(gb->fnow, gb->fnext);
       // f = gb->fnow;
@@ -92,11 +85,12 @@ void rotate(figura *f, game_stats_t *gb) {
   showFigure(f);
 }
 
-void on_start_state(signals sig, frog_state *state, game_stats_t *game) {
-  switch (sig) {
-    case ENTER_BTN:
+//void on_start_state(signals sig, frog_state *state, game_stats_t *game) {
+//  switch (sig) {
+//    case Start:
     //  *state = SPAWN;
-            hideIntro();
+void start(game_stats_t *game){  
+  hideIntro();
   initFigure(game->fnow);  // инициализируем фигуру
   initFigure(game->fnext);
   showFigure(game->fnow);
@@ -105,38 +99,21 @@ void on_start_state(signals sig, frog_state *state, game_stats_t *game) {
   game->fnext->y = R_NEXT_Y;
 
   showFigure(game->fnext);
-  *state = Action; //MOVING;
-      break;
-    case ESCAPE_BTN:
-      *state = Terminate; // EXIT_STATE;
-      break;
-    default:
-      //*state = Start;  // а мне это надо?
-
-
-      break;
-  }
 }
 
-void on_moving_state(signals sig, frog_state *state, board_t *map,
+void on_moving_state(UserAction_t *state, //board_t *map,
                      player_pos *frog_pos, figura *f, game_stats_t *gamestats) {
-  switch (sig) {
+  switch (*state) {
       // case MOVE_UP:
       //   moveup(frog_pos); // не используется т.е. убрать
       //   break;
 
-    case MOVE_DOWN:
-      movedown(state, f, gamestats);
-      break;
-    case MOVE_RIGHT:
-      moveright(f, gamestats);  // сдвинуть фигуру вправо
-      break;
-    case MOVE_LEFT:
-      moveleft(f, gamestats);
-      break;
-    case ROTOR:
-      rotate(f, gamestats);
-      break;
+    //case Down:
+    //  movedown(state, f, gamestats);
+    //  break;
+
+
+
     case ESCAPE_BTN:
       *state = Terminate; //EXIT_STATE;
       break;
@@ -144,64 +121,52 @@ void on_moving_state(signals sig, frog_state *state, board_t *map,
     //  while (GET_USER_INPUT <> 'p') {}
     //  break;
     default:
-      // movedown(state, f, gamestats);
+       
       break;
   }
 
-  //if (*state != Terminate) { //EXIT_STATE
-
-  //    *state = COLLIDE;
-  //  else if (check_finish_state(frog_pos, map))
-  //    *state = REACH;
-  //  else
-  //    *state = SHIFTING;
-  //}
 }
 
 
 //  add_proggress(map); // TO DO DEL
-
-
 //    stats->level++;
 //    stats->speed++;
-
 //    frogpos_init(frog_pos);
 //    // print_finished(map);
 
-void on_collide_state(frog_state *state, game_stats_t *stats,
-                      player_pos *frog_pos) {
-  if (stats->lives) {
-    stats->lives--;
-    frogpos_init(frog_pos);
-    *state = Action; //MOVING;
-  } else
-    *state = Terminate;
-}
 
-void sigact(signals sig, frog_state *state, game_stats_t *gamestats,
-            board_t *map, player_pos *frog_pos, figura *posStart) {
+void sigact(UserAction_t *state, game_stats_t *gamestats,
+            //board_t *map, 
+            player_pos *frog_pos, figura *fnow) {
   switch (*state) {
     case Start:
-      on_start_state(sig, state, gamestats);
+      start(gamestats);
       break;
-    case Action: //MOVING:
-      on_moving_state(sig, state, map, frog_pos, posStart, gamestats);
+  case Pause:
+  do {*state = get_signal(GET_USER_INPUT);}      while ( *state != Start );
+     break;
+  case Left:
+      moveleft(fnow, gamestats);
       break;
-    //case SHIFTING:  // сдвиг карты
-    //  on_shifting_state(state, gamestats, map, frog_pos);
-    //  break;
-    //case REACH:
-    //  on_reach_state(state, gamestats, map, frog_pos);
-    //  break;
-    //case COLLIDE:
-    //  on_collide_state(state, gamestats, frog_pos);
-    //  break;
+   case Right:
+      moveright(fnow, gamestats);  // сдвинуть фигуру вправо
+      break;
+   case Down: //MOVING:
+      on_moving_state(state,  frog_pos, fnow, gamestats); //map,
+      break;
+   case Action:
+      rotate(fnow, gamestats);
+      break;
     case Terminate:
-      print_banner(gamestats);
+    	gameOver(); // gameOVER thanks for game
+        napms(2000); //func sleep for at least ms milliseconds
+        *state = Terminate;
       break;
+      
     default:
 
       break;
+      	 
   }
-  
+
 }

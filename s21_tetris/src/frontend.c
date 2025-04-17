@@ -43,6 +43,11 @@ void hideIntro(void) {
   MVPRINTW(BOARD_N / 2 + 1, MAP_PADDING, HIDE_INTRO);
 }
 
+void gameOver(void) {
+  MVPRINTW(BOARD_N / 2, MAP_PADDING, OVER_MESSAGE1);
+  MVPRINTW(BOARD_N / 2 + 1, MAP_PADDING, OVER_MESSAGE2);
+}
+
 // отрисовка прямоугольника с координатми
 void print_rectangle(int top_y, int bottom_y, int left_x, int right_x) {
   MVADDCH(top_y, left_x, ACS_ULCORNER);
@@ -97,26 +102,26 @@ void print_cars(board_t *game) {
 //       MVADDCH(1, i + 1, ' ');
 //   }
 // }
-void print_banner(game_stats_t *stats) {
-  banner_t banner;
+//void print_banner(game_stats_t *stats) {
+//  banner_t banner;
 
-  memset(banner.matrix, 0, (BANNER_N + 1) * (BANNER_M + 1));
+//  memset(banner.matrix, 0, (BANNER_N + 1) * (BANNER_M + 1));
 
-  clear();
+//  clear();
 
-  if (!(read_banner(stats, &banner))) {
-    for (int i = 0; i < BANNER_N; i++)
-      for (int j = 0; j < BANNER_M; j++)
-        if (banner.matrix[i][j] == '#')
-          MVADDCH(i, j, ACS_BLOCK);
-        else
-          MVADDCH(i, j, ' ');
-    refresh();
-    napms(2000);
-  }
-}
+//  if (!(read_banner(stats, &banner))) {
+//    for (int i = 0; i < BANNER_N; i++)
+//      for (int j = 0; j < BANNER_M; j++)
+//        if (banner.matrix[i][j] == '#')
+//          MVADDCH(i, j, ACS_BLOCK);
+//        else
+//          MVADDCH(i, j, ' ');
+//    refresh();
 
-int read_banner(game_stats_t *stats, banner_t *banner) {
+//  }
+//}
+
+int read_banner(game_stats_t *stats) { //, banner_t *banner
   int rc = SUCCESS;
   FILE *file = NULL;
 
@@ -126,12 +131,12 @@ int read_banner(game_stats_t *stats, banner_t *banner) {
     file = fopen(YOU_LOSE, "r");
 
   if (file) {
-    for (int i = 0; i < BANNER_N - 1 && !rc; i++) {
-      if (fgets(banner->matrix[i], BANNER_M + 2, file) == NULL)
-        rc = ERROR;
-      else
-        banner->matrix[i][strcspn(banner->matrix[i], "\n")] = '\0';
-    }
+    //for (int i = 0; i < BANNER_N - 1 && !rc; i++) {
+    //  if (fgets(banner->matrix[i], BANNER_M + 2, file) == NULL)
+    //    rc = ERROR;
+    //  else
+    //    banner->matrix[i][strcspn(banner->matrix[i], "\n")] = '\0';
+    //}
 
     fclose(file);
   } else

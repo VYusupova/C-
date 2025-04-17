@@ -62,10 +62,10 @@ typedef struct
 
 
 
-typedef struct
-{
-    char matrix[BANNER_N + 1][BANNER_M + 1];
-} banner_t;
+//typedef struct
+//{
+//    char matrix[BANNER_N + 1][BANNER_M + 1];
+//} banner_t;
 
 
 

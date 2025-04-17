@@ -6,3 +6,13 @@ Fail
 перебор матрицы делаем по столбцам, зтем по строкам,
 как только найдена позиция стобика запоминаем его и циклы прекращаются
 потому что переменная pos перестает равняться -1 */
+
+bool check_level_compl(board_t *map) {
+  bool rc = TRUE;
+  for (int i = 0; i < BOARD_M && rc; i++)
+    if (map->finish[i] != '0') rc = FALSE;
+
+  return rc;
+}
+
+memmove(&map->ways[i][1], &map->ways[i][0], COLS_MAP * sizeof(char));

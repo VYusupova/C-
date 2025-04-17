@@ -10,16 +10,14 @@
 typedef enum
 {
     Start = 0,
+    Pause,
     Terminate, // GAMEOVER
-    //SPAWN,
-    Action, //MOVING,
-    //SHIFTING,
-    //REACH,
-    //COLLIDE,
-    // GAMEOVER,
-    //EXIT_STATE,
-    //FILE_ERROR_STATE  // TO END DELETE in tetris not use file
-} frog_state;
+    Left,
+    Right,
+    Up,
+    Down,
+    Action
+} UserAction_t;
 
 typedef enum
 {
@@ -35,10 +33,15 @@ typedef enum
 
 
 signals get_signal(int user_input);
-void sigact(signals sig, frog_state *state, game_stats_t *stats, board_t *map, player_pos *frog_pos, figura *posStart);
-void on_start_state(signals sig, frog_state *state, game_stats_t *game);
-void movedown(frog_state *state,  figura *moveFigure,  game_stats_t *gamestats);
+void sigact(UserAction_t *state, game_stats_t *stats,player_pos *frog_pos, figura *posStart); //board_t *map,
+			 
+//void on_start_state(signals sig, frog_state *state, game_stats_t *game);
+void movedown(UserAction_t *state,  figura *moveFigure,  game_stats_t *gamestats);
+void moveleft(figura *moveFigure,  game_stats_t *gamestats);
 int check(figura *f,  game_stats_t *gb);
 
 int collisionDown(figura *f, game_stats_t *gb);
+
+void start(game_stats_t *game);
+
 #endif

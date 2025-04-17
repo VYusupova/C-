@@ -14,6 +14,10 @@
 #define INTRO_MESSAGE_LEN     5
 #define INTRO_MESSAGE1 "Press" // приветствие
 #define INTRO_MESSAGE2 "ENTER" // приветствие
+
+#define OVER_MESSAGE1 "GAME" 
+#define OVER_MESSAGE2 "OVER" 
+
 #define HIDE_INTRO    "     "
 
 #define BOARDS_BEGIN 0            // начало игрового поля левый верхний угол с отступом на 0 позиции
@@ -42,8 +46,8 @@
 
 #define MAP_PADDING 3 
 
-#define BANNER_N    10
-#define BANNER_M    100
+//#define BANNER_N    10
+//#define BANNER_M    100
 
 #define SUCCESS   0
 #define ERROR     1

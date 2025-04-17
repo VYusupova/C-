@@ -4,13 +4,13 @@
 #include <frog_frontend.h>
 /*
 typedef enum {
-	Start,
+	+Start, 
 	Pause,
-	Terminate, // GAMEOVER
+	+Terminate, // GAMEOVER
 	Left,
 	Right,
 	Up,
-	Down,
+	+Down,
 	Action
 } UserAction_t;
 */
