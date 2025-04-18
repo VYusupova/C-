@@ -21,31 +21,24 @@ int collisionUp(figura *f, game_stats_t *gb){
 int collisionLeft(figura *f, game_stats_t *gb) {
   int result = SUCCESS;
   if ((f->x) <= 1) result = ERROR;
-//   
-//   // Если крайняя левая позиция фигуры слева встретит игровое поле занятое
-//   // фигурой, тут нужен цикл проверить для I
-//   for(int y = 0 ; y < FSIZE; y++)
-//     if (gb->gameField[f->y+y][positonX-1]) result = ERROR;
-// if (check(f, gb)) result = ERROR;
+  else 
+  if (collisionGameField(gb,0,-1)) result = ERROR;
   return result;
 }
 
 int collisionRight(figura *f, game_stats_t *gb) {
-//  int positonX = -1;
    int result = SUCCESS;
    if (f->x + f->m-1 >= BOARD_M) result = ERROR;
-//   for(int y = 0 ; y < FSIZE; y++)
-//     if (gb->gameField[f->y+y][positonX+1]) result = ERROR;
-// if (check(f, gb)) result = ERROR;
+   if (collisionGameField(gb,0,1)) result = ERROR;
   return result;
 }
 
-int collisionGameField(figura *f, game_stats_t *gb) {
+int collisionGameField(game_stats_t *gb, int down, int left) {
   int result = SUCCESS;
-  for (int y = f->y + 1, k = 0; y < BOARD_N && k < f->n; y++, k++)
-    for (int j = f->x, l = 0; j < BOARD_M && l < f->m; j++, l++)
-      if (gb->gameField[y][j] != 0 && f->figur[k][l] == 1) result = ERROR;
-  return result;
+  for (int y = gb->fnow->y+down, k = 0; y < BOARD_N && k <  gb->fnow->n; y++, k++)
+    for (int j =  gb->fnow->x+left, l = 0; j < BOARD_M && l <  gb->fnow->m; j++, l++)
+      if (gb->gameField[y][j] != 0 &&  gb->fnow->figur[k][l] == 1) result = ERROR;
+   return result;
 }
 
 void rotateFigure(figura *f, game_stats_t *gb){
