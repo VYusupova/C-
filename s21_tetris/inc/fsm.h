@@ -19,20 +19,8 @@ typedef enum
     Action
 } UserAction_t;
 
-typedef enum
-{
-    MOVE_UP = 0,
-    MOVE_DOWN,
-    MOVE_RIGHT,
-    MOVE_LEFT,
-    ESCAPE_BTN,
-    ENTER_BTN,
-    ROTOR,
-    NOSIG
-} signals;
 
-
-signals get_signal(int user_input);
+UserAction_t get_signal(int user_input);
 void sigact(UserAction_t *state, game_stats_t *stats,player_pos *frog_pos, figura *posStart); //board_t *map,
 			 
 //void on_start_state(signals sig, frog_state *state, game_stats_t *game);

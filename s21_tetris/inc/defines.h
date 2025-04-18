@@ -12,8 +12,7 @@
 #define GET_USER_INPUT getch()
 
 #define INTRO_MESSAGE_LEN     5
-#define INTRO_MESSAGE1 "Press" // приветствие
-#define INTRO_MESSAGE2 "ENTER" // приветствие
+
 
 #define OVER_MESSAGE1 "GAME" 
 #define OVER_MESSAGE2 "OVER" 
@@ -25,6 +24,8 @@
 #define START_Y      (1)
 #define BOARD_N     20// (ROWS_MAP + MAP_PADDING * 2) // ширина и высота игрового поля
 #define BOARD_M     10
+#define FIELD_N     20
+#define FIELD_M     10
 #define HUD_WIDTH   10  // ширана  поля для вывода информации по уровням и т.д.
 
 #define PRINT(x, y) mvprintw(BOARDS_BEGIN + (y), BOARDS_BEGIN + (x), " ") // функция рисования с задаными координатами
@@ -32,10 +33,7 @@
 #define MVADDCH(y, x, c) mvaddch(BOARDS_BEGIN + (y), BOARDS_BEGIN + (x), c)
 #define CLEAR_BACKPOS(y, x) { bkgdset(COLOR_PAIR(0)); mvaddch(BOARDS_BEGIN + (y), BOARDS_BEGIN + (x), ' ');}
 
-#define YOU_WON "tests/game_progress/you_won.txt"
-#define YOU_LOSE "tests/game_progress/you_lose.txt"
-#define LEVEL_DIR "tests/levels/level_"
-
+#define MAX_SCORE "max_score.txt"
 
 #define LEVEL_CNT 5
 #define LEVELNAME_MAX 25

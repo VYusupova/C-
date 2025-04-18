@@ -16,12 +16,11 @@ next one.
         1) A lot of codelines.
 */
 
-signals get_signal(int user_input) {
-  signals rc = NOSIG;
+UserAction_t get_signal(int user_input) { // TO DO RENAME
+ UserAction_t rc = Pause;
 
   switch (user_input) {
-    
-        case KEY_UP:
+      case KEY_UP:
       rc = Up;
       break;
       case KEY_DOWN:
@@ -36,7 +35,7 @@ signals get_signal(int user_input) {
     case ESCAPE:
       rc = Terminate;
       break;
-    case ENTER_KEY:
+    case '\n':
       rc = Start;
       break;
     case ' ':
@@ -46,7 +45,7 @@ signals get_signal(int user_input) {
        rc = Pause;
        break;
     default:
-      rc = Down; //NOSIG;// ; //
+      rc = Down; 
       break;
   }
   return rc;
@@ -55,6 +54,10 @@ signals get_signal(int user_input) {
 // void moveleft(game_stats_t *gb) {
 //  if (!collisionLeft(gb->fnow, gb)) refreshFigure(gb->fnow, -1, 0);
 //}
+
+void moveleft(figura *f, game_stats_t *gb) {
+  if (!collisionLeft(f, gb)) refreshFigure(f, -1, 0);
+}
 
 void moveright(figura *f, game_stats_t *gb) {
   if (!collisionRight(f, gb)) refreshFigure(f, 1, 0);
@@ -65,6 +68,8 @@ void movedown(UserAction_t *state, figura *f, game_stats_t *gb) {
     refreshFigure(f, 0, 1);
   else {
     figuraGamefield(gb, f);
+      score(gb);
+          refreshGameField(gb);
     // TO DO score
     if (!collisionUp(f, gb)) {
       swapFigure(gb->fnow, gb->fnext);
@@ -101,31 +106,10 @@ void start(game_stats_t *game){
   showFigure(game->fnext);
 }
 
-void on_moving_state(UserAction_t *state, //board_t *map,
-                     player_pos *frog_pos, figura *f, game_stats_t *gamestats) {
-  switch (*state) {
+
       // case MOVE_UP:
       //   moveup(frog_pos); // не используется т.е. убрать
       //   break;
-
-    //case Down:
-    //  movedown(state, f, gamestats);
-    //  break;
-
-
-
-    case ESCAPE_BTN:
-      *state = Terminate; //EXIT_STATE;
-      break;
-    //case PAUSE_BTN:
-    //  while (GET_USER_INPUT <> 'p') {}
-    //  break;
-    default:
-       
-      break;
-  }
-
-}
 
 
 //  add_proggress(map); // TO DO DEL
@@ -135,15 +119,17 @@ void on_moving_state(UserAction_t *state, //board_t *map,
 //    // print_finished(map);
 
 
-void sigact(UserAction_t *state, game_stats_t *gamestats,
-            //board_t *map, 
+void sigact(UserAction_t *userAct, game_stats_t *gamestats,
             player_pos *frog_pos, figura *fnow) {
-  switch (*state) {
+
+  print_stats(gamestats);
+  switch (*userAct) {
     case Start:
       start(gamestats);
       break;
-  case Pause:
-  do {*state = get_signal(GET_USER_INPUT);}      while ( *state != Start );
+  case Pause:   
+        //while ( get_signal(GET_USER_INPUT) != 0 ){};
+        //*userAct = Start;
      break;
   case Left:
       moveleft(fnow, gamestats);
@@ -151,8 +137,8 @@ void sigact(UserAction_t *state, game_stats_t *gamestats,
    case Right:
       moveright(fnow, gamestats);  // сдвинуть фигуру вправо
       break;
-   case Down: //MOVING:
-      on_moving_state(state,  frog_pos, fnow, gamestats); //map,
+   case Down:
+      movedown(userAct, fnow, gamestats);
       break;
    case Action:
       rotate(fnow, gamestats);
@@ -160,11 +146,10 @@ void sigact(UserAction_t *state, game_stats_t *gamestats,
     case Terminate:
     	gameOver(); // gameOVER thanks for game
         napms(2000); //func sleep for at least ms milliseconds
-        *state = Terminate;
+        //*userAct = Terminate;
       break;
-      
     default:
-
+	movedown(userAct, fnow, gamestats);
       break;
       	 
   }

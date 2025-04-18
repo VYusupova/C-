@@ -13,7 +13,7 @@ END_TEST
 
 START_TEST(test_score0) {
   game_stats_t gb;
-  stats_init(&gb);
+  initGame(&gb);
      score(&gb);
      ck_assert_int_eq(gb.score , 0);
 }
@@ -21,15 +21,70 @@ END_TEST
 
 START_TEST(test_score1) {
   game_stats_t gb;
-  stats_init(&gb);
+  initGame(&gb);
         for (int j = 0; j < BOARD_M; j++)
             gb.gameField[5][j] = 1;
-                    for (int j = 0; j < (BOARD_M-1); j++)
-            gb.gameField[5][j] = 1;
+        //for (int j = 0; j < (BOARD_M-1); j++)
+          //  gb.gameField[5][j] = 1;
      score(&gb);
      ck_assert_int_eq(gb.score , 100);
 }
 END_TEST
+
+START_TEST(test_score2) {
+  game_stats_t gb;
+  initGame(&gb);
+        for (int j = 0; j < BOARD_M; j++)
+            gb.gameField[5][j] = 1;
+        for (int j = 0; j < (BOARD_M-1); j++)
+            gb.gameField[7][j] = 1;
+     score(&gb);
+     ck_assert_int_eq(gb.score , 100);
+}
+END_TEST
+
+START_TEST(test_score3) {
+  game_stats_t gb;
+  initGame(&gb);
+        for (int j = 0; j < BOARD_M; j++)
+            gb.gameField[5][j] = 1;
+        for (int j = 0; j < BOARD_M; j++)
+            gb.gameField[7][j] = 1;
+     score(&gb);
+     ck_assert_int_eq(gb.score , 300);
+}
+END_TEST
+
+START_TEST(test_score4) {
+  game_stats_t gb;
+  initGame(&gb);
+        for (int j = 0; j < FIELD_M; j++){
+            gb.gameField[5][j] = 1;
+for (int j = 0; j < BOARD_M; j++)
+            gb.gameField[7][j] = 1;
+for (int j = 0; j < BOARD_M; j++)
+            gb.gameField[8][j] = 1;
+       }
+     score(&gb);
+     ck_assert_int_eq(gb.score , 700);
+}
+END_TEST
+
+
+START_TEST(test_score5) {
+  game_stats_t gb;
+  initGame(&gb);
+        for (int j = 0; j < BOARD_M; j++){
+            gb.gameField[5][j] = 1;
+            gb.gameField[6][j] = 1;
+            gb.gameField[7][j] = 1;
+            gb.gameField[8][j] = 1;
+                                                }
+     score(&gb);
+     ck_assert_int_eq(gb.score , 1500);
+}
+END_TEST
+
 
 Suite *test() {
   Suite *s = suite_create("\033[32m---TESTING TETRIS---\033[0m");
@@ -38,6 +93,10 @@ Suite *test() {
   tcase_add_test(test_case, test_init_tetris);
   tcase_add_test(test_case, test_score0);
   tcase_add_test(test_case, test_score1);
+    tcase_add_test(test_case, test_score2);
+    tcase_add_test(test_case, test_score3);
+    tcase_add_test(test_case, test_score4);
+    tcase_add_test(test_case, test_score5);
 
   suite_add_tcase(s, test_case);
 

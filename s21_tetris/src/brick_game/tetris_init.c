@@ -51,21 +51,17 @@ void swapFigure(figura *fnow, figura *fnext){
 }
 
 void initGameField(game_stats_t *gameBakend){
-    for (int i = 0; i < BOARD_N; i++)
-        for (int j = 0; j < BOARD_M; j++)
+    for (int i = 0; i < FIELD_N; i++)
+        for (int j = 0; j < FIELD_M; j++)
             gameBakend->gameField[i][j] = 0;
 }
 
-// TO DO переименовать метод в stats_init initGameField
 void initGame(game_stats_t *gameBakend) { 
   gameBakend->level = 1;
   gameBakend->score = 0;
   gameBakend->speed = 1;
   gameBakend->lives = 99;
   gameBakend->won = FALSE;
-  //gameBakend->fnow = NULL;
-  //gameBakend->fnext = NULL;
-  //initFigure(gameBakend->fnext);
   initGameField(gameBakend);
 }
 

@@ -1,8 +1,6 @@
 #include "tetris.h"
 
-void moveleft(figura *f, game_stats_t *gb) {
-  if (!collisionLeft(f, gb)) refreshFigure(f, -1, 0);
-}
+
 
 int collisionDown(figura *f, game_stats_t *gb) {
   int result = SUCCESS;

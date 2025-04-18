@@ -54,20 +54,11 @@ typedef struct
     int speed;
     int lives;
     int won;
-    int gameField[BOARD_N][BOARD_M];
+    int gameField[FIELD_N][FIELD_M];
     figura *fnow;
     figura *fnext;
 } game_stats_t;
 //} game;
-
-
-
-//typedef struct
-//{
-//    char matrix[BANNER_N + 1][BANNER_M + 1];
-//} banner_t;
-
-
 
 
 typedef enum

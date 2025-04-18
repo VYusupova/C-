@@ -1,6 +1,7 @@
 CC := gcc
 CFLAGS := -I inc -std=c11 -Wall -Werror -Wpedantic
-OBJS_FSMSWITCHCASE :=  out/frogger.o out/fsm.o out/backend.o out/frontend.o  out/brick_game/tetris_init.o out/brick_game/tetris_moving.o out/brick_game/tetris.o
+OBJS_FSMSWITCHCASE :=  out/frogger.o out/fsm.o out/backend.o out/frontend.o  
+INIT := out/brick_game/tetris_init.o out/brick_game/tetris_moving.o out/brick_game/tetris.o
 OBJS_FSMTABLE := out/frogger.o out/fsm_matrix.o out/backend.o out/frontend.o
 
 GCOV_FLAGS = -fprofile-arcs -ftest-coverage
@@ -10,7 +11,7 @@ CHECK_LIBS = $(shell pkg-config --libs check) #-lcheck -lm -lpthread -lrt -lsubu
 
 all: clean mkdir frogger
 
-frogger:  $(OBJS_FSMSWITCHCASE)
+frogger:  $(OBJS_FSMSWITCHCASE) $(INIT)
 	#clang-format -i src/*.c
 	$(CC) $(CFLAGS) $^ -o $@ -lncurses
 
@@ -26,7 +27,8 @@ mkdir:
 clean:
 	$(RM) out/*.o frogger frogger_fsmtable
 	rm -rf out/brick_game/
-	rm -rf test/*.o
+	rm -rf test/*.gcov.*
+	rm -rf $(TEST_BIN)
 
 .PHONY: clean
 
@@ -34,7 +36,7 @@ test_file:
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c test/test.c -o  test/tests.gcov.o
 
 test: test_file
-	$(CC) $(CFLAGS) $(GCOV_FLAGS) -o $(TEST_BIN) test/*.gcov.o out/brick_game/tetris.o  $(CHECK_LIBS)
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -o $(TEST_BIN) test/*.gcov.o out/brick_game/*.o  $(CHECK_LIBS)
 	@printf "\e[1;35;107m RUN FILE TESTING  \e[31;0m \n"
 	./$(TEST_BIN)
 	@printf "\n\e[1;35;107m END & DEL FILE TESTING    \e[31;0m \n"
