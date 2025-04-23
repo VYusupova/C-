@@ -121,4 +121,10 @@ void stack<T>::destroyStack() {
   }
 }
 
+/*template <class value_type, class Container>
+template <class... Args>
+void Stack<value_type, Container>::insert_many_front(Args &&...args) {
+  for (auto item : {args...}) baseClass_.push_back(item);
+}*/
+
 #endif
