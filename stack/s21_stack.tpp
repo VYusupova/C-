@@ -1,15 +1,12 @@
-#ifndef STACK_CPP
-#define STACK_CPP
+#ifndef S21_STACK_TPP_
+#define S21_STACK_TPP_
 
 #include "s21_stack.h"
 
 using namespace s21;
 
 template <typename T>
-stack<T>::stack() {
-  header = NULL;
-  ssize = 0;
-}
+stack<T>::stack() : header(NULL), ssize(0) {}
 
 template <typename T>
 stack<T>::stack(std::initializer_list<s21_value_type> const &items) : stack() {
@@ -19,12 +16,12 @@ stack<T>::stack(std::initializer_list<s21_value_type> const &items) : stack() {
 }
 
 template <typename T>
-s21::stack<T>::stack(const stack &s) : stack() {
+stack<T>::stack(const stack &s) : stack() {
   if (!s.empty()) this->copyStack(s);
 }
 
 template <typename T>
-s21::stack<T>::stack(stack &&s) : stack() {
+stack<T>::stack(stack &&s) : stack() {
   this->header = s.header;
   this->ssize = s.ssize;
   s.header = NULL;
@@ -37,19 +34,23 @@ stack<T> &s21::stack<T>::operator=(stack &&s) {
   if (!s.empty() && (this != &s)) {
     this->copyStack(s);
     s.destroyStack();
+    //ssize = s.ssize; //исправляет ошибки cppcheck, но ломает тесты
   }
   return *this;
 }
 
 template <typename T>
-stack<T> &stack<T>::operator=(stack &s) {
+stack<T> &stack<T>::operator=(const stack &s) {
   this->destroyStack();
   if (s.empty()) return *this;
-  if (this != &s) this->copyStack(s);
+  if (this != &s) {
+    this->copyStack(s);
+    ssize = s.ssize;
+  }
   return *this;
 }
 template <typename T>
-s21::stack<T>::~stack() {
+stack<T>::~stack() {
   this->destroyStack();
   ssize = 0;
   header = NULL;
