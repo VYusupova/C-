@@ -92,4 +92,6 @@ cppcheck:
 rebuild: clean all
 
 
-
+#rm -r LIB # удалить директорию и все ее содержимое рекурсивно -r
+#mv $(NAME).o LIB/$(NAME).
+#	mkdir LIB
