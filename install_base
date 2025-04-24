@@ -8,4 +8,13 @@ ssh-keygen -t rsa
 cat ~/.ssh/id_rsa.pub
 git clone git@github.com:VYusupova/C-.git
 
-
+#update cppcheck from version 2.17
+#download package *.tar 
+#unzip packag 
+# open terminal in unzip dir
+#try install command $sudo make install 
+# before install you may try uninstall $sudo uninstall
+# if to be install you catch erorr of *** FILESDIR must be set!
+# then open makefile look this file, and to write variable  FILESDIR = /usr/bin/
+# restart $sudo make install
+# check version command $cppcheck --version
