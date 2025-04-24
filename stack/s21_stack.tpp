@@ -1,15 +1,12 @@
-#ifndef STACK_CPP
-#define STACK_CPP
+#ifndef S21_STACK_TPP_
+#define S21_STACK_TPP_
 
 #include "s21_stack.h"
 
 using namespace s21;
 
 template <typename T>
-stack<T>::stack() {
-  header = NULL;
-  ssize = 0;
-}
+stack<T>::stack() : header(NULL), ssize(0) {}
 
 template <typename T>
 stack<T>::stack(std::initializer_list<s21_value_type> const &items) : stack() {
@@ -19,12 +16,12 @@ stack<T>::stack(std::initializer_list<s21_value_type> const &items) : stack() {
 }
 
 template <typename T>
-s21::stack<T>::stack(const stack &s) : stack() {
+stack<T>::stack(const stack &s) : stack() {
   if (!s.empty()) this->copyStack(s);
 }
 
 template <typename T>
-s21::stack<T>::stack(stack &&s) : stack() {
+stack<T>::stack(stack &&s) : stack() {
   this->header = s.header;
   this->ssize = s.ssize;
   s.header = NULL;
@@ -36,20 +33,25 @@ stack<T> &s21::stack<T>::operator=(stack &&s) {
   this->destroyStack();
   if (!s.empty() && (this != &s)) {
     this->copyStack(s);
+    ssize = s.ssize; //исправляет ошибки cppcheck, но ломает тесты
     s.destroyStack();
+
   }
   return *this;
 }
 
 template <typename T>
-stack<T> &stack<T>::operator=(stack &s) {
+stack<T> &stack<T>::operator=(const stack &s) {
   this->destroyStack();
   if (s.empty()) return *this;
-  if (this != &s) this->copyStack(s);
+  if (this != &s) {
+    this->copyStack(s);
+ssize = s.ssize; //исправляет ошибки cppcheck, но ломает тесты
+  }
   return *this;
 }
 template <typename T>
-s21::stack<T>::~stack() {
+stack<T>::~stack() {
   this->destroyStack();
   ssize = 0;
   header = NULL;
@@ -72,7 +74,7 @@ s21_size_type stack<T>::size() const {
   return ssize;
 }
 template <typename T>
-void stack<T>::push(s21_const_reference value) {
+void stack<T>::push(s21_const_reference value) noexcept {
   node<T> *n = new node<T>();
   n->tail = header;
   n->data = value;
@@ -80,14 +82,14 @@ void stack<T>::push(s21_const_reference value) {
   ssize++;
 }
 template <typename T>
-void stack<T>::pop() {
+void stack<T>::pop() noexcept {
   node<T> *n = header->tail;
   delete header;
   header = n;
   ssize--;
 }
 template <typename T>
-void s21::stack<T>::swap(stack &other) {
+void s21::stack<T>::swap(stack &other) noexcept {
   if (this != &other) {
     node<T> *tmp = other.header;
     other.header = this->header;
@@ -99,7 +101,7 @@ void s21::stack<T>::swap(stack &other) {
   }
 }
 template <typename T>
-void stack<T>::copyStack(const stack &s) {
+void stack<T>::copyStack(const stack &s) noexcept {
   node<T> el = *s.header;
   stack copy;
   while (el.tail != NULL) {
@@ -114,10 +116,20 @@ void stack<T>::copyStack(const stack &s) {
   }
 }
 template <typename T>
-void stack<T>::destroyStack() {
+void stack<T>::destroyStack() noexcept {
   while (this->ssize > 0) {
     this->pop();
   }
 }
+
+template <typename T>
+template <typename... Args>
+void stack<T>::insert_many_back(Args &&...args) {
+  std::initializer_list<T> a({static_cast<T> (args)...});
+  //std::cout << "SIZE = " << a.size();
+  if (a.size() > 0) 
+	  for (auto item : a ) push(item);  
+}
+
 
 #endif

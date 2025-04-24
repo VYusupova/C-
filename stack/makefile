@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -Wextra -Werror -std=c++20 -lpthread -pedantic -lsubunit -pthread
+CFLAGS = -Wall -Wextra -Werror -std=c++17 -lpthread -pedantic -lsubunit -pthread
 
 all : test_main
 

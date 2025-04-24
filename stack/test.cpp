@@ -11,10 +11,7 @@ using namespace s21;
 
 using namespace std;
 
-struct Point {
-  int x;
-  int y;
-};
+
 
 /**/
 
@@ -72,7 +69,7 @@ TEST(simpleTests, pushTest4) {
   origin.push(b);
   EXPECT_EQ(origin.top(), stack1.top());
 }
-/* проверка дефолтного конструктора и работы функции size()*/
+// проверка дефолтного конструктора и работы функции size()
 TEST(simpleTests, sizeTest1) {
   std::stack<int> origin;
   s21::stack<int> stack1;
@@ -88,11 +85,23 @@ TEST(simpleTests, sizeTest2) {
   // stack1.size();
 }
 TEST(simpleTests, sizeTest3) {
+struct Point {
+  int x =0;
+  int y= 0;
+};
   std::stack<Point> origin;
   s21::stack<Point> stack1;
   EXPECT_EQ(origin.size(), stack1.size());
-  // cout << "size origin - " << origin.size() << " \nsize my stack - " <<
-  // stack1.size();
+
+  Point p;
+  p.x = 4;
+  p.y = 8;
+  
+  origin.push(p);
+  stack1.push(p);
+  
+  
+
 }
 TEST(simpleTests, sizeTest4) {
   std::stack<std::string> origin;
@@ -162,6 +171,10 @@ TEST(simpleTests, constuctorDefTest1) {
   EXPECT_EQ(stack1.empty(), true);
 }
 TEST(mediumTests, pushTest1) {
+struct Point {
+  int x =0;
+  int y= 0;
+};
   std::stack<Point> origin;
   s21::stack<Point> stack1;
   Point p;
@@ -212,7 +225,7 @@ TEST(hardTest, sizeTest) {
   // stack1.size();
 }
 
-/*проверяем конструктор со списком инициализации*/
+//проверяем конструктор со списком инициализации
 TEST(hardTest, constuctorIniListTest) {
   std::stack<int> origin({1, 2, 3, 4, 5, 6, 7});
   s21::stack<int> stack1({1, 2, 3, 4, 5, 6, 7});
@@ -379,7 +392,7 @@ TEST(hardTest, operatorEqTest) {
     stack1CP.pop();
   }
 }
-/*если не пустому стеку присвоить пустой стек*/
+//если не пустому стеку присвоить пустой стек
 TEST(hardTest, operatorEqTest1) {
   // проверить что будет если  копировать пустой стек в непустой стек
   // вызвать коструктор копирования я не смогу, но ...
@@ -404,7 +417,7 @@ TEST(hardTest, operatorEqTest1) {
   EXPECT_NE(&origin, &originCP);
   EXPECT_NE(&stack, &stackCP);
 }
-/*оператор перемещения*/
+//оператор перемещения
 TEST(simpleTest, operatorEqMoveTest) {
   std::stack<int> origin;
   s21::stack<int> stack;
@@ -471,7 +484,7 @@ TEST(hardTest, operatorEqMoveTest) {
   EXPECT_EQ(stack.size(), 0);
   EXPECT_EQ(stackCP.size(), 0);
 }
-/*оперетор обмена swap(stack &other) */
+//оперетор обмена swap(stack &other) 
 
 TEST(simpleTest, swapTest) {
   std::stack<int> origin;
@@ -635,7 +648,7 @@ TEST(hardTest, swapTest2) {
   std::stack<int> origin({8, 9});
   s21::stack<int> stack({8, 9});
   std::stack<int> originCP({1});
-  s21::stack<int> stackCP({1});
+  s21::stack<int> stackCP{1};
 
   const void *porigin = &origin;
   const void *pstack = &stack;
@@ -697,6 +710,41 @@ TEST(hardTest, swapTest2) {
 
   EXPECT_EQ(originCP.empty(), true);
   EXPECT_EQ(stackCP.empty(), true);
+}
+
+TEST(simpleTests, insertManyTest) {
+
+  s21::stack<int> stack({8, 9});
+  stack.insert_many_back(1);
+  EXPECT_EQ(stack.top(), 1);
+}
+
+TEST(mediumTests, insertManyTest) {
+  s21::stack<int> stack({8, 9});
+  stack.insert_many_back(1,4,18);
+  EXPECT_EQ(stack.top(), 18);
+  EXPECT_EQ(stack.size(), 5);
+}
+
+TEST(mediumTests, insertManyTest1) {
+  s21::stack<int> stack({8, 9});
+  stack.insert_many_back();
+  EXPECT_EQ(stack.top(), 9);
+  EXPECT_EQ(stack.size(), 2);
+}
+
+TEST(mediumTests, insertManyTest2) {
+  s21::stack<int> stack({8, 9});
+  stack.insert_many_back(4,3.6); // static_cast()
+  EXPECT_EQ(stack.top(), 3);
+  EXPECT_EQ(stack.size(), 4);
+}
+
+TEST(hardTests, insertManyTest) {
+  s21::stack<int> stack({8, 9});
+  stack.insert_many_back(4,3, 'v'); // static_cast()
+  EXPECT_EQ(stack.top(), 'v');
+  EXPECT_EQ(stack.size(), 5);
 }
 
 int main(int argc, char **argv) {
