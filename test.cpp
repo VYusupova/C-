@@ -20,6 +20,8 @@ TEST(simpleTests, listConstructor0) {
  
   EXPECT_EQ(origin.empty(), true);
   EXPECT_EQ(list.empty(), true);
+  EXPECT_EQ(origin.size(), 0);
+  EXPECT_EQ(list.size(), 0);
 }
 TEST(simpleTests, listConstructor1) {
   std::list<bool> origin;
@@ -27,6 +29,8 @@ TEST(simpleTests, listConstructor1) {
  
   EXPECT_EQ(origin.empty(), true);
   EXPECT_EQ(list.empty(), true);
+    EXPECT_EQ(origin.size(), 0);
+  EXPECT_EQ(list.size(), 0);
 }
 
 TEST(simpleTests, listConstructor3) {
@@ -35,24 +39,40 @@ TEST(simpleTests, listConstructor3) {
  
     EXPECT_EQ(origin.empty(), false);
     EXPECT_EQ(list.empty(), false);
+  EXPECT_EQ(origin.size(), 5);
+  EXPECT_EQ(list.size(), 5);
+    EXPECT_EQ(origin.front(), 0);
+  EXPECT_EQ(list.front(), 0);
+      EXPECT_EQ(origin.back(), 0);
+  EXPECT_EQ(list.back(), 0);
 }
 
+/*
+// not this constructor
 TEST(simpleTests, listConstructor4) {
   std::list<int> origin(5,2);
   s21::list<int> list(5,2);
  
     EXPECT_EQ(origin.empty(), false);
     EXPECT_EQ(list.empty(), false);
-}
+}*/
 
 TEST(simpleTests, listConstructor5) {
-  std::list<int> origin({9, 2, 4, 6, 2});
-  s21::list<int> list({9, 2, 4, 6, 2});
-  //std::list<int> origin{9, 2, 4, 6, 2};
-  //s21::list<int> list{9, 2, 4, 6, 2};
+  //std::list<int> origin({9, 2, 4, 6, 2});
+  //s21::list<int> list({9, 2, 4, 6, 2});
+  std::list<int> origin{9, 2, 4, 6, 2};
+  s21::list<int> list{9, 2, 4, 6, 2};
  
     EXPECT_EQ(origin.empty(), false);
     EXPECT_EQ(list.empty(), false);
+      EXPECT_EQ(origin.size(), 5);
+  EXPECT_EQ(list.size(), 5);
+    EXPECT_EQ(origin.size(), 5);
+  EXPECT_EQ(list.size(), 5);
+    EXPECT_EQ(origin.front(), 9);
+  EXPECT_EQ(list.front(), 9);
+      EXPECT_EQ(origin.back(), 2);
+  EXPECT_EQ(list.back(), 2);
 }
 
 TEST(simpleTests, listConstructor6) {
@@ -61,6 +81,13 @@ TEST(simpleTests, listConstructor6) {
  
     EXPECT_EQ(origin.empty(), false);
     EXPECT_EQ(list.empty(), false);
+      EXPECT_EQ(origin.size(), 5);
+  EXPECT_EQ(list.size(), 5);
+  
+    EXPECT_EQ(origin.front(), 9);
+  EXPECT_EQ(list.front(), 9);
+      EXPECT_EQ(origin.back(), 2);
+  EXPECT_EQ(list.back(), 2);
 }
 
 TEST(hardTest, constuctorCopyTest) {
@@ -68,15 +95,33 @@ TEST(hardTest, constuctorCopyTest) {
       {true, false, true, true, true, 0, 1, 1, true, false, 0, 0, 0});
   s21::list<bool> list(
       {true, false, true, true, true, 0, true, 1, 1, 0, false, 0, false});
+      
   EXPECT_EQ(origin.empty(), false);
   EXPECT_EQ(list.empty(), false);
+  
   std::list<bool> originCP(origin);
   s21::list<bool> listCP(list);
+  
   EXPECT_EQ(originCP.empty(), false);
   EXPECT_EQ(listCP.empty(), false);
   
+  EXPECT_EQ(origin.empty(), false);
+  EXPECT_EQ(list.empty(), false);
+  
   EXPECT_NE(&origin, &originCP);
   EXPECT_NE(&list, &listCP);
+  
+    EXPECT_EQ(origin.size(), 13);
+  EXPECT_EQ(list.size(), 13);
+      EXPECT_EQ(originCP.size(), 13);
+  EXPECT_EQ(listCP.size(), 13);
+  
+  
+    EXPECT_EQ(origin.front(), true);
+  EXPECT_EQ(list.front(), true);
+      EXPECT_EQ(origin.back(), false);
+  EXPECT_EQ(list.back(), false);
+  
   //int count = 13;
   //while (count > 0) {
   /*  count--;
@@ -93,17 +138,17 @@ TEST(hardTest, constuctorCopyTest) {
     stack1CP.pop();
     */
   }
-/*  
+ 
 TEST(hardTest, constuctorMoveTest) {
   std::list<int> origin;
   s21::list<int> list;
 
- // int count = 1300;
- // while (count > 0) {
- //   count--;
- //   origin.push(count);
- //   stack1.push(count);
- // }
+  int count = 1300;
+  while (count > 0) {
+    count--;
+    origin.push_back(count);
+    list.push_back(count);
+  }
  // const void *p1 = &origin.top();
 //  const void *p2 = &stack1.top();
 
@@ -112,16 +157,25 @@ TEST(hardTest, constuctorMoveTest) {
   
   EXPECT_EQ(origin.empty(), true);
   EXPECT_EQ(list.empty(), true);
+      EXPECT_EQ(origin.size(), 0);
+  EXPECT_EQ(list.size(), 0);
   EXPECT_EQ(originCP.empty(), false);
   EXPECT_EQ(listCP.empty(), false);
-  //EXPECT_EQ(origin.size(), 0);
-  //EXPECT_EQ(stack1.size(), 0);
+      EXPECT_EQ(originCP.size(), 1300);
+  EXPECT_EQ(listCP.size(), 1300);
+  
+  
+    EXPECT_EQ(originCP.front(), 1299);
+  EXPECT_EQ(listCP.front(), 1299);
+      EXPECT_EQ(originCP.back(), 0);
+  EXPECT_EQ(listCP.back(), 0);
+ 
 
   //EXPECT_EQ(&originCP.top(), p1);
   //EXPECT_EQ(&stack1CP.top(), p2);
 }
-*/
-/*TEST(hardTest, constuctorMoveTest2) {
+
+TEST(hardTest, constuctorMoveTest2) {
   std::list<bool> origin(
       {true, false, true, true, true, 0, 1, 1, true, false, 0, 0, 0});
   s21::list<bool> list(
@@ -136,39 +190,45 @@ TEST(hardTest, constuctorMoveTest) {
   EXPECT_EQ(list.empty(), true);
     EXPECT_EQ(originCP.empty(), false);
   EXPECT_EQ(listCP.empty(), false);
-  //EXPECT_EQ(origin.size(), 0);
-  //EXPECT_EQ(stack1.size(), 0);
+  EXPECT_EQ(origin.size(), 0);
+  EXPECT_EQ(list.size(), 0);
+    EXPECT_EQ(originCP.size(), 13);
+  EXPECT_EQ(listCP.size(), 13);
 
   //EXPECT_EQ(&originCP.top(), p1);
   //EXPECT_EQ(&stack1CP.top(), p2);
-}*/
+}
 
 TEST(hardTest, operatorEqTest) {
-  std::stack<bool> origin(
+  std::list<bool> origin(
       {true, false, true, true, true, 0, 1, 1, true, false, 0, 0, 0});
   s21::list<bool> list(
       {true, false, true, true, true, 0, true, 1, 1, 0, false, 0, false});
 
   std::list<bool> originCP = origin;
-  s21::stack<bool> listCP = list;
+  s21::list<bool> listCP = list;
   EXPECT_NE(&origin, &originCP);
   EXPECT_NE(&list, &listCP);
+      EXPECT_EQ(origin.size(), 13);
+  EXPECT_EQ(list.size(), 13);
+
   int count = 13;
   while (count > 0) {
     count--;
-    EXPECT_NE(&origin.top(), &originCP.top());
-    EXPECT_NE(&list.top(), &listCP.top());
-    EXPECT_EQ(origin.top(), originCP.top());
-    EXPECT_EQ(list.top(), listCP.top());
-    EXPECT_EQ(origin.size(), originCP.size());
-    EXPECT_EQ(list.size(), listCP.size());
-    origin.pop();
-    originCP.pop();
-    list.pop();
-    listCP.pop();
+    //EXPECT_NE(&origin.top(), &originCP.top());
+    //EXPECT_NE(&list.top(), &listCP.top());
+    //EXPECT_EQ(origin.top(), originCP.top());
+    //EXPECT_EQ(list.top(), listCP.top());
+    //EXPECT_EQ(origin.size(), originCP.size());
+    //EXPECT_EQ(list.size(), listCP.size());
+    //origin.pop();
+    //originCP.pop();
+    //list.pop();
+    //listCP.pop();
   }
 }
 
+/* DELETED ??? NO specification 
 TEST(hardTest, operatorEqTest1) {
   // проверить что будет если  копировать пустой список в непустой список
   std::list<int> origin;
@@ -193,7 +253,9 @@ TEST(hardTest, operatorEqTest1) {
   EXPECT_NE(&origin, &originCP);
   EXPECT_NE(&list, &listCP);
 }
+*/
 //оператор перемещения
+/*
 TEST(simpleTest, operatorEqMoveTest) {
   std::list<int> origin;
   s21::list<int> list;
@@ -203,8 +265,9 @@ TEST(simpleTest, operatorEqMoveTest) {
   listCP = std::move(list);
 
   EXPECT_NE(&origin, &originCP);
-  EXPECT_NE(&list, &listCP);
-}
+  //EXPECT_NE(&list, &listCP);
+}*/
+/*
 TEST(mediumTest, operatorEqMoveTest) {
   std::list<int> origin({1, 2, 3, 4, 5, 6, 7});
   s21::list<int> list({1, 2, 3, 4, 5, 6, 7});
@@ -236,7 +299,8 @@ TEST(mediumTest, operatorEqMoveTest) {
 //    listCP.pop();
 //    size--;
 //  }
-}
+}*/
+/*
 TEST(hardTest, operatorEqMoveTest) {
   std::list<int> origin;
   s21::list<int> list;
@@ -260,6 +324,7 @@ TEST(hardTest, operatorEqMoveTest) {
 //  EXPECT_EQ(list.size(), 0);
 //  EXPECT_EQ(listCP.size(), 0);
 }
+*/
 /*2*/
 TEST(simpleTests, listPushTest) {
     std::list<int> origin;

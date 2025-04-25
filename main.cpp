@@ -4,10 +4,6 @@
 
 int main() {
 
-    std::list<int> list1;// = {9, 2, 4, 6, 2};
-    s21::list<int> list2;// = {4, 2 , 3, 1, 7, 9};
- 	std::cout << "list1.empty() - " << list1.empty() << '\n';
- 	std::cout << "list2.empty() - " << list2.empty() << '\n';
 
     /*std::list<int> list3= list();// = {9, 2, 4, 6, 2};
     s21::list<int> list4= list();// = {4, 2 , 3, 1, 7, 9};
@@ -15,11 +11,7 @@ int main() {
  	std::cout << "list4.empty() - " << list4.empty() << '\n';
 */
 
-    std::list<int> list5(2);
-    //s21::list<int> list6(2);
-    std::cout << "list5.empty() - " << list5.empty() << '\n';
-    //std::cout << "list6.empty() - " << list6.empty() << '\n';
-
+  
     std::list<int> list7;
     s21::list<int> list8;
     list7.push_back(3);
@@ -27,8 +19,8 @@ int main() {
     list7.push_back(4);
     list8.push_back(4);
     
- 	std::cout << "list7.empty() - " << list7.empty() << '\n';
- 	std::cout << "list8.empty() - " << list8.empty() << '\n';
+ 	std::cout << "list7.empty() - " << list7.front() << '\n';
+ 	std::cout << "list8.empty() - " << list8.back() << '\n';
 
 
     std::list<int> list9({9, 2, 4, 6, 2});

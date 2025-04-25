@@ -12,9 +12,10 @@ s21::list<T>::list() : length(0)
 }
 
 template <typename T>
-s21::list<T>::list(size_type n)
+s21::list<T>::list(size_type n) : list() 
+// ADDed a call to the base constructor to initiflize the fields with default values 
 {
-    for(long unsigned int i = 0; i < n; ++i){
+    for(size_type i = 0; i < n; ++i){
         this->push_back(0);
    }
 }
@@ -42,7 +43,10 @@ s21::list<T>::list(const list& other) : length(0)
 }
 
 template <typename T>
-s21::list<T>::list(list&& other) : length(0), sentinel(nullptr)
+s21::list<T>::list(list&& other) : list() 
+//length(0), sentinel(nullptr)
+// ADDed a call to the base constructor to initiflize the fields with default values 
+// because didn`t pass the test : constuctorMoveTest
 {   
     sentinel = other.sentinel;
     length = other.length;
