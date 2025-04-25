@@ -29,20 +29,40 @@ TEST(simpleTests, listConstructor1) {
   EXPECT_EQ(list.empty(), true);
 }
 
-TEST(simpleTests, listConstructor2) {
-  std::list<int> origin({9, 2, 4, 6, 2});
-  s21::list<int> list({9, 2, 4, 6, 2});
- 
-    EXPECT_EQ(origin.empty(), false);
-    EXPECT_EQ(list.empty(), false);
-}
 TEST(simpleTests, listConstructor3) {
-  std::list<int> origin({9, 2, 4, 6, 2});
-  s21::list<int> list({9, 2, 4, 6, 2});
+  std::list<int> origin(5);
+  s21::list<int> list(5);
  
     EXPECT_EQ(origin.empty(), false);
     EXPECT_EQ(list.empty(), false);
 }
+
+TEST(simpleTests, listConstructor4) {
+  std::list<int> origin(5,2);
+  s21::list<int> list(5,2);
+ 
+    EXPECT_EQ(origin.empty(), false);
+    EXPECT_EQ(list.empty(), false);
+}
+
+TEST(simpleTests, listConstructor5) {
+  std::list<int> origin({9, 2, 4, 6, 2});
+  s21::list<int> list({9, 2, 4, 6, 2});
+  //std::list<int> origin{9, 2, 4, 6, 2};
+  //s21::list<int> list{9, 2, 4, 6, 2};
+ 
+    EXPECT_EQ(origin.empty(), false);
+    EXPECT_EQ(list.empty(), false);
+}
+
+TEST(simpleTests, listConstructor6) {
+  std::list<int> origin = {9, 2, 4, 6, 2};
+  s21::list<int> list = {9, 2, 4, 6, 2};
+ 
+    EXPECT_EQ(origin.empty(), false);
+    EXPECT_EQ(list.empty(), false);
+}
+
 TEST(hardTest, constuctorCopyTest) {
   std::list<bool> origin(
       {true, false, true, true, true, 0, 1, 1, true, false, 0, 0, 0});
@@ -73,8 +93,8 @@ TEST(hardTest, constuctorCopyTest) {
     stack1CP.pop();
     */
   }
-  
-/*TEST(hardTest, constuctorMoveTest) {
+/*  
+TEST(hardTest, constuctorMoveTest) {
   std::list<int> origin;
   s21::list<int> list;
 
@@ -89,6 +109,7 @@ TEST(hardTest, constuctorCopyTest) {
 
   std::list<int> originCP(std::move(origin));
   s21::list<int> listCP(std::move(list));
+  
   EXPECT_EQ(origin.empty(), true);
   EXPECT_EQ(list.empty(), true);
   EXPECT_EQ(originCP.empty(), false);
@@ -122,6 +143,123 @@ TEST(hardTest, constuctorCopyTest) {
   //EXPECT_EQ(&stack1CP.top(), p2);
 }*/
 
+TEST(hardTest, operatorEqTest) {
+  std::stack<bool> origin(
+      {true, false, true, true, true, 0, 1, 1, true, false, 0, 0, 0});
+  s21::list<bool> list(
+      {true, false, true, true, true, 0, true, 1, 1, 0, false, 0, false});
+
+  std::list<bool> originCP = origin;
+  s21::stack<bool> listCP = list;
+  EXPECT_NE(&origin, &originCP);
+  EXPECT_NE(&list, &listCP);
+  int count = 13;
+  while (count > 0) {
+    count--;
+    EXPECT_NE(&origin.top(), &originCP.top());
+    EXPECT_NE(&list.top(), &listCP.top());
+    EXPECT_EQ(origin.top(), originCP.top());
+    EXPECT_EQ(list.top(), listCP.top());
+    EXPECT_EQ(origin.size(), originCP.size());
+    EXPECT_EQ(list.size(), listCP.size());
+    origin.pop();
+    originCP.pop();
+    list.pop();
+    listCP.pop();
+  }
+}
+
+TEST(hardTest, operatorEqTest1) {
+  // проверить что будет если  копировать пустой список в непустой список
+  std::list<int> origin;
+  std::list<int> originCP({1, 2, 3});
+  originCP = origin;
+
+  s21::list<int> list;
+  s21::list<int> listCP({1, 2, 3});
+  listCP = list;
+  
+// ожидаение оба списка стали пустые и размеры их нулевые 
+  EXPECT_EQ(origin.empty(), true);
+  EXPECT_EQ(originCP.empty(), true);
+  EXPECT_EQ(list.empty(), true);
+  EXPECT_EQ(listCP.empty(), true);
+
+  //EXPECT_EQ(origin.size(), 0);
+ // EXPECT_EQ(originCP.size(), 0);
+ // EXPECT_EQ(list.size(), 0);
+ // EXPECT_EQ(listCP.size(), 0);
+// адреса списков разные
+  EXPECT_NE(&origin, &originCP);
+  EXPECT_NE(&list, &listCP);
+}
+//оператор перемещения
+TEST(simpleTest, operatorEqMoveTest) {
+  std::list<int> origin;
+  s21::list<int> list;
+  std::list<int> originCP;
+  originCP = std::move(origin);
+  s21::list<int> listCP;
+  listCP = std::move(list);
+
+  EXPECT_NE(&origin, &originCP);
+  EXPECT_NE(&list, &listCP);
+}
+TEST(mediumTest, operatorEqMoveTest) {
+  std::list<int> origin({1, 2, 3, 4, 5, 6, 7});
+  s21::list<int> list({1, 2, 3, 4, 5, 6, 7});
+  //int size = origin.size();
+
+  std::list<int> originCP;
+  s21::list<int> listCP;
+
+  originCP = std::move(origin);
+  listCP = std::move(list);
+
+  EXPECT_NE(&origin, &originCP);
+  EXPECT_NE(&list, &listCP);
+
+  EXPECT_EQ(origin.empty(), true);
+  EXPECT_EQ(originCP.empty(), false);
+  EXPECT_EQ(list.empty(), true);
+  EXPECT_EQ(listCP.empty(), false);
+
+ // EXPECT_EQ(origin.size(), 0);
+ // EXPECT_EQ(originCP.size(), size);
+ // EXPECT_EQ(list.size(), 0);
+//  EXPECT_EQ(listCP.size(), size);
+
+ // while (size > 1) {
+  //  EXPECT_EQ(listCP.top(), originCP.top());
+ //   EXPECT_EQ(listCP.size(), originCP.size());
+ //   originCP.pop();
+//    listCP.pop();
+//    size--;
+//  }
+}
+TEST(hardTest, operatorEqMoveTest) {
+  std::list<int> origin;
+  s21::list<int> list;
+
+  std::list<int> originCP({1, 2, 3, 4, 5, 6, 7});
+  s21::list<int> listCP({1, 2, 3, 4, 5, 6, 7});
+
+  originCP = std::move(origin);
+  listCP = std::move(list);
+
+  EXPECT_NE(&origin, &originCP);
+  EXPECT_NE(&list, &listCP);
+
+  EXPECT_EQ(origin.empty(), true);
+  EXPECT_EQ(originCP.empty(), true);
+  EXPECT_EQ(list.empty(), true);
+  EXPECT_EQ(listCP.empty(), true);
+
+  //EXPECT_EQ(origin.size(), 0);
+ // EXPECT_EQ(originCP.size(), 0);
+//  EXPECT_EQ(list.size(), 0);
+//  EXPECT_EQ(listCP.size(), 0);
+}
 /*2*/
 TEST(simpleTests, listPushTest) {
     std::list<int> origin;
@@ -136,23 +274,23 @@ TEST(simpleTests, listPushTest) {
 /*
 TEST(mediumTests, pushPopTest) {
   std::stack<int> origin;
-  s21::stack<int> stack1;
+  s21::stack<int> list;
   int a = 2;
-  stack1.push(a);
+  list.push(a);
   origin.push(a);
-  stack1.push(3);
+  list.push(3);
   origin.push(3);
-  EXPECT_EQ(origin.top(), stack1.top());
-  stack1.pop();
+  EXPECT_EQ(origin.top(), list.top());
+  list.pop();
   origin.pop();
-  EXPECT_EQ(origin.top(), stack1.top());
+  EXPECT_EQ(origin.top(), list.top());
 }
 TEST(simpleTests, pushTest1) {
   std::stack<int> origin;
-  s21::stack<int> stack1;
-  stack1.push(5);
+  s21::stack<int> list;
+  list.push(5);
   origin.push(5);
-  EXPECT_EQ(origin.top(), stack1.top());
+  EXPECT_EQ(origin.top(), list.top());
 }
 TEST(simpleTests, pushTest2) {
   std::stack<int> origin;
@@ -400,123 +538,7 @@ TEST(simpleTest, operatorEqTest) {
   EXPECT_EQ(origin.size(), originCP.size());
   EXPECT_EQ(stack1.size(), stack1CP.size());
 }
-TEST(hardTest, operatorEqTest) {
-  std::stack<bool> origin(
-      {true, false, true, true, true, 0, 1, 1, true, false, 0, 0, 0});
-  s21::stack<bool> stack1(
-      {true, false, true, true, true, 0, true, 1, 1, 0, false, 0, false});
 
-  std::stack<bool> originCP = origin;
-  s21::stack<bool> stack1CP = stack1;
-  EXPECT_NE(&origin, &originCP);
-  EXPECT_NE(&stack1, &stack1CP);
-  int count = 13;
-  while (count > 0) {
-    count--;
-    EXPECT_NE(&origin.top(), &originCP.top());
-    EXPECT_NE(&stack1.top(), &stack1CP.top());
-    EXPECT_EQ(origin.top(), originCP.top());
-    EXPECT_EQ(stack1.top(), stack1CP.top());
-    EXPECT_EQ(origin.size(), originCP.size());
-    EXPECT_EQ(stack1.size(), stack1CP.size());
-    origin.pop();
-    originCP.pop();
-    stack1.pop();
-    stack1CP.pop();
-  }
-}
-//если не пустому стеку присвоить пустой стек
-TEST(hardTest, operatorEqTest1) {
-  // проверить что будет если  копировать пустой стек в непустой стек
-  // вызвать коструктор копирования я не смогу, но ...
-  std::stack<int> origin;
-  std::stack<int> originCP({1, 2, 3});
-  originCP = origin;
-
-  s21::stack<int> stack;
-  s21::stack<int> stackCP({1, 2, 3});
-  stackCP = stack;
-
-  EXPECT_EQ(origin.empty(), true);
-  EXPECT_EQ(originCP.empty(), true);
-  EXPECT_EQ(stack.empty(), true);
-  EXPECT_EQ(stackCP.empty(), true);
-
-  EXPECT_EQ(origin.size(), 0);
-  EXPECT_EQ(originCP.size(), 0);
-  EXPECT_EQ(stack.size(), 0);
-  EXPECT_EQ(stackCP.size(), 0);
-
-  EXPECT_NE(&origin, &originCP);
-  EXPECT_NE(&stack, &stackCP);
-}
-//оператор перемещения
-TEST(simpleTest, operatorEqMoveTest) {
-  std::stack<int> origin;
-  s21::stack<int> stack;
-  std::stack<int> originCP;
-  originCP = std::move(origin);
-  s21::stack<int> stackCP;
-  stackCP = std::move(stack);
-
-  EXPECT_NE(&origin, &originCP);
-  EXPECT_NE(&stack, &stackCP);
-}
-TEST(mediumTest, operatorEqMoveTest) {
-  std::stack<int> origin({1, 2, 3, 4, 5, 6, 7});
-  s21::stack<int> stack({1, 2, 3, 4, 5, 6, 7});
-  int size = origin.size();
-
-  std::stack<int> originCP;
-  s21::stack<int> stackCP;
-
-  originCP = std::move(origin);
-  stackCP = std::move(stack);
-
-  EXPECT_NE(&origin, &originCP);
-  EXPECT_NE(&stack, &stackCP);
-
-  EXPECT_EQ(origin.empty(), true);
-  EXPECT_EQ(originCP.empty(), false);
-  EXPECT_EQ(stack.empty(), true);
-  EXPECT_EQ(stackCP.empty(), false);
-
-  EXPECT_EQ(origin.size(), 0);
-  EXPECT_EQ(originCP.size(), size);
-  EXPECT_EQ(stack.size(), 0);
-  EXPECT_EQ(stackCP.size(), size);
-
-  while (size > 1) {
-    EXPECT_EQ(stackCP.top(), originCP.top());
-    EXPECT_EQ(stackCP.size(), originCP.size());
-    originCP.pop();
-    stackCP.pop();
-    size--;
-  }
-}
-TEST(hardTest, operatorEqMoveTest) {
-  std::stack<int> origin;
-  s21::stack<int> stack;
-
-  std::stack<int> originCP({1, 2, 3, 4, 5, 6, 7});
-  s21::stack<int> stackCP({1, 2, 3, 4, 5, 6, 7});
-
-  originCP = std::move(origin);
-  stackCP = std::move(stack);
-
-  EXPECT_NE(&origin, &originCP);
-  EXPECT_NE(&stack, &stackCP);
-
-  EXPECT_EQ(origin.empty(), true);
-  EXPECT_EQ(originCP.empty(), true);
-  EXPECT_EQ(stack.empty(), true);
-  EXPECT_EQ(stackCP.empty(), true);
-
-  EXPECT_EQ(origin.size(), 0);
-  EXPECT_EQ(originCP.size(), 0);
-  EXPECT_EQ(stack.size(), 0);
-  EXPECT_EQ(stackCP.size(), 0);
-}
 //оперетор обмена swap(stack &other) 
 
 TEST(simpleTest, swapTest) {
