@@ -1,139 +1,9 @@
-#include <iostream>
-#include <limits>
-
-namespace s21 {
-template <typename T>
-class list 
-{
-
-protected:
-
-    class Node 
-        {
-        public:
-            Node *pNext;
-            Node *pPrev;
-            T data;
-
-            Node(T data=T(), Node* pNext=nullptr, Node* pPrev=nullptr) 
-            {
-                this->data = data;
-                this->pNext = pNext;
-                this->pPrev = pPrev;
-            }
-        };
-
-    Node *sentinel;
-    std::size_t length;
-    
-    template <typename reference>
-    class ListIteratorBase
-        {
-        protected:
-            Node* current;
-        
-        public:
-
-            friend class list<T>;
-
-            ListIteratorBase(Node* node) : current(node) {}
-
-            reference operator*() const { return current->data; }
-
-            ListIteratorBase operator++(){
-                current = current->pNext;
-                return *this;
-            }
-
-            ListIteratorBase operator++(int){
-                ListIteratorBase temp = *this;
-                ++(*this);
-                return temp;
-            }
-
-            ListIteratorBase operator--(){
-                current = current->pPrev;
-                return *this;
-            }
-
-            ListIteratorBase operator--(int){
-                ListIteratorBase temp = *this;
-                --(*this);
-                return temp;
-            }
-
-            bool operator==(const ListIteratorBase& other) const { return current->data == other.current->data; }
-            bool operator!=(const ListIteratorBase& other) const { return current != other.current; }
-
-        };
-
-    class ListIterator : public ListIteratorBase<T&>
-        {
-            public:
-                using ListIteratorBase<T&>::ListIteratorBase;
-        };
-
-    class constListIterator : public ListIteratorBase<const T&>
-        {
-            public:
-                using ListIteratorBase<const T&>::ListIteratorBase;
-
-                constListIterator(const ListIterator& iterator) : ListIteratorBase<const T&>(iterator.current) {}
-        };
-
-public:
-
-    using value_type = T;
-    using reference = T&;
-    using const_reference = const T&;
-    using iterator = ListIterator;
-    using const_iterator = constListIterator;
-    using size_type = std::size_t;
-
-    list();
-    list(size_type n);
-    list(std::initializer_list<value_type> const &items);
-    list(const list &other);
-    list(list &&other);
-    ~list();
-    list operator=(list&& l);
-
-    bool empty();
-    size_type size() { return length; };
-    size_type max_size() { return std::numeric_limits<size_type>::max() / sizeof(Node) / 2; };
-
-    void clear();
-    iterator insert(iterator pos, const_reference value);
-    iterator erase(iterator pos);
-    void push_back(value_type data);
-    void push_front(value_type data);
-    void pop_back();
-    void pop_front();
-    void swap(list& other);
-    void merge(list& other);
-    void splice(const_iterator pos, list& other);
-    void reverse();
-    void unique();
-    void sort();
-    list merge_sort(list l1, list l2);
-    Node* midNode(Node* head);
-    list<value_type> sortList(Node* head);
 
 
-    iterator begin() { return iterator(sentinel->pNext); }
-    iterator end() { return iterator(sentinel); }
+#include "s21_list.h"
+#include <list>
 
-    const_iterator begin() const { return const_iterator(sentinel->pNext); }
-    const_iterator end() const { return const_iterator(sentinel); }
 
-    const_reference front() { return this->sentinel->pNext->data; }
-    const_reference back() { return this->sentinel->pPrev->data; }
-
-    void init_sentinel();
-
-};
-
-}
 
 template <typename T>
 s21::list<T>::list() : length(0)
@@ -144,9 +14,9 @@ s21::list<T>::list() : length(0)
 template <typename T>
 s21::list<T>::list(size_type n)
 {
-    for(int i = 0; i < n; ++i){
+    for(long unsigned int i = 0; i < n; ++i){
         this->push_back(0);
-    }
+   }
 }
 
 template <typename T>
@@ -446,7 +316,7 @@ typename s21::list<T>::iterator s21::list<T>::erase(iterator pos)
 template <typename T>
 bool s21::list<T>::empty()
 {
-    return length == 0 ? true : false;
+    return this->length == 0 ? true : false;
 }
 
 template <typename T>
@@ -501,35 +371,3 @@ inline void s21::list<T>::push_back(T data)
     sentinel->data = (++length);
 }
 
-
-int main() {
-
-    s21::list<int> list1 = {9, 2, 4, 6, 2};
-    s21::list<int> list2 = {4, 2 , 3, 1, 7, 9};
-
-
-    for(auto to : list1){
-        std::cout << to << " ";
-    }
-    std::cout << '\n';
-
-    for(auto to : list2){
-        std::cout << to << " ";
-    }
-    std::cout << '\n';
-
-    list1.merge(list2);
-
-    for(auto to : list1){
-        std::cout << to << " ";
-    }
-    std::cout << '\n';
-
-    for(auto to : list2){
-        std::cout << to << " ";
-    }
-    std::cout << '\n';
-    
-
-    return 0;
-}
