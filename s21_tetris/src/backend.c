@@ -37,20 +37,20 @@ void add_proggress(board_t *map) {
     map->finish[position++] = '0';
 }
 
-bool check_finish_state(player_pos *frog, board_t *map) {
+/*bool check_finish_state(player_pos *frog, board_t *map) {
   bool rc = FALSE;
 
   if (frog->y == 1) rc = TRUE;
 
   return rc;
-}
+}*/
 
 
-
+/*
 void frogpos_init(player_pos *frog) {
   frog->x = START_X;
   frog->y = START_Y;
-}
+}*/
 
 // void fill_finish(char *finish_line) {
 //   for (int i = 0; i < BOARD_M; i++) finish_line[i] = '$';

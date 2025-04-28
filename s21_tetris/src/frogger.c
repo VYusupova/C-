@@ -17,7 +17,7 @@ int main(void) {
 
 void game_loop() {
   game_stats_t gameBakend;  // здесь лежит массив с описанием игрового поля
-  player_pos frog;
+ 
   figura fnow;
   figura fnext;
 
@@ -36,7 +36,7 @@ void game_loop() {
       break_flag = FALSE;
 
     //printGameField(&gameBakend); //?
-    sigact(&userAct, &gameBakend, &frog, &fnow);  
+    sigact(&userAct, &gameBakend, &fnow);  
        //if (state != Terminate) signal = GET_USER_INPUT; //state == MOVING || state == Start
     userAct = get_signal(GET_USER_INPUT);
     //movedown(&userAct, &fnow, &gameBakend);

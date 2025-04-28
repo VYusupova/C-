@@ -13,11 +13,11 @@ typedef struct Point
     int y;
 };
 */
-typedef struct
+/*typedef struct
 {
     int x;
     int y;
-} player_pos;
+} player_pos;*/
 
 typedef struct
 {

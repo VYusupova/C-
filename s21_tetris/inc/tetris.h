@@ -38,7 +38,7 @@ int collisionLeft(figura *f, game_stats_t *gb);
 int collisionRight(figura *f, game_stats_t *gb);
 int collisionUp(figura *f, game_stats_t *gb);
 
-int collisionGameField(figura *f,  game_stats_t *gb);
+int collisionGameField(game_stats_t *gb, int down, int left);
 
 void rotateFigure(figura *f, game_stats_t *gb);
 

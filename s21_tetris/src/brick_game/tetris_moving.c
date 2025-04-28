@@ -4,9 +4,9 @@
 
 int collisionDown(figura *f, game_stats_t *gb) {
   int result = SUCCESS;
-  if (f->y + f->n >= BOARD_N) result = ERROR;
+  if ((-1+f->y + f->n) >= (BOARD_N)) result = ERROR;
   else 
-  if (collisionGameField(f,gb)) result = ERROR;
+  if (collisionGameField(gb,1,0)) result = ERROR;
   return result;
 }
 

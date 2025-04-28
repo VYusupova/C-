@@ -7,7 +7,8 @@ void initFigure(figura *f){
     for (int i = 0; i < FSIZE; i++)
        for (int j = 0; j < FSIZE; j++) 
          f->figur[i][j] = 0; 
-    int fig = rand() % 7;    
+    int fig = rand() % 7;   
+    while (fig == 0) fig = rand() % 7;   
     switch (fig){
     case FIGURE_Q :   
         iniFigura_Q(f);
@@ -68,8 +69,8 @@ void initGame(game_stats_t *gameBakend) {
 //запомним и зафиксируем фигуру на игровом поле
 void figuraGamefield(game_stats_t *gb, figura *f){
     // тут под новую структуру меняю 
-    for(int y = f->y, k = 0; y <  f->y+f->n && k < f->n; y++, k++)
-        for(int x = f->x, l = 0; x < f->x+f->m && l < f->m; x++, l++)
+    for(int y = f->y, k = 0; y <  FIELD_N && k < f->n; y++, k++)
+        for(int x = f->x, l = 0; x < FIELD_M && l < f->m; x++, l++)
             if(f->figur[k][l]) gb->gameField[y][x] = f->typeFigure;
 
 }

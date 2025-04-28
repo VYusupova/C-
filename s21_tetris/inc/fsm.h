@@ -21,7 +21,7 @@ typedef enum
 
 
 UserAction_t get_signal(int user_input);
-void sigact(UserAction_t *state, game_stats_t *stats,player_pos *frog_pos, figura *posStart); //board_t *map,
+void sigact(UserAction_t *state, game_stats_t *stats, figura *posStart); //board_t *map,
 			 
 //void on_start_state(signals sig, frog_state *state, game_stats_t *game);
 void movedown(UserAction_t *state,  figura *moveFigure,  game_stats_t *gamestats);

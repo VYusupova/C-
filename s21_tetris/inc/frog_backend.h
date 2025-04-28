@@ -9,11 +9,11 @@
 int lvlproc(board_t *map, game_stats_t *stats);
 void add_proggress(board_t *map);
 
-void frogpos_init(player_pos *frog);
+//void frogpos_init(player_pos *frog);
 //void fill_finish(char *finish_line);
 
 
-bool check_finish_state(player_pos *frog, board_t *map);
+//bool check_finish_state(player_pos *frog, board_t *map);
 bool check_level_compl(board_t *map);
 
 #endif

@@ -14,6 +14,8 @@ next one.
         1) Less memory usage.
     Cons:
         1) A lot of codelines.
+        
+        TO DO ENTER click second
 */
 
 UserAction_t get_signal(int user_input) { // TO DO RENAME
@@ -63,7 +65,7 @@ void moveright(figura *f, game_stats_t *gb) {
   if (!collisionRight(f, gb)) refreshFigure(f, 1, 0);
 }
 
-void movedown(UserAction_t *state, figura *f, game_stats_t *gb) {
+void movedown(UserAction_t *ua, figura *f, game_stats_t *gb) {
   if (!collisionDown(f, gb))
     refreshFigure(f, 0, 1);
   else {
@@ -80,7 +82,7 @@ void movedown(UserAction_t *state, figura *f, game_stats_t *gb) {
       refreshFigure(gb->fnext, 0, 0);
       // TO DO maybe  used showFigure();
     } else
-      *state = Terminate;
+      *ua = Terminate;
   }
 }
 
@@ -120,7 +122,7 @@ void start(game_stats_t *game){
 
 
 void sigact(UserAction_t *userAct, game_stats_t *gamestats,
-            player_pos *frog_pos, figura *fnow) {
+             figura *fnow) {
 
   print_stats(gamestats);
   switch (*userAct) {
@@ -131,7 +133,7 @@ void sigact(UserAction_t *userAct, game_stats_t *gamestats,
         //while ( get_signal(GET_USER_INPUT) != 0 ){};
         //*userAct = Start;
      break;
-  case Left:
+ /* case Left:
       moveleft(fnow, gamestats);
       break;
    case Right:
@@ -142,7 +144,7 @@ void sigact(UserAction_t *userAct, game_stats_t *gamestats,
       break;
    case Action:
       rotate(fnow, gamestats);
-      break;
+      break;*/
     case Terminate:
     	gameOver(); // gameOVER thanks for game
         napms(2000); //func sleep for at least ms milliseconds
