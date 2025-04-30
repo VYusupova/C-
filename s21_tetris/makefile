@@ -1,8 +1,8 @@
 CC := gcc
 CFLAGS := -I inc -std=c11 -Wall -Werror -Wpedantic
-OBJS_FSMSWITCHCASE :=  out/frogger.o out/fsm.o out/backend.o out/frontend.o  
+OBJS_FSMSWITCHCASE :=  out/frogger.o out/fsm.o out/frontend.o  
 INIT := out/brick_game/tetris_init.o out/brick_game/tetris_moving.o out/brick_game/tetris.o
-OBJS_FSMTABLE := out/frogger.o out/fsm_matrix.o out/backend.o out/frontend.o
+OBJS_FSMTABLE := out/frogger.o out/fsm_matrix.o  out/frontend.o
 
 GCOV_FLAGS = -fprofile-arcs -ftest-coverage
 PATH_TEST = test

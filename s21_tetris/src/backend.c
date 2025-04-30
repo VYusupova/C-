@@ -1,4 +1,4 @@
-#include "frog_backend.h"
+/*#include "frog_backend.h"
 
 int lvlproc(board_t *map, game_stats_t *stats) {
   timeout(INITIAL_TIMEOUT - stats->speed * 15);
@@ -6,7 +6,7 @@ int lvlproc(board_t *map, game_stats_t *stats) {
   // char levelname[LEVELNAME_MAX + 1] = { 0 };
   int rc = SUCCESS;
   // MVPRINTW(0, 0, "An error occured openning level file!");
-  /*sprintf(levelname, LEVEL_DIR"%d.txt", stats->level);
+  sprintf(levelname, LEVEL_DIR"%d.txt", stats->level);
 
   FILE *level = fopen(levelname, "r");
 
@@ -23,8 +23,7 @@ int lvlproc(board_t *map, game_stats_t *stats) {
   }
   else
       rc = ERROR;
-  */
-
+  
   return rc;
 }
 
@@ -43,14 +42,14 @@ void add_proggress(board_t *map) {
   if (frog->y == 1) rc = TRUE;
 
   return rc;
-}*/
+}
 
 
-/*
+
 void frogpos_init(player_pos *frog) {
   frog->x = START_X;
   frog->y = START_Y;
-}*/
+}
 
 // void fill_finish(char *finish_line) {
 //   for (int i = 0; i < BOARD_M; i++) finish_line[i] = '$';
@@ -58,5 +57,5 @@ void frogpos_init(player_pos *frog) {
 //   finish_line[BOARD_M] = '\0';
 // }
 
-
+*/
 

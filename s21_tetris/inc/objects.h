@@ -72,5 +72,16 @@ typedef enum
    FIGURE_T
 } listFigures;
 
+typedef enum
+{
+    Start = 0,
+    Pause,
+    Terminate, // GAMEOVER
+    Left,
+    Right,
+    Up,
+    Down,
+    Action
+} UserAction_t;
 
 #endif

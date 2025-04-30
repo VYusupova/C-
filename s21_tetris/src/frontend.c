@@ -24,7 +24,7 @@ void initColors() {
 }
 
 void print_overlay(void) {
-  print_rectangle(0, BOARD_N + 1, 0, BOARD_M + 1);  // отрисовка игрового поля
+  print_rectangle(0, BOARD_N +1, 0, BOARD_M + 1);  // отрисовка игрового поля
   print_rectangle(0, BOARD_N + 1, BOARD_M + 2,
                   BOARD_M + HUD_WIDTH);  // отрисовка информационного поля
   print_rectangle(R_NEXT, R_NEXT_H, BOARD_M + 3,

@@ -3,21 +3,11 @@
 
 #include "defines.h"
 #include "objects.h"
-#include "frog_backend.h"
+
 #include "frog_frontend.h"
 #include "tetris.h"
 
-typedef enum
-{
-    Start = 0,
-    Pause,
-    Terminate, // GAMEOVER
-    Left,
-    Right,
-    Up,
-    Down,
-    Action
-} UserAction_t;
+
 
 
 UserAction_t get_signal(int user_input);
