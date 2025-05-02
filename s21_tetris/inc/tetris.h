@@ -1,23 +1,16 @@
-#include "objects.h"
-#include "defines.h"
-#include <stdlib.h>
 #include <frog_frontend.h>
-/*
-typedef enum {
-	+Start, 
-	Pause,
-	+Terminate, // GAMEOVER
-	Left,
-	Right,
-	Up,
-	+Down,
-	Action
-} UserAction_t;
-*/
+#include <locale.h>
+#include <stdlib.h>
 
+#include "defines.h"
+#include "frog_frontend.h"
+#include "fsm.h"
+#include "objects.h"
+
+void game_loop();
 
 void initFigure(figura *f);
-void initFigureNow(figura *f);
+void initStartPosFigure(figura *f, int x, int y);
 void initMatrix(figura *f);
 void iniFigura_Q(figura *f);
 void iniFigura_I(figura *f);
@@ -44,5 +37,5 @@ void rotateFigure(figura *f, game_stats_t *gb);
 
 int collisionDown(figura *f, game_stats_t *gb);
 
-void score(game_stats_t *gb) ;
+void score(game_stats_t *gb);
 void shiftField(game_stats_t *gb, int y);
