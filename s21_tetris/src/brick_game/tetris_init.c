@@ -35,9 +35,10 @@ void initFigure(figura *f){
     
 }
 
-void initFigureNow(figura *fnow){
-    fnow->x = START_X;
-    fnow->y = START_Y;
+
+void initStartPosFigure(figura *f, int x, int y){
+    f->x = x;
+    f->y = y;
 }
 
 void swapFigure(figura *fnow, figura *fnext){
@@ -61,8 +62,10 @@ void initGame(game_stats_t *gameBakend) {
   gameBakend->level = 1;
   gameBakend->score = 0;
   gameBakend->speed = 1;
-  gameBakend->lives = 99;
+  gameBakend->lives = 9;
   gameBakend->won = FALSE;
+  initStartPosFigure(gameBakend->fnow, START_X, START_Y);
+  initStartPosFigure(gameBakend->fnext, R_NEXT_X, R_NEXT_Y  );
   initGameField(gameBakend);
 }
 
