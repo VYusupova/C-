@@ -14,18 +14,18 @@ next one.
         1) Less memory usage.
     Cons:
         1) A lot of codelines.
-        
-        TO DO ENTER click second
+
+        \/ TO DO ENTER click second 
 */
 
-UserAction_t get_signal(int user_input) { // TO DO RENAME
- UserAction_t rc = Pause;
+UserAction_t get_signal(int user_input) {  // TO DO RENAME
+  UserAction_t rc = Down;
 
   switch (user_input) {
-      case KEY_UP:
+    case KEY_UP:
       rc = Up;
       break;
-      case KEY_DOWN:
+    case KEY_DOWN:
       rc = Down;
       break;
     case KEY_LEFT:
@@ -44,10 +44,10 @@ UserAction_t get_signal(int user_input) { // TO DO RENAME
       rc = Action;
       break;
     case 'p':
-       rc = Pause;
-       break;
+      rc = Pause;
+      break;
     default:
-      rc = Down; 
+      //rc = Down;
       break;
   }
   return rc;
@@ -65,13 +65,14 @@ void moveright(figura *f, game_stats_t *gb) {
   if (!collisionRight(f, gb)) refreshFigure(f, 1, 0);
 }
 
-void movedown(UserAction_t *ua, figura *f, game_stats_t *gb) {
+void movedown(/*UserAction_t *userAct,*/ tetris_state *state, figura *f,
+              game_stats_t *gb) {
   if (!collisionDown(f, gb))
     refreshFigure(f, 0, 1);
   else {
     figuraGamefield(gb, f);
-      score(gb);
-          refreshGameField(gb);
+    score(gb);
+    refreshGameField(gb);
     // TO DO score
     if (!collisionUp(f, gb)) {
       swapFigure(gb->fnow, gb->fnext);
@@ -81,8 +82,10 @@ void movedown(UserAction_t *ua, figura *f, game_stats_t *gb) {
 
       refreshFigure(gb->fnext, 0, 0);
       // TO DO maybe  used showFigure();
-    } else
-      *ua = Terminate;
+    } else {
+      //*userAct = Terminate;
+      *state = GAMEOVER;
+    }
   }
 }
 
@@ -92,26 +95,66 @@ void rotate(figura *f, game_stats_t *gb) {
   showFigure(f);
 }
 
-//void on_start_state(signals sig, frog_state *state, game_stats_t *game) {
-//  switch (sig) {
-//    case Start:
-    //  *state = SPAWN;
-void start(game_stats_t *game){  
-  hideIntro();
-  initFigure(game->fnow);  // инициализируем фигуру
-  initFigure(game->fnext);
-  showFigure(game->fnow);
 
-  game->fnext->x = R_NEXT_X;
-  game->fnext->y = R_NEXT_Y;
-
-  showFigure(game->fnext);
+void gg(game_stats_t *game, tetris_state *state){
+      hideIntro();
+      initFigure(game->fnow);  // инициализируем фигуру
+      initFigure(game->fnext);
+      showFigure(game->fnow);
+      showFigure(game->fnext);
+      *state = MOVING;
 }
 
 
-      // case MOVE_UP:
-      //   moveup(frog_pos); // не используется т.е. убрать
-      //   break;
+void started(UserAction_t *userAct, game_stats_t *game, tetris_state *state) {
+  switch (*userAct) {
+    case Start:
+      gg(game,state);
+      break;
+    case Terminate:
+      *state = GAMEOVER;
+      break;
+    case Pause:
+    //userAct = Start;
+      *state = GAME;
+      break;
+    default:
+
+      break;
+  }
+}
+
+
+void moved(UserAction_t *userAct, tetris_state *state, game_stats_t *gamestats,
+            figura *fnow)
+{
+    switch (*userAct)
+    {
+        case Left:
+             moveleft(fnow, gamestats);
+            break;
+        case Right:
+             moveright(fnow, gamestats); 
+            break;
+        case Up:
+            break;
+        case Down:
+             movedown(state, fnow, gamestats); 
+            break;
+        case Action:
+            rotate(fnow, gamestats);
+            break;
+        case Pause:
+            //while(GET_USER_INPUT != 'p') {};
+            break;
+        case Terminate:
+            *state = GAMEOVER;
+            break;
+        default:
+        //movedown(state, fnow, gamestats);
+            break;
+    }
+}
 
 
 //  add_proggress(map); // TO DO DEL
@@ -120,40 +163,22 @@ void start(game_stats_t *game){
 //    frogpos_init(frog_pos);
 //    // print_finished(map);
 
-
-void sigact(UserAction_t *userAct, game_stats_t *gamestats,
-             figura *fnow) {
-
+void sigact(UserAction_t *userAct, tetris_state *state, game_stats_t *gamestats,
+            figura *fnow) {
   print_stats(gamestats);
-  switch (*userAct) {
-    case Start:
-      start(gamestats);
+      // napms(2000); //func sleep for at least ms milliseconds
+  switch (*state) {
+    case GAME:
+      started(userAct, gamestats, state);
       break;
-  case Pause:   
-        //while ( get_signal(GET_USER_INPUT) != 0 ){};
-        //*userAct = Start;
-     break;
- /* case Left:
-      moveleft(fnow, gamestats);
+    case MOVING:
+      moved(userAct, state, gamestats,  fnow);
       break;
-   case Right:
-      moveright(fnow, gamestats);  // сдвинуть фигуру вправо
-      break;
-   case Down:
-      movedown(userAct, fnow, gamestats);
-      break;
-   case Action:
-      rotate(fnow, gamestats);
-      break;*/
-    case Terminate:
-    	gameOver(); // gameOVER thanks for game
-        napms(2000); //func sleep for at least ms milliseconds
-        //*userAct = Terminate;
+    case GAMEOVER:
+      gameOver();  // gameOVER thanks for game
+      timeout(700);
       break;
     default:
-	movedown(userAct, fnow, gamestats);
       break;
-      	 
   }
-
 }
