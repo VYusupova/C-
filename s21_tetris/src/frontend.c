@@ -1,14 +1,14 @@
 #include "frog_frontend.h"
 
-#define MESSAGE_PRESS "Press" // приветствие
-#define MESSAGE_ENTER "ENTER" // приветствие
-#define MESSAGE_TO "to" // приветствие
-#define MESSAGE_START "Start" // приветствие
+#define MESSAGE_PRESS "Press"  // приветствие
+#define MESSAGE_ENTER "ENTER"  // приветствие
+#define MESSAGE_TO "TO"        // приветствие
+#define MESSAGE_START "Start"  // приветствие
 
 void initColors() {
   if (!has_colors()) {
     endwin();
-    printf( "COLORS NOT SUPPORTED");
+    printf("COLORS NOT SUPPORTED");
   }
   // bkgdset(COLOR_PAIR()); включи что бы посмотреть эелменты которые надо
   // убрать COLOR_MAGENTA - милиновый COLOR_CYAN
@@ -24,7 +24,7 @@ void initColors() {
 }
 
 void print_overlay(void) {
-  print_rectangle(0, BOARD_N +1, 0, BOARD_M + 1);  // отрисовка игрового поля
+  print_rectangle(0, BOARD_N + 1, 0, BOARD_M + 1);  // отрисовка игрового поля
   print_rectangle(0, BOARD_N + 1, BOARD_M + 2,
                   BOARD_M + HUD_WIDTH);  // отрисовка информационного поля
   print_rectangle(R_NEXT, R_NEXT_H, BOARD_M + 3,
@@ -40,22 +40,22 @@ void print_overlay(void) {
 void showIntro(void) {
   MVPRINTW(BOARD_N / 2, MAP_PADDING, MESSAGE_PRESS);
   MVPRINTW(BOARD_N / 2 + 1, MAP_PADDING, MESSAGE_ENTER);
-  MVPRINTW(BOARD_N / 2+3, MAP_PADDING, MESSAGE_TO);
-  MVPRINTW(BOARD_N / 2+3, MAP_PADDING, MESSAGE_START);
-//    clear();
-//  MVPRINTW(0, 0, "An error occured openning level file!");
-//  MVPRINTW(2, 0, "Please check ./tests/ directory.");
-//  MVPRINTW(3, 0, "There should be 5 level files named level_(1-5).txt.");
-//  MVPRINTW(4, 0, "Also try to open the game nearby ./tests/ directory.");
-//  MVPRINTW(6, 0, "Press any key to exit.");
+  MVPRINTW(BOARD_N / 2 + 3, MAP_PADDING, MESSAGE_TO);
+  MVPRINTW(BOARD_N / 2 + 3, MAP_PADDING, MESSAGE_START);
+  //    clear();
+  //  MVPRINTW(0, 0, "An error occured openning level file!");
+  //  MVPRINTW(2, 0, "Please check ./tests/ directory.");
+  //  MVPRINTW(3, 0, "There should be 5 level files named level_(1-5).txt.");
+  //  MVPRINTW(4, 0, "Also try to open the game nearby ./tests/ directory.");
+  //  MVPRINTW(6, 0, "Press any key to exit.");
 }
 
 void hideIntro(void) {
   bkgdset(COLOR_PAIR(FIGURE_HIDE));
   MVPRINTW(BOARD_N / 2, MAP_PADDING, HIDE_INTRO);
   MVPRINTW(BOARD_N / 2 + 1, MAP_PADDING, HIDE_INTRO);
-    MVPRINTW(BOARD_N / 2+2, MAP_PADDING, HIDE_INTRO);
-      MVPRINTW(BOARD_N / 2+3, MAP_PADDING, HIDE_INTRO);
+  MVPRINTW(BOARD_N / 2 + 2, MAP_PADDING, HIDE_INTRO);
+  MVPRINTW(BOARD_N / 2 + 3, MAP_PADDING, HIDE_INTRO);
 }
 
 void gameOver(void) {
@@ -65,8 +65,8 @@ void gameOver(void) {
 
 // отрисовка прямоугольника с координатми
 void print_rectangle(int top_y, int bottom_y, int left_x, int right_x) {
-  //ACS_BLOCK
-  
+  // ACS_BLOCK
+
   MVADDCH(top_y, left_x, ACS_ULCORNER);
 
   int i = left_x + 1;
@@ -95,8 +95,6 @@ void print_stats(game_stats_t *stats) {
   MVPRINTW(R_LIVES + 1, BOARD_M + SHIFT_MESSAGE, "%d", stats->lives);
 }
 
-
-
 // void print_finished(board_t *game) {
 //   for (int i = 0; i < BOARD_M; i++) {
 //     if (game->finish[i] == '0')
@@ -105,7 +103,7 @@ void print_stats(game_stats_t *stats) {
 //       MVADDCH(1, i + 1, ' ');
 //   }
 // }
-//void print_banner(game_stats_t *stats) {
+// void print_banner(game_stats_t *stats) {
 //  banner_t banner;
 
 //  memset(banner.matrix, 0, (BANNER_N + 1) * (BANNER_M + 1));
@@ -124,14 +122,15 @@ void print_stats(game_stats_t *stats) {
 //  }
 //}
 
-void writeScore (game_stats_t *stats) { 
-  FILE *file = fopen(MAX_SCORE, "w");;
+void writeScore(game_stats_t *stats) {
+  FILE *file = fopen(MAX_SCORE, "w");
+  ;
 
   if (file) {
     // WRITE
 
     fclose(file);
-}
+  }
 }
 
 void printFigure(figura *f) {
@@ -149,6 +148,12 @@ void hideFigure(figura *f) {
 void showFigure(figura *f) {
   bkgdset(COLOR_PAIR(f->typeFigure));
   printFigure(f);
+}
+void refreshFigure(figura *f, int dx, int dy) {
+  hideFigure(f);
+  f->y += dy;
+  f->x += dx;
+  showFigure(f);
 }
 
 void printGameField(game_stats_t *gameBakend) {
@@ -171,13 +176,3 @@ void refreshGameField(game_stats_t *gameBakend) {
     }
   printGameField(gameBakend);
 }
-
-void refreshFigure(figura *f, int dx, int dy) {
-  hideFigure(f);
-  f->y += dy;
-  f->x += dx;
-  showFigure(f);
-}
-
-
-
