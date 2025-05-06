@@ -79,7 +79,7 @@ void rotate(figura *f, game_stats_t *gb) {
 }
 
 void gg(game_stats_t *game, tetris_state *state) {
-  hideIntro();
+hide();
   initFigure(game->fnow);  // инициализируем фигуру
   initFigure(game->fnext);
   showFigure(game->fnow);

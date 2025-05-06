@@ -1,5 +1,5 @@
-#ifndef FROGGER_FRONTEND_H
-#define FROGGER_FRONTEND_H
+#ifndef FRONTEND_H
+#define FRONTEND_H
 
 #include <string.h>
 #include "defines.h"
@@ -12,7 +12,7 @@
 void initColors();
 void printGameField(game_stats_t *gameBakend);
 void refreshGameField(game_stats_t *gameBakend) ;
-void hideIntro(void);
+void hide(void);
 
 void refreshFigure(figura *f, int dx, int dy);
 void printFigure(figura *position);

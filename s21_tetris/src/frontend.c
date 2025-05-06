@@ -1,9 +1,6 @@
-#include "frog_frontend.h"
+#include "frontend.h"
 
-#define MESSAGE_PRESS "Press"  // приветствие
-#define MESSAGE_ENTER "ENTER"  // приветствие
-#define MESSAGE_TO "TO"        // приветствие
-#define MESSAGE_START "Start"  // приветствие
+
 
 void initColors() {
   if (!has_colors()) {
@@ -38,25 +35,23 @@ void print_overlay(void) {
 }
 
 void showIntro(void) {
-  MVPRINTW(BOARD_N / 2, MAP_PADDING, MESSAGE_PRESS);
-  MVPRINTW(BOARD_N / 2 + 1, MAP_PADDING, MESSAGE_ENTER);
-  MVPRINTW(BOARD_N / 2 + 3, MAP_PADDING, MESSAGE_TO);
-  MVPRINTW(BOARD_N / 2 + 3, MAP_PADDING, MESSAGE_START);
-  //    clear();
-  //  MVPRINTW(0, 0, "An error occured openning level file!");
-  //  MVPRINTW(2, 0, "Please check ./tests/ directory.");
-  //  MVPRINTW(3, 0, "There should be 5 level files named level_(1-5).txt.");
-  //  MVPRINTW(4, 0, "Also try to open the game nearby ./tests/ directory.");
-  //  MVPRINTW(6, 0, "Press any key to exit.");
+  
+  char *intro[12] = {"Press", "ENTER", "to START", " ", 
+                    "USED:", "p - PAUSE", "SPACE - ", "   ROTOR",
+                     "ESC - EXIT", "DOWN", "LEFT", "RIGHT"};
+  for(int i = 0; i < 12; i++){
+  MVPRINTW(6+i, MAP_PADDING-2, intro[i]);
+  }
 }
+void hide(void) {
+        bkgdset(COLOR_PAIR(0));
+  for (int i = 1; i <= BOARD_N; i++)
+    for (int j = 1; j <= BOARD_M; j++) {
 
-void hideIntro(void) {
-  bkgdset(COLOR_PAIR(FIGURE_HIDE));
-  MVPRINTW(BOARD_N / 2, MAP_PADDING, HIDE_INTRO);
-  MVPRINTW(BOARD_N / 2 + 1, MAP_PADDING, HIDE_INTRO);
-  MVPRINTW(BOARD_N / 2 + 2, MAP_PADDING, HIDE_INTRO);
-  MVPRINTW(BOARD_N / 2 + 3, MAP_PADDING, HIDE_INTRO);
-}
+        PRINT(j, i);
+
+      }
+    }
 
 void gameOver(void) {
   MVPRINTW(BOARD_N / 2, MAP_PADDING, OVER_MESSAGE1);

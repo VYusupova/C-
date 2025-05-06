@@ -1,9 +1,9 @@
-#include <frog_frontend.h>
+
 #include <locale.h>
 #include <stdlib.h>
 
 #include "defines.h"
-#include "frog_frontend.h"
+
 #include "fsm.h"
 #include "objects.h"
 
