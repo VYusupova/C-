@@ -10,7 +10,8 @@ void score(game_stats_t *gb) {
             else {s++;}
       if (s == 10){ 
       	lines++;
-        shiftField(gb,y);      
+        shiftField(gb,y); 
+        y++;     
       }
       }
   if (lines == 4) gb->score += 1500;
@@ -20,7 +21,7 @@ void score(game_stats_t *gb) {
 }
 
 void shiftField(game_stats_t *gb, int y){	
-	for(int y1 = y; y >=1; y--)
+	for(int y1 = y; y1 >=1; y1--)
 		for(int x = 0; x < FIELD_M; x++)
 		gb->gameField[y1][x] = gb->gameField[y1-1][x];
 	for(int x = 0; x < FIELD_M; x++)

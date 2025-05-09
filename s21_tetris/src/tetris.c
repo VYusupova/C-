@@ -37,7 +37,7 @@ void game_loop() {
       // gameOver();
     }
 
-   printGameField(&gameBakend);
+   //refreshGameField(&gameBakend);
    
     sigact(&userAct, &state, &gameBakend, &fnow);
 

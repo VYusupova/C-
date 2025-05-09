@@ -115,6 +115,7 @@ void spawned(game_stats_t *gb, tetris_state *state) {
 void attaching(game_stats_t *gb, figura *f) {
   figuraGamefield(gb, f);
   score(gb);  // TO DO score
+  //shiftField(gb,f->y);
   refreshGameField(gb);
 }
 

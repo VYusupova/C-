@@ -157,7 +157,7 @@ void printGameField(game_stats_t *gameBakend) {
       if (gameBakend->gameField[i-1][j-1]) {
         bkgdset(COLOR_PAIR(gameBakend->gameField[i-1][j-1]));
         PRINT(j, i);
-        bkgdset(COLOR_PAIR(0));
+        //bkgdset(COLOR_PAIR(0));
       }
     }
 }
@@ -165,9 +165,9 @@ void refreshGameField(game_stats_t *gameBakend) {
   bkgdset(COLOR_PAIR(0));
   for (int i = 1; i < BOARD_N+1; i++)
     for (int j = 1; j < BOARD_M+1; j++) {
-      if (gameBakend->gameField[i-1][j-1]) {
+     // if (gameBakend->gameField[i-1][j-1]) {
         PRINT(j, i);
-      }
+     // }
     }
   printGameField(gameBakend);
 }
