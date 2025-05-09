@@ -43,7 +43,10 @@ UserAction_t get_signal(int user_input) {  // TO DO RENAME
     case ' ':
       rc = Action;
       break;
-    case 'p':
+    case PAUSE_p:
+      rc = Pause;
+      break;
+    case PAUSE_P:
       rc = Pause;
       break;
     default:
@@ -135,7 +138,7 @@ void moved(UserAction_t *userAct, tetris_state *state, game_stats_t *gamestats,
       rotate(fnow, gamestats);
       break;
     case Pause:
-      while(GET_USER_INPUT != 'p') {};
+      while((GET_USER_INPUT != PAUSE_p)) {};
       break;
     case Terminate:
       *state = GAMEOVER;

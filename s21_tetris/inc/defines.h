@@ -20,8 +20,8 @@
 #define HIDE_INTRO    "     "
 
 #define BOARDS_BEGIN 0            // начало игрового поля левый верхний угол с отступом на 0 позиции
-#define START_X      (BOARD_M / 2)  // начальные позиции фигуры для игры
-#define START_Y      (1)
+#define START_X      (BOARD_M / 2)-1  // начальные позиции фигуры для игры
+#define START_Y      (0)
 #define BOARD_N     20// (ROWS_MAP + MAP_PADDING * 2) // ширина и высота игрового поля
 #define BOARD_M     10
 #define FIELD_N     20
@@ -52,12 +52,14 @@
 
 #define ESCAPE 27
 #define ENTER_KEY 10
+#define PAUSE_p 112
+#define PAUSE_P 80
 
 #define SHIFT_MESSAGE 4
 #define R_NEXT 1   // координаты отрисовки поля под новую фигуру
 #define R_NEXT_H 7 
 #define R_NEXT_X BOARD_M + 5
-#define R_NEXT_Y 3 
+#define R_NEXT_Y 2 
 #define R_LEV 11
 #define R_SCORE 13
 #define R_SPEED 15

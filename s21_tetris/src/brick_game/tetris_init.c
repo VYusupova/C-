@@ -7,7 +7,7 @@ void initFigure(figura *f){
     for (int i = 0; i < FSIZE; i++)
        for (int j = 0; j < FSIZE; j++) 
          f->figur[i][j] = 0; 
-    int fig = rand() % 7;   
+    int fig = rand() % 8;   
     while (fig == 0) fig = rand() % 7;   
     switch (fig){
     case FIGURE_Q :   

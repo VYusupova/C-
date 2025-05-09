@@ -2,7 +2,7 @@
 
 int collisionDown(figura *f, game_stats_t *gb) {
   int result = SUCCESS;
-  if ((f->y + f->n) >= (BOARD_N+1)) result = ERROR;
+  if ((f->y + f->n) >= (BOARD_N)) result = ERROR;
   else 
   if (collisionGameField(gb,1,0)) result = ERROR;
   return result;
@@ -18,7 +18,7 @@ int collisionUp(figura *f, game_stats_t *gb){
  // t->m & BOARD_M - столбцов
 int collisionLeft(figura *f, game_stats_t *gb) {
   int result = SUCCESS;
-  if ((f->x) <= 1) result = ERROR;
+  if ((f->x) <= 0) result = ERROR;
   else 
   if (collisionGameField(gb,0,-1)) result = ERROR;
   return result;
@@ -26,7 +26,7 @@ int collisionLeft(figura *f, game_stats_t *gb) {
 
 int collisionRight(figura *f, game_stats_t *gb) {
    int result = SUCCESS;
-   if (f->x + f->m-1 >= (BOARD_M)) result = ERROR;
+   if (f->x + f->m >= (BOARD_M)) result = ERROR;
    if (collisionGameField(gb,0,1)) result = ERROR;
   return result;
 }

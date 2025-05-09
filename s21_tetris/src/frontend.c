@@ -129,9 +129,9 @@ void writeScore(game_stats_t *stats) {
 }
 
 void printFigure(figura *f) {
-  for (int i = 0; i < f->n; i++)
-    for (int j = 0; j < f->m; j++) {
-      if (f->figur[i][j] == 1) PRINT(f->x + j, f->y + i);
+  for (int i = 1; i < f->n+1; i++)
+    for (int j = 1; j < f->m+1; j++) {
+      if (f->figur[i-1][j-1] == 1) PRINT(f->x + j, f->y + i);
     }
 }
 
@@ -152,10 +152,10 @@ void refreshFigure(figura *f, int dx, int dy) {
 }
 
 void printGameField(game_stats_t *gameBakend) {
-  for (int i = 0; i < BOARD_N; i++)
-    for (int j = 0; j < BOARD_M; j++) {
-      if (gameBakend->gameField[i][j]) {
-        bkgdset(COLOR_PAIR(gameBakend->gameField[i][j]));
+  for (int i = 1; i < BOARD_N+1; i++)
+    for (int j = 1; j < BOARD_M+1; j++) {
+      if (gameBakend->gameField[i-1][j-1]) {
+        bkgdset(COLOR_PAIR(gameBakend->gameField[i-1][j-1]));
         PRINT(j, i);
         bkgdset(COLOR_PAIR(0));
       }
@@ -163,9 +163,9 @@ void printGameField(game_stats_t *gameBakend) {
 }
 void refreshGameField(game_stats_t *gameBakend) {
   bkgdset(COLOR_PAIR(0));
-  for (int i = 0; i < BOARD_N; i++)
-    for (int j = 0; j < BOARD_M; j++) {
-      if (gameBakend->gameField[i][j]) {
+  for (int i = 1; i < BOARD_N+1; i++)
+    for (int j = 1; j < BOARD_M+1; j++) {
+      if (gameBakend->gameField[i-1][j-1]) {
         PRINT(j, i);
       }
     }
