@@ -1,17 +1,19 @@
 CC := gcc
 CFLAGS := -I inc -std=c11 -Wall -Werror -Wpedantic
-OBJS_FSMSWITCHCASE :=  out/tetris.o out/fsm.o out/frontend.o  
-INIT := out/brick_game/tetris_init.o out/brick_game/tetris_moving.o out/brick_game/tetris_score.o
-OBJS_FSMTABLE := out/frogger.o out/fsm_matrix.o  out/frontend.o
+OBJS_FSMSWITCHCASE :=  out/tetris.o out/fsm.o 
+BACKEND := out/brick_game/tetris/
+INIT := $(BACKEND)tetris_init.o $(BACKEND)tetris_moving.o $(BACKEND)tetris_score.o
+FRONT := out/gui/cli/tetris_frontend.o
+OBJS_FSMTABLE := out/frogger.o out/fsm_matrix.o  out/frontend.c.o
 
 GCOV_FLAGS = -fprofile-arcs -ftest-coverage
 PATH_TEST = test
 TEST_BIN = run_tests
 CHECK_LIBS = $(shell pkg-config --libs check) #-lcheck -lm -lpthread -lrt -lsubunit
 
-all: clean mkdir tetris.exe
+all: clean mkdir tetris
 
-tetris.exe:  $(OBJS_FSMSWITCHCASE) $(INIT)
+tetris:  $(OBJS_FSMSWITCHCASE) $(INIT) $(FRONT)
 	#clang-format -i src/*.c
 	$(CC) $(CFLAGS) $^ -o $@ -lncurses
 
@@ -22,11 +24,15 @@ out/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 mkdir:
+	mkdir out/
 	mkdir out/brick_game/
+	mkdir out/brick_game/tetris/
+	mkdir out/gui/
+	mkdir out/gui/cli/
 
 clean:
-	$(RM) out/*.o tetris.exe frogger_fsmtable
-	rm -rf out/brick_game/
+	$(RM) out/*.o tetris frogger_fsmtable
+	rm -rf out/
 	rm -rf test/*.gcov.*
 	rm -rf $(TEST_BIN)
 

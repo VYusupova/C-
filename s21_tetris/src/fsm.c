@@ -114,8 +114,7 @@ void spawned(game_stats_t *gb, tetris_state *state) {
 
 void attaching(game_stats_t *gb, figura *f) {
   figuraGamefield(gb, f);
-  score(gb);  // TO DO score
-  //shiftField(gb,f->y);
+  score(gb);
   refreshGameField(gb);
 }
 
@@ -133,13 +132,16 @@ void moved(UserAction_t *userAct, tetris_state *state, game_stats_t *gamestats,
     case Up:
       break;
     case Down:
+      //while (*state != ATTACHING) {
       movedown(state, fnow, gamestats);
+      //}
       break;
     case Action:
       rotate(fnow, gamestats);
+      *state = SHIFTING;
       break;
     case Pause:
-      while((GET_USER_INPUT != PAUSE_p)) {};
+      while(get_signal(GET_USER_INPUT) != Pause) {};
       break;
     case Terminate:
       *state = GAMEOVER;
