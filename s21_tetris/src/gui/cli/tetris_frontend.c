@@ -18,40 +18,24 @@ void initColors() {
   init_pair(FIGURE_L, COLOR_YELLOW, COLOR_RED);
   init_pair(FIGURE_J, COLOR_BLACK, COLOR_MAGENTA);
   init_pair(FIGURE_T, COLOR_YELLOW, COLOR_CYAN);
-}
-
-void print_overlay(void) {
-  print_rectangle(0, BOARD_N + 1, 0, BOARD_M + 1);  // отрисовка игрового поля
-  print_rectangle(0, BOARD_N + 1, BOARD_M + 2,
-                  BOARD_M + HUD_WIDTH);  // отрисовка информационного поля
-  print_rectangle(R_NEXT, R_NEXT_H, BOARD_M + 3,
-                  BOARD_M + HUD_WIDTH - 1);  // отрисовка поля под новую фигуру
-
-  MVPRINTW(R_LEV, BOARD_M + SHIFT_MESSAGE, "LEVEL");
-  MVPRINTW(R_SCORE, BOARD_M + SHIFT_MESSAGE, "SCORE");
-  MVPRINTW(R_SPEED, BOARD_M + SHIFT_MESSAGE, "SPEED");
-  MVPRINTW(R_LIVES, BOARD_M + SHIFT_MESSAGE, "LIVES");
-  showIntro();
+  init_pair(MASSEGE, COLOR_WHITE, COLOR_BLACK);
 }
 
 void showIntro(void) {
-  
-  char *intro[12] = {"Press", "ENTER", "to START", " ", 
-                    "USED:", "p - PAUSE", "SPACE - ", "   ROTOR",
-                     "ESC - EXIT", "DOWN", "LEFT", "RIGHT"};
-  for(int i = 0; i < 12; i++){
-  MVPRINTW(6+i, MAP_PADDING-2, intro[i]);
-  }
+  int start = 6;
+   MVPRINTW(start, 1, "Press");
+   MVPRINTW(start+1, 1,"ENTER");
+   MVPRINTW(start+2, 1, "to start");
+   MVPRINTW(start+3, 1, " ");
+   MVPRINTW(start+5, 1, "USED:");
+   MVPRINTW(start+6, 1,"P - pause");
+   MVPRINTW(start+7, 1, "SPACE - ");
+   MVPRINTW(start+8, 1, "  rotate");
+   MVPRINTW(start+9, 1,"ESC - exit");
+   MVPRINTW(start+10, 1, "DOWN");
+   MVPRINTW(start+11, 1, "LEFT");
+   MVPRINTW(start+12, 1, "RIGHT");
 }
-void hide(void) {
-        bkgdset(COLOR_PAIR(0));
-  for (int i = 1; i <= BOARD_N; i++)
-    for (int j = 1; j <= BOARD_M; j++) {
-
-        PRINT(j, i);
-
-      }
-    }
 
 void gameOver(void) {
   MVPRINTW(BOARD_N / 2, MAP_PADDING, OVER_MESSAGE1);
@@ -82,12 +66,32 @@ void print_rectangle(int top_y, int bottom_y, int left_x, int right_x) {
 
 // отрисовка уровня и очков
 void print_stats(game_stats_t *stats) {
-  bkgdset(COLOR_PAIR(FIGURE_HIDE));
+  bkgdset(COLOR_PAIR(MASSEGE));
   MVPRINTW(R_NEXT, BOARD_M + SHIFT_MESSAGE, "NEXT");
-  MVPRINTW(R_LEV + 1, BOARD_M + SHIFT_MESSAGE, "%d", stats->level);
-  MVPRINTW(R_SCORE + 1, BOARD_M + SHIFT_MESSAGE, "%d", stats->score);
-  MVPRINTW(R_SPEED + 1, BOARD_M + SHIFT_MESSAGE, "%d", stats->speed);
-  MVPRINTW(R_LIVES + 1, BOARD_M + SHIFT_MESSAGE, "%d", stats->lives);
+  MVPRINTW(R_NEXT+9, BOARD_M + SHIFT_MESSAGE, "%d", stats->level);
+  MVPRINTW(R_NEXT+11, BOARD_M + SHIFT_MESSAGE, "%d", stats->score);
+  MVPRINTW(R_NEXT+13, BOARD_M + SHIFT_MESSAGE, "%d", stats->speed);
+  MVPRINTW(R_NEXT+17, BOARD_M + SHIFT_MESSAGE, "%d", stats->maxScore);
+}
+
+void print_overlay(void) {
+  print_rectangle(0, BOARD_N + 1, 0, BOARD_M + 1);  // отрисовка игрового поля
+  print_rectangle(0, BOARD_N + 1, BOARD_M + 2,
+                  BOARD_M + HUD_WIDTH);  // отрисовка информационного поля
+  print_rectangle(R_NEXT, R_NEXT_H, BOARD_M + 3,
+                  BOARD_M + HUD_WIDTH - 1);  // отрисовка поля под новую фигуру
+
+  MVPRINTW(R_NEXT+8, BOARD_M + SHIFT_MESSAGE, "LEVEL");
+  MVPRINTW(R_NEXT+10, BOARD_M + SHIFT_MESSAGE, "SCORE");
+  MVPRINTW(R_NEXT+12, BOARD_M + SHIFT_MESSAGE, "SPEED");
+  MVPRINTW(R_NEXT+15, BOARD_M + SHIFT_MESSAGE, "MAX");
+  MVPRINTW(R_NEXT+16, BOARD_M + SHIFT_MESSAGE, "SCORE");
+  showIntro();
+}
+
+void printPause(void) {
+  bkgdset(COLOR_PAIR(MASSEGE));
+  MVPRINTW(BOARD_N/2, SHIFT_MESSAGE, "PAUSE");
 }
 
 // void print_finished(board_t *game) {
@@ -117,16 +121,6 @@ void print_stats(game_stats_t *stats) {
 //  }
 //}
 
-void writeScore(game_stats_t *stats) {
-  FILE *file = fopen(MAX_SCORE, "w");
-  ;
-
-  if (file) {
-    // WRITE
-
-    fclose(file);
-  }
-}
 
 void printFigure(figura *f) {
   for (int i = 1; i < f->n+1; i++)
@@ -157,17 +151,15 @@ void printGameField(game_stats_t *gameBakend) {
       if (gameBakend->gameField[i-1][j-1]) {
         bkgdset(COLOR_PAIR(gameBakend->gameField[i-1][j-1]));
         PRINT(j, i);
-        //bkgdset(COLOR_PAIR(0));
       }
     }
 }
+
 void refreshGameField(game_stats_t *gameBakend) {
   bkgdset(COLOR_PAIR(0));
   for (int i = 1; i < BOARD_N+1; i++)
     for (int j = 1; j < BOARD_M+1; j++) {
-     // if (gameBakend->gameField[i-1][j-1]) {
         PRINT(j, i);
-     // }
     }
   printGameField(gameBakend);
 }
