@@ -1,14 +1,14 @@
 #include "tetris.h"
+#include "time.h"
 // TO DO # 0 в отдельные методы вынесены операции инициализации фигуры по типу
 void initFigure(figura *f){
 
-    // TO DO в идеале надо сделать так что бы матрица выделялась динамически
-    // TO DO выделение матрицы проиходит в функциях инициализации фигур
     for (int i = 0; i < FSIZE; i++)
        for (int j = 0; j < FSIZE; j++) 
          f->figur[i][j] = 0; 
-    int fig = rand() % 8;   
-    while (fig == 0) fig = rand() % 7;   
+    srand(time(NULL));
+    int fig = (rand() % 8)+1;   
+    //while (fig == 0) fig = rand()  % 8;   
     switch (fig){
     case FIGURE_Q :   
         iniFigura_Q(f);
@@ -35,7 +35,6 @@ void initFigure(figura *f){
     
 }
 
-
 void initStartPosFigure(figura *f, int x, int y){
     f->x = x;
     f->y = y;
@@ -61,21 +60,18 @@ void initGameField(game_stats_t *gameBakend){
 void initGame(game_stats_t *gameBakend) { 
   gameBakend->level = 1;
   gameBakend->score = 0;
+  gameBakend->maxScore = readScore();
   gameBakend->speed = 1;
-  gameBakend->lives = 9;
-  gameBakend->won = FALSE;
   initStartPosFigure(gameBakend->fnow, START_X, START_Y);
-  initStartPosFigure(gameBakend->fnext, R_NEXT_X, R_NEXT_Y  );
+  initStartPosFigure(gameBakend->fnext, R_NEXT_X, R_NEXT_Y);
   initGameField(gameBakend);
 }
 
 //запомним и зафиксируем фигуру на игровом поле
 void figuraGamefield(game_stats_t *gb, figura *f){
-    // тут под новую структуру меняю 
     for(int y = f->y, k = 0; y <  FIELD_N && k < f->n; y++, k++)
         for(int x = f->x, l = 0; x < FIELD_M && l < f->m; x++, l++)
             if(f->figur[k][l]) gb->gameField[y][x] = f->typeFigure;
-
 }
 
 
@@ -86,7 +82,7 @@ void iniFigura_Q(figura *f){
     f->figur[0][1] = 1;
     f->figur[1][0] = 1;
     f->figur[1][1] = 1;
-        f->typeFigure = FIGURE_Q;  
+        f->typeFigure = FIGURE_Q;
 }
 void iniFigura_I(figura *f){
     f->n = 4;
