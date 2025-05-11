@@ -15,11 +15,10 @@ next one.
     Cons:
         1) A lot of codelines.
 
-        \/ TO DO ENTER click second
 */
 
 UserAction_t get_signal(int user_input) {  // TO DO RENAME
-  UserAction_t rc = Down;
+  UserAction_t rc = -1;
 
   switch (user_input) {
     case KEY_UP:
@@ -37,10 +36,10 @@ UserAction_t get_signal(int user_input) {  // TO DO RENAME
     case ESCAPE:
       rc = Terminate;
       break;
-    case '\n':
+    case ENTER_KEY:
       rc = Start;
       break;
-    case ' ':
+    case SPACE:
       rc = Action;
       break;
     case PAUSE_p:
@@ -56,18 +55,11 @@ UserAction_t get_signal(int user_input) {  // TO DO RENAME
   return rc;
 }
 
-void moveleft(game_stats_t *gb) {
-  if (!collisionLeft(gb->fnow, gb)) refreshFigure(gb->fnow, -1, 0);
-}
-
-void moveright(figura *f, game_stats_t *gb) {
-  if (!collisionRight(f, gb)) refreshFigure(f, 1, 0);
-}
-
 void movedown(tetris_state *state, figura *f, game_stats_t *gb) {
-  if (!collisionDown(f, gb))
+  if (!collisionDown(f, gb)) {
     refreshFigure(f, 0, 1);
-  else {
+    *state = MOVING;
+  } else {
     *state = ATTACHING;
     if (collisionUp(f, gb)) {
       *state = GAMEOVER;
@@ -81,19 +73,13 @@ void rotate(figura *f, game_stats_t *gb) {
   showFigure(f);
 }
 
-void gg(game_stats_t *game, tetris_state *state) {
-hide();
-  initFigure(game->fnow);  // инициализируем фигуру
-  initFigure(game->fnext);
-  showFigure(game->fnow);
-  showFigure(game->fnext);
-  *state = SPAWN;
-}
-
 void started(UserAction_t *userAct, game_stats_t *game, tetris_state *state) {
   switch (*userAct) {
     case Start:
-      gg(game, state);
+      refreshGameField(game);
+      initFigure(game->fnow);  // инициализируем фигуру
+      initFigure(game->fnext);
+      *state = SPAWN;
       break;
     case Terminate:
       *state = GAMEOVER;
@@ -107,9 +93,8 @@ void spawned(game_stats_t *gb, tetris_state *state) {
   swapFigure(gb->fnow, gb->fnext);
   hideFigure(gb->fnext);
   initFigure(gb->fnext);
-  refreshFigure(gb->fnext, 0, 0);
-  // TO DO maybe  used showFigure();
-  *state = MOVING;
+  showFigure(gb->fnext);
+  showFigure(gb->fnow);
 }
 
 void attaching(game_stats_t *gb, figura *f) {
@@ -118,36 +103,41 @@ void attaching(game_stats_t *gb, figura *f) {
   refreshGameField(gb);
 }
 
-void moved(UserAction_t *userAct, tetris_state *state, game_stats_t *gamestats,
+void moved(UserAction_t *userAct, tetris_state *state, game_stats_t *gb,
            figura *fnow) {
   switch (*userAct) {
     case Left:
-      moveleft(gamestats);
+      if (!collisionLeft(gb->fnow, gb)) refreshFigure(gb->fnow, -1, 0);
       *state = SHIFTING;
       break;
     case Right:
-      moveright(fnow, gamestats);
+      if (!collisionRight(gb->fnow, gb)) refreshFigure(gb->fnow, 1, 0);
       *state = SHIFTING;
       break;
     case Up:
       break;
     case Down:
-      //while (*state != ATTACHING) {
-      movedown(state, fnow, gamestats);
-      //}
+      while (*state != ATTACHING) {
+        movedown(state, fnow, gb);
+      }
       break;
     case Action:
-      rotate(fnow, gamestats);
+      rotate(fnow, gb);
       *state = SHIFTING;
       break;
     case Pause:
-      while(get_signal(GET_USER_INPUT) != Pause) {};
+      printPause();
+      while (get_signal(GET_USER_INPUT) != Pause) {
+      };
+      refreshGameField(gb);
+      refreshFigure(gb->fnow, 0, 0);
       break;
     case Terminate:
+      gameOver();
       *state = GAMEOVER;
       break;
     default:
-      // movedown(state, fnow, gamestats);
+      *state = SHIFTING;
       break;
   }
 }
@@ -162,13 +152,13 @@ void sigact(UserAction_t *userAct, tetris_state *state, game_stats_t *gamestats,
       break;
     case SPAWN: /*Рождение нового блока*/
       spawned(gamestats, state);
+      *state = MOVING;
       break;
     case MOVING:
       moved(userAct, state, gamestats, fnow);
       break;
     case SHIFTING: /*движение блока вниз*/
       movedown(state, fnow, gamestats);
-      *state = MOVING;
       break;
     case ATTACHING: /*положить блок на игровое поле*/
       attaching(gamestats, fnow);
@@ -176,7 +166,7 @@ void sigact(UserAction_t *userAct, tetris_state *state, game_stats_t *gamestats,
       break;
     case GAMEOVER:
       gameOver();  // gameOVER thanks for game
-      timeout(700);
+      timeout(1700);
       break;
     default:
       break;
