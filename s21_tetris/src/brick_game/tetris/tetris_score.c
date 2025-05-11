@@ -29,3 +29,26 @@ void shiftField(game_stats_t *gb, int y){
 		
 }
 
+void writeScore(game_stats_t *stats) {
+  if (stats->maxScore < stats->score){
+      FILE *file = fopen(MAX_SCORE, "w");
+    if (file == NULL) {
+        perror("Ошибка при открытии файла");
+    }
+    fprintf(file, "%d", stats->score);
+    fclose(file);
+  }
+}
+
+int readScore(void) {
+   FILE *file = fopen(MAX_SCORE, "r");
+    if (file == NULL) {
+        perror("Ошибка при открытии файла");
+        return 0;
+    }
+
+    int maxScore;
+    fscanf(file, "%d", &maxScore);
+    fclose(file);
+    return maxScore;
+}
