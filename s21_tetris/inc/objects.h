@@ -49,16 +49,17 @@ typedef struct
 
 typedef struct
 {
+    int field[FIELD_N][FIELD_M];
+    figura *fnext;
     int score;
+    int high_score;
     int level;
     int speed;
-    int lives;
-    int won;
-    int gameField[FIELD_N][FIELD_M];
+    int pause;    
     figura *fnow;
-    figura *fnext;
-} game_stats_t;
-//} game;
+
+} GameInfo_t;
+
 
 
 typedef enum

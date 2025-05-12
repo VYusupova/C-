@@ -14,25 +14,25 @@ typedef enum { START = 0,
                GAMEOVER 
 } tetris_state;
 
-void sigact(UserAction_t *userAct, tetris_state *state, game_stats_t *gamestats,
+void sigact(UserAction_t *userAct, tetris_state *state, GameInfo_t *gamestats,
             figura *fnow);
-void started(UserAction_t *userAct, game_stats_t *game, tetris_state *state);
-void moved(UserAction_t *userAct, tetris_state *state, game_stats_t *gamestats,
+void started(UserAction_t *userAct, GameInfo_t *game, tetris_state *state);
+void moved(UserAction_t *userAct, tetris_state *state, GameInfo_t *gamestats,
             figura *fnow);
-            void gg(game_stats_t *game, tetris_state *state);
+//            void gg(GameInfo_t *game, tetris_state *state);
 
 
 void movedown(/*UserAction_t *userAct,*/ tetris_state *state,
-              figura *moveFigure, game_stats_t *gamestats);
+              figura *moveFigure, GameInfo_t *gamestats);
 
 UserAction_t get_signal(int user_input);
 
 // void on_start_state(signals sig, frog_state *state, game_stats_t *game);
 
-void moveleft(game_stats_t *gamestats);
-int check(figura *f, game_stats_t *gb);
+void moveleft(GameInfo_t *gamestats);
+int check(figura *f, GameInfo_t *gb);
 
-int collisionDown(figura *f, game_stats_t *gb);
+int collisionDown(figura *f, GameInfo_t *gb);
 
 
 

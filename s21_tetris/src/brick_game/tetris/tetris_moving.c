@@ -1,6 +1,6 @@
 #include "tetris.h"
 
-int collisionDown(figura *f, game_stats_t *gb) {
+int collisionDown(figura *f, GameInfo_t *gb) {
   int result = SUCCESS;
   if ((f->y + f->n) >= (BOARD_N)) result = ERROR;
   else 
@@ -9,14 +9,14 @@ int collisionDown(figura *f, game_stats_t *gb) {
 }
 
 // проверяем что фигура появилась и не упирается вниз
-int collisionUp(figura *f, game_stats_t *gb){
+int collisionUp(figura *f, GameInfo_t *gb){
  if (f->y == START_Y && collisionDown(f,gb)) return ERROR;
  return SUCCESS;
 }
 
- // f->n & BOARD_N - строк 
- // t->m & BOARD_M - столбцов
-int collisionLeft(figura *f, game_stats_t *gb) {
+ // f->n & FIELD_N - строк 
+ // t->m & FIELD_M - столбцов
+int collisionLeft(figura *f, GameInfo_t *gb) {
   int result = SUCCESS;
   if ((f->x) <= 0) result = ERROR;
   else 
@@ -24,24 +24,23 @@ int collisionLeft(figura *f, game_stats_t *gb) {
   return result;
 }
 
-int collisionRight(figura *f, game_stats_t *gb) {
+int collisionRight(figura *f, GameInfo_t *gb) {
    int result = SUCCESS;
    if (f->x + f->m >= (BOARD_M)) result = ERROR;
    if (collisionGameField(gb,0,1)) result = ERROR;
   return result;
 }
 
-int collisionGameField(game_stats_t *gb, int down, int left) {
+int collisionGameField(GameInfo_t *gb, int down, int left) {
   int result = SUCCESS;
-  for (int y = gb->fnow->y+down, k = 0; y < BOARD_N && k <  gb->fnow->n; y++, k++)
-    for (int j =  gb->fnow->x+left, l = 0; j < BOARD_M && l <  gb->fnow->m; j++, l++)
-      if (gb->gameField[y][j] != 0 &&  gb->fnow->figur[k][l] == 1) result = ERROR;
+  for (int y = gb->fnow->y+down, k = 0; y < FIELD_N && k <  gb->fnow->n; y++, k++)
+    for (int j =  gb->fnow->x+left, l = 0; j < FIELD_M && l <  gb->fnow->m; j++, l++)
+      if (gb->field[y][j] != 0 &&  gb->fnow->figur[k][l] == 1) result = ERROR;
    return result;
 }
 
-void rotateFigure(figura *f, game_stats_t *gb){
-    if (f->typeFigure != FIGURE_Q) 
-    {
+void rotateFigure(figura *f, GameInfo_t *gb){
+    
         //задаем новую фигуру 
         figura new;
         new.x = f->x;
@@ -67,5 +66,5 @@ void rotateFigure(figura *f, game_stats_t *gb){
                 f->figur[y][x] =new.figur[y][x];
         f->m = new.m;
         f->n = new.n;}
-    }
+    
 }

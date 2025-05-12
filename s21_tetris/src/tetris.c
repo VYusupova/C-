@@ -10,6 +10,7 @@ int main(void) {
   setlocale(LC_ALL, "");
   initColors();     // инициализация цветов
   print_overlay();  // отрисовка поля игры
+  srand(time(NULL)); // for tru random
   game_loop();
   endwin();
 
@@ -17,7 +18,7 @@ int main(void) {
 }
 
 void game_loop() {
-  game_stats_t gameBakend;  // здесь лежит массив с описанием игрового поля
+  GameInfo_t gameBakend;  // здесь лежит массив с описанием игрового поля
 
   figura fnow;
   figura fnext;

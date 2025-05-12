@@ -65,13 +65,13 @@ void print_rectangle(int top_y, int bottom_y, int left_x, int right_x) {
 }
 
 // отрисовка уровня и очков
-void print_stats(game_stats_t *stats) {
+void print_stats(GameInfo_t *stats) {
   bkgdset(COLOR_PAIR(MASSEGE));
   MVPRINTW(R_NEXT, BOARD_M + SHIFT_MESSAGE, "NEXT");
   MVPRINTW(R_NEXT+9, BOARD_M + SHIFT_MESSAGE, "%d", stats->level);
   MVPRINTW(R_NEXT+11, BOARD_M + SHIFT_MESSAGE, "%d", stats->score);
   MVPRINTW(R_NEXT+13, BOARD_M + SHIFT_MESSAGE, "%d", stats->speed);
-  MVPRINTW(R_NEXT+17, BOARD_M + SHIFT_MESSAGE, "%d", stats->maxScore);
+  MVPRINTW(R_NEXT+17, BOARD_M + SHIFT_MESSAGE, "%d", stats->high_score);
 }
 
 void print_overlay(void) {
@@ -145,17 +145,17 @@ void refreshFigure(figura *f, int dx, int dy) {
   showFigure(f);
 }
 
-void printGameField(game_stats_t *gameBakend) {
+void printGameField(GameInfo_t *gameBakend) {
   for (int i = 1; i < BOARD_N+1; i++)
     for (int j = 1; j < BOARD_M+1; j++) {
-      if (gameBakend->gameField[i-1][j-1]) {
-        bkgdset(COLOR_PAIR(gameBakend->gameField[i-1][j-1]));
+      if (gameBakend->field[i-1][j-1]) {
+        bkgdset(COLOR_PAIR(gameBakend->field[i-1][j-1]));
         PRINT(j, i);
       }
     }
 }
 
-void refreshGameField(game_stats_t *gameBakend) {
+void refreshGameField(GameInfo_t *gameBakend) {
   bkgdset(COLOR_PAIR(0));
   for (int i = 1; i < BOARD_N+1; i++)
     for (int j = 1; j < BOARD_M+1; j++) {

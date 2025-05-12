@@ -55,7 +55,7 @@ UserAction_t get_signal(int user_input) {  // TO DO RENAME
   return rc;
 }
 
-void movedown(tetris_state *state, figura *f, game_stats_t *gb) {
+void movedown(tetris_state *state, figura *f, GameInfo_t *gb) {
   if (!collisionDown(f, gb)) {
     refreshFigure(f, 0, 1);
     *state = MOVING;
@@ -67,13 +67,13 @@ void movedown(tetris_state *state, figura *f, game_stats_t *gb) {
   }
 }
 
-void rotate(figura *f, game_stats_t *gb) {
+void rotate(figura *f, GameInfo_t *gb) {
   hideFigure(f);
   rotateFigure(f, gb);
   showFigure(f);
 }
 
-void started(UserAction_t *userAct, game_stats_t *game, tetris_state *state) {
+void started(UserAction_t *userAct, GameInfo_t *game, tetris_state *state) {
   switch (*userAct) {
     case Start:
       refreshGameField(game);
@@ -89,7 +89,7 @@ void started(UserAction_t *userAct, game_stats_t *game, tetris_state *state) {
   }
 }
 
-void spawned(game_stats_t *gb, tetris_state *state) {
+void spawned(GameInfo_t *gb, tetris_state *state) {
   swapFigure(gb->fnow, gb->fnext);
   hideFigure(gb->fnext);
   initFigure(gb->fnext);
@@ -97,13 +97,13 @@ void spawned(game_stats_t *gb, tetris_state *state) {
   showFigure(gb->fnow);
 }
 
-void attaching(game_stats_t *gb, figura *f) {
+void attaching(GameInfo_t *gb, figura *f) {
   figuraGamefield(gb, f);
   score(gb);
   refreshGameField(gb);
 }
 
-void moved(UserAction_t *userAct, tetris_state *state, game_stats_t *gb,
+void moved(UserAction_t *userAct, tetris_state *state, GameInfo_t *gb,
            figura *fnow) {
   switch (*userAct) {
     case Left:
@@ -142,7 +142,7 @@ void moved(UserAction_t *userAct, tetris_state *state, game_stats_t *gb,
   }
 }
 
-void sigact(UserAction_t *userAct, tetris_state *state, game_stats_t *gamestats,
+void sigact(UserAction_t *userAct, tetris_state *state, GameInfo_t *gamestats,
             figura *fnow) {
   print_stats(gamestats);
   // napms(2000); //func sleep for at least ms milliseconds
