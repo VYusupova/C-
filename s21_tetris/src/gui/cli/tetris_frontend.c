@@ -75,13 +75,13 @@ void print_stats(GameInfo_t *stats) {
 }
 
 void print_overlay(void) {
-  print_rectangle(0, BOARD_N + 1, 0, BOARD_M + 1);  // отрисовка игрового поля
-  print_rectangle(0, BOARD_N + 1, BOARD_M + 2,
-                  BOARD_M + HUD_WIDTH);  // отрисовка информационного поля
-  print_rectangle(R_NEXT, R_NEXT_H, BOARD_M + 3,
-                  BOARD_M + HUD_WIDTH - 1);  // отрисовка поля под новую фигуру
+  print_rectangle(0, BOARD_N + 1, 0, BOARD_M + 2);  // отрисовка игрового поля
+  //print_rectangle(0, BOARD_N + 1, BOARD_M + 3,
+  //                BOARD_M + HUD_WIDTH);  // отрисовка информационного поля
+  //print_rectangle(R_NEXT, R_NEXT_H, BOARD_M + 4,
+    //              BOARD_M + HUD_WIDTH - 1);  // отрисовка поля под новую фигуру
 
-  MVPRINTW(R_NEXT+8, BOARD_M + SHIFT_MESSAGE, "LEVEL");
+  MVPRINTW(R_NEXT+8,  BOARD_M + SHIFT_MESSAGE, "LEVEL");
   MVPRINTW(R_NEXT+10, BOARD_M + SHIFT_MESSAGE, "SCORE");
   MVPRINTW(R_NEXT+12, BOARD_M + SHIFT_MESSAGE, "SPEED");
   MVPRINTW(R_NEXT+15, BOARD_M + SHIFT_MESSAGE, "MAX");
@@ -91,7 +91,7 @@ void print_overlay(void) {
 
 void printPause(void) {
   bkgdset(COLOR_PAIR(MASSEGE));
-  MVPRINTW(BOARD_N/2, SHIFT_MESSAGE, "PAUSE");
+  MVPRINTW(BOARD_N/2, BOARD_M/2, "PAUSE");
 }
 
 // void print_finished(board_t *game) {
@@ -125,7 +125,7 @@ void printPause(void) {
 void printFigure(figura *f) {
   for (int i = 1; i < f->n+1; i++)
     for (int j = 1; j < f->m+1; j++) {
-      if (f->figur[i-1][j-1] == 1) PRINT(f->x + j, f->y + i);
+      if (f->figur[i-1][j-1] == 1) PRINT((f->x*2 + j*2), f->y + i);
     }
 }
 
@@ -147,10 +147,10 @@ void refreshFigure(figura *f, int dx, int dy) {
 
 void printGameField(GameInfo_t *gameBakend) {
   for (int i = 1; i < BOARD_N+1; i++)
-    for (int j = 1; j < BOARD_M+1; j++) {
+    for (int j = 1; j < FIELD_M+1; j++) {
       if (gameBakend->field[i-1][j-1]) {
         bkgdset(COLOR_PAIR(gameBakend->field[i-1][j-1]));
-        PRINT(j, i);
+        PRINT(j*2, i);
       }
     }
 }

@@ -2,7 +2,7 @@
 
 int collisionDown(figura *f, GameInfo_t *gb) {
   int result = SUCCESS;
-  if ((f->y + f->n) >= (BOARD_N)) result = ERROR;
+  if ((f->y + f->n) >= (FIELD_N)) result = ERROR;
   else 
   if (collisionGameField(gb,1,0)) result = ERROR;
   return result;
@@ -26,7 +26,7 @@ int collisionLeft(figura *f, GameInfo_t *gb) {
 
 int collisionRight(figura *f, GameInfo_t *gb) {
    int result = SUCCESS;
-   if (f->x + f->m >= (BOARD_M)) result = ERROR;
+   if (f->x + f->m >= (FIELD_M)) result = ERROR;
    if (collisionGameField(gb,0,1)) result = ERROR;
   return result;
 }
