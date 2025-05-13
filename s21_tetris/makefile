@@ -2,26 +2,46 @@ CC := gcc
 CFLAGS := -I inc -std=c11 -Wall -Werror -Wpedantic
 OBJS_FSMSWITCHCASE :=  out/tetris.o out/fsm.o 
 BACKEND := out/brick_game/tetris/
-INIT := $(BACKEND)tetris_init.o $(BACKEND)tetris_moving.o $(BACKEND)tetris_score.o
+BACK := $(BACKEND)tetris_init.o $(BACKEND)tetris_moving.o $(BACKEND)tetris_score.o
 FRONT := out/gui/cli/tetris_frontend.o
-OBJS_FSMTABLE := out/frogger.o out/fsm_matrix.o  out/frontend.c.o
+#OBJS_FSMTABLE := out/frogger.o out/fsm_matrix.o  out/frontend.c.o
 
 GCOV_FLAGS = -fprofile-arcs -ftest-coverage
 PATH_TEST = test
 TEST_BIN = run_tests
 CHECK_LIBS = $(shell pkg-config --libs check) #-lcheck -lm -lpthread -lrt -lsubunit
 
-all: clean mkdir tetris
+DIR_INSTALL := ~/'Рабочий стол'/
 
-tetris:  $(OBJS_FSMSWITCHCASE) $(INIT) $(FRONT)
+.PHONY: clean install uninstall
+
+all: clean install
+
+install: mkdir tetris
+ifdef DIR_INSTALL
+	@if [ -d $(DIR_INSTALL) ]; then \
+	  echo "\n >>> TETRIS GAME install in catalog $(DIR_INSTALL) >>>" ; install tetris $(DIR_INSTALL) ; \
+	  else echo "\ninstall aborted ... " ; \
+	       echo "$(DIR_INSTALL) >>> not found catalog" ; \
+	fi
+	
+else
+	$(error DIR_INSTALL must be set!)
+endif
+
+	
+uninstall: clean
+	$(RM) $(DIR_INSTALL)/tetris
+
+tetris:  $(OBJS_FSMSWITCHCASE) $(BACK) $(FRONT)
 	#clang-format -i src/*.c
 	$(CC) $(CFLAGS) $^ -o $@ -lncurses
 
-frogger_fsmtable: $(OBJS_FSMTABLE)
-	$(CC) $(CFLAGS) $^ -o $@ -lncurses
+#frogger_fsmtable: $(OBJS_FSMTABLE)
+#	$(CC) $(CFLAGS) $^ -o $@ -lncurses
 
 out/%.o: src/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ 
 
 mkdir:
 	mkdir out/
@@ -36,7 +56,7 @@ clean:
 	rm -rf test/*.gcov.*
 	rm -rf $(TEST_BIN)
 
-.PHONY: clean
+
 
 test_file:
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c test/test.c -o  test/tests.gcov.o
