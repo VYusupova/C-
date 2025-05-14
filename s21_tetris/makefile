@@ -32,6 +32,7 @@ endif
 	
 uninstall: clean
 	$(RM) $(DIR_INSTALL)/tetris
+	$(RM) $(DIR_INSTALL)/tetris_max_score.txt
 
 tetris:  $(OBJS_FSMSWITCHCASE) $(BACK) $(FRONT)
 	#clang-format -i src/*.c

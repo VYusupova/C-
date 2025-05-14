@@ -38,9 +38,8 @@ typedef struct
     int m;
     int x ;
     int y ;
-//Point point;
-    int figur[FSIZE][FSIZE]; 
-//  int **figur;     //TO DO rewrite dynamic alloc memory 
+//    int figur[FSIZE][FSIZE]; 
+    int **figur;     //TO DO rewrite dynamic alloc memory 
     int typeFigure;
 } figura;
 
@@ -49,7 +48,7 @@ typedef struct
 
 typedef struct
 {
-    int field[FIELD_N][FIELD_M];
+    int **field;//[FIELD_N][FIELD_M];
     figura *fnext;
     int score;
     int high_score;
@@ -71,7 +70,7 @@ typedef enum
    FIGURE_L,
    FIGURE_J,
    FIGURE_T
-} listFigures;
+} ColorsFigures;
 
 typedef enum
 {

@@ -34,7 +34,7 @@
 #define FIELD_M 10
 #define HUD_WIDTH 10  // ширана  поля для вывода информации по уровням и т.д.
 
-#define MAX_SCORE "max_score.txt"
+#define MAX_SCORE "tetris_max_score.txt"
 
 #define LEVEL_CNT 5
 #define LEVELNAME_MAX 25

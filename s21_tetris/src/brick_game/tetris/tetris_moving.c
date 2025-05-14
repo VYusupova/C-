@@ -1,14 +1,13 @@
 #include "tetris.h"
 
-int collisionDown(figura *f, GameInfo_t *gb) {
+int collisionDown(figura *f, GameInfo_t *game) {
   int result = SUCCESS;
   if ((f->y + f->n) >= (FIELD_N)) result = ERROR;
   else 
-  if (collisionGameField(gb,1,0)) result = ERROR;
+  if (collisionGameField(game,1,0)) result = ERROR;
   return result;
 }
 
-// проверяем что фигура появилась и не упирается вниз
 int collisionUp(figura *f, GameInfo_t *gb){
  if (f->y == START_Y && collisionDown(f,gb)) return ERROR;
  return SUCCESS;
@@ -40,7 +39,6 @@ int collisionGameField(GameInfo_t *gb, int down, int left) {
 }
 
 void rotateFigure(figura *f, GameInfo_t *gb){
-    
         //задаем новую фигуру 
         figura new;
         new.x = f->x;
@@ -48,9 +46,7 @@ void rotateFigure(figura *f, GameInfo_t *gb){
         new.n = f->m;
         new.m = f->n;
         new.typeFigure = f->typeFigure;
-      for (int i = 0; i < FSIZE; i++)
-       for (int j = 0; j < FSIZE; j++) 
-         new.figur[i][j] = 0;
+        new.figur = create(FSIZE,FSIZE);
         for(int i = 0; i < new.n; i++)
             for (int j = 0; j < new.m; j++)
                new.figur[i][j] = f->figur[j][new.n-1-i];
@@ -59,12 +55,12 @@ void rotateFigure(figura *f, GameInfo_t *gb){
 // // добавить условие что если новая позиция фигуры не выходит за рамки игрового поля
 // // и не сталкивается с уже занятыми на поле ячейками (т.е другими  фигурами) выполнить поворот
         //  переписываем в старую фигуру новую
-        if (!collisionRight(f, gb) && !collisionLeft(f, gb) &&
-       !collisionDown(f, gb)){
+        if (!collisionRight(&new, gb) && !collisionLeft(&new, gb) &&
+       !collisionDown(&new, gb)){
         for(int y = 0; y < new.n; y++)
             for (int x = 0; x < new.m; x++)
                 f->figur[y][x] =new.figur[y][x];
         f->m = new.m;
         f->n = new.n;}
-    
+    tetFree(new.figur, FSIZE, FSIZE);
 }

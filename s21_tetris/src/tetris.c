@@ -22,6 +22,10 @@ void game_loop() {
 
   figura fnow;
   figura fnext;
+  
+  fnow.figur = create(FSIZE, FSIZE);
+  fnext.figur = create(FSIZE, FSIZE);
+  
 
   bool break_flag = TRUE;
 
@@ -31,7 +35,7 @@ void game_loop() {
   game.fnow = &fnow;
   game.fnext = &fnext;
   initGame(&game);
-  game->speed = 700;
+  game.speed = 700;
 
   while (break_flag) {
     if (state == GAMEOVER) {
@@ -43,9 +47,13 @@ void game_loop() {
 
     if (state == MOVING || state == START) userAct = get_signal(GET_USER_INPUT);
     // else userAct = Terminate;
-    timeout(game->speed); //  timeout(700);
+    timeout(game.speed); //  timeout(700);
     // napms(500);
     // delay_output(200);
   }
-  writeScore(&gameBakend);
+  writeScore(&game);
+  
+  tetFree(fnow.figur, FSIZE, FSIZE);
+  tetFree(fnext.figur, FSIZE, FSIZE);
+  tetFree(game.field, FIELD_N, FIELD_M);
 }

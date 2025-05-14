@@ -66,10 +66,10 @@ int readScore(void) {
 // TO DO #2 Добавь в игру механику уровней. Каждый раз, когда игрок набирает 600 очков, уровень увеличивается на 1. Повышение уровня увеличивает скорость движения фигур. 
 //Максимальное количество уровней — 10.
 void levelUP(GameInfo_t *game){
- if(game->level == 10) break;
+ if(game->level == 10) return;
  if(game->score % 600 == 0) {
 	 game->level = game->score % 600;
-	 game->speed = game->speed - 10*game->level
+	 game->speed = game->speed - 10*game->level;
 		 }
 }
 
