@@ -28,6 +28,7 @@ void score(GameInfo_t *game) {
   if (lines == 3) game->score += 700;
   if (lines == 2) game->score += 300;
   if (lines == 1) game->score += 100;
+  levelUP(game);
 }
 
 void shiftField(GameInfo_t *gb, int y){	
@@ -67,8 +68,9 @@ int readScore(void) {
 //Максимальное количество уровней — 10.
 void levelUP(GameInfo_t *game){
  if(game->level == 10) return;
- if(game->score % 600 == 0) {
-	 game->level = game->score % 600;
+ int level = game->score / 600 ;
+ if (level > game->level)  {
+	 game->level = level;
 	 game->speed = game->speed - 10*game->level;
 		 }
 }

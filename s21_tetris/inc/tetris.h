@@ -38,6 +38,7 @@ int collisionGameField(GameInfo_t *game, int down, int left);
 void rotateFigure(figura *f, GameInfo_t *game);
 
 void score(GameInfo_t *game);
+void levelUP(GameInfo_t *game);
 void shiftField(GameInfo_t *game, int y);
 int readScore();
 
