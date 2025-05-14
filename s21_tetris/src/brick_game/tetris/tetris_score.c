@@ -1,23 +1,33 @@
+// TO DO #1 Максимальное количество очков должно изменяться во время игры, если пользователь превышает текущий показатель максимального количества очков во время игры.
+/* логика игры тетрис - подсчет очков и повышение уровня 
+shiftField - Уничтожение заполненных линий (Часть 1);
+score - подсчет очков (Часть 2);
+writeScore & readScore - хранение максимального количества очков(Часть 2)*/
+
+#ifndef TETRIS_SCORE
+#define TETRIS_SCORE
+
 #include "tetris.h"
 
-void score(GameInfo_t *gb) {
-  int s = 0; 
+void score(GameInfo_t *game) {
+  int cell = 0; 
   int lines = 0;
   for(int y = FIELD_N-1; y >= 0; y--){
-	s = 0;
-        for(int x = FIELD_M-1; x >= 0; x--)
-            if(gb->field[y][x] == 0) break;
-            else {s++;}
-      if (s == 10){ 
+	cell = 0;
+        for(int x = FIELD_M-1; x >= 0; x--){
+            if(game->field[y][x] == 0) break;
+            else cell++;
+	}	
+      if (cell == 10){ 
       	lines++;
-        shiftField(gb,y); 
+        shiftField(game,y); 
         y++;     
       }
       }
-  if (lines == 4) gb->score += 1500;
-  if (lines == 3) gb->score += 700;
-  if (lines == 2) gb->score += 300;
-  if (lines == 1) gb->score += 100;
+  if (lines == 4) game->score += 1500;
+  if (lines == 3) game->score += 700;
+  if (lines == 2) game->score += 300;
+  if (lines == 1) game->score += 100;
 }
 
 void shiftField(GameInfo_t *gb, int y){	
@@ -52,3 +62,15 @@ int readScore(void) {
     fclose(file);
     return maxScore;
 }
+
+// TO DO #2 Добавь в игру механику уровней. Каждый раз, когда игрок набирает 600 очков, уровень увеличивается на 1. Повышение уровня увеличивает скорость движения фигур. 
+//Максимальное количество уровней — 10.
+void levelUP(GameInfo_t *game){
+ if(game->level == 10) break;
+ if(game->score % 600 == 0) {
+	 game->level = game->score % 600;
+	 game->speed = game->speed - 10*game->level
+		 }
+}
+
+#endif
