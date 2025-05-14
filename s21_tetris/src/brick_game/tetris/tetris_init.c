@@ -1,11 +1,24 @@
+// TO DO # 0 в отдельные методы вынесены операции инициализации фигуры по типу
+// TO DO # 1 проверить на утечки памяти
+
+#ifndef TETRIS_INIT
+#define TETRIS_INIT
+
 #include "tetris.h"
 
-// TO DO # 0 в отдельные методы вынесены операции инициализации фигуры по типу
+void fillZero(int **matrix, int size_n, int size_m) {
+    for (int i = 0; i < size_n; i++)
+       for (int j = 0; j < size_m; j++) 
+         matrix[i][j] = 0; 
+}
+
 void initFigure(figura *f){
 
-    for (int i = 0; i < FSIZE; i++)
-       for (int j = 0; j < FSIZE; j++) 
-         f->figur[i][j] = 0; 
+    //for (int i = 0; i < FSIZE; i++)
+    //   for (int j = 0; j < FSIZE; j++) 
+    //     f->figur[i][j] = 0; 
+
+    fillZero(f->figure, FSIZE, FSIZE);
 
     int fig = (rand() % 8)+1;   
     switch (fig){
@@ -31,6 +44,7 @@ void initFigure(figura *f){
         iniFigura_T(f);
         break;       
     }
+     f->typeFigure = (rand() % FIGURE_T)+1;
     
 }
 
@@ -40,8 +54,8 @@ void initStartPosFigure(figura *f, int x, int y){
 }
 
 void swapFigure(figura *fnow, figura *fnext){
-    fnow->x = START_X;
-    fnow->y = START_Y;
+   fnow->x = START_X;
+   fnow->y = START_Y;
    fnow->n = fnext->n;
    fnow->m = fnext->m;
    fnow->typeFigure = fnext->typeFigure;
@@ -63,7 +77,8 @@ void initGame(GameInfo_t *gameBakend) {
   gameBakend->speed = 1;
   initStartPosFigure(gameBakend->fnow, START_X, START_Y);
   initStartPosFigure(gameBakend->fnext, R_NEXT_X, R_NEXT_Y);
-  initGameField(gameBakend);
+  //initGameField(gameBakend);
+    fillZero(gameBakend->field, FIELD_N, FIELD_M);
 }
 
 //запомним и зафиксируем фигуру на игровом поле
@@ -81,7 +96,7 @@ void iniFigura_Q(figura *f){
     f->figur[0][1] = 1;
     f->figur[1][0] = 1;
     f->figur[1][1] = 1;
-        f->typeFigure = (rand() % FIGURE_T)+1;   //FIGURE_Q;
+    //    f->typeFigure = (rand() % FIGURE_T)+1;   //FIGURE_Q;
 }
 void iniFigura_I(figura *f){
     f->n = 4;
@@ -90,7 +105,7 @@ void iniFigura_I(figura *f){
     f->figur[1][0] = 1;
     f->figur[2][0] = 1;
     f->figur[3][0] = 1;
-        f->typeFigure = (rand() % FIGURE_T)+1;   //FIGURE_I;
+    //    f->typeFigure = (rand() % FIGURE_T)+1;   //FIGURE_I;
 }
 void iniFigura_S(figura *f){
     f->n = 2;
@@ -112,7 +127,7 @@ void iniFigura_Z(figura *f){
     f->figur[1][0] = 0;
     f->figur[1][1] = 1;
     f->figur[1][2] = 1;
-        f->typeFigure =  (rand() % FIGURE_T)+1;
+    //    f->typeFigure =  (rand() % FIGURE_T)+1;
 }
 void iniFigura_L(figura *f){
     f->n = 3;
@@ -134,7 +149,7 @@ void iniFigura_J(figura *f){
     f->figur[0][0] = 0; 
     f->figur[1][0] = 0; 
     f->figur[2][0] = 1;
-        f->typeFigure =  (rand() % FIGURE_T)+1;
+    //    f->typeFigure =  (rand() % FIGURE_T)+1;
 }
 void iniFigura_T(figura *f){
     f->n = 2;
@@ -145,5 +160,7 @@ void iniFigura_T(figura *f){
     f->figur[1][1] = 1;
     f->figur[0][2] = 0;
     f->figur[1][2] = 1;
-        f->typeFigure =  (rand() % FIGURE_T)+1;
+    //    f->typeFigure =  (rand() % FIGURE_T)+1;
 }
+
+#endif
