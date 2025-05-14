@@ -10,7 +10,7 @@ int main(void) {
   setlocale(LC_ALL, "");
   initColors();     // инициализация цветов
   print_overlay();  // отрисовка поля игры
-  srand(time(NULL)); // for tru random
+  srand(time(NULL)); // for true random
   game_loop();
   endwin();
 
@@ -18,7 +18,7 @@ int main(void) {
 }
 
 void game_loop() {
-  GameInfo_t gameBakend;  // здесь лежит массив с описанием игрового поля
+  GameInfo_t game;  
 
   figura fnow;
   figura fnext;
@@ -28,26 +28,23 @@ void game_loop() {
   UserAction_t userAct = Pause;
   tetris_state state = START;
   // задаем начальные значения левел и количество очков
-  gameBakend.fnow = &fnow;
-  gameBakend.fnext = &fnext;
-  initGame(&gameBakend);
+  game.fnow = &fnow;
+  game.fnext = &fnext;
+  initGame(&game);
+  game->speed = 700;
 
   while (break_flag) {
     if (state == GAMEOVER) {
       break_flag = FALSE;
       // gameOver();
     }
-
-   //refreshGameField(&gameBakend);
-   
-    sigact(&userAct, &state, &gameBakend, &fnow);
+  
+    sigact(&userAct, &state, &game, &fnow);
 
     if (state == MOVING || state == START) userAct = get_signal(GET_USER_INPUT);
     // else userAct = Terminate;
-    timeout(700);
-    // movedown(&userAct, &fnow, &gameBakend);
+    timeout(game->speed); //  timeout(700);
     // napms(500);
-
     // delay_output(200);
   }
   writeScore(&gameBakend);
