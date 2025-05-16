@@ -22,8 +22,7 @@ void moved(UserAction_t *userAct, tetris_state *state, GameInfo_t *gamestats,
 //            void gg(GameInfo_t *game, tetris_state *state);
 
 
-void movedown(/*UserAction_t *userAct,*/ tetris_state *state,
-              figura *moveFigure, GameInfo_t *gamestats);
+void shifted(tetris_state *state, figura *f, GameInfo_t *game);
 
 UserAction_t get_signal(int user_input);
 

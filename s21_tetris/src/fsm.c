@@ -55,15 +55,12 @@ UserAction_t get_signal(int user_input) {  // TO DO RENAME
   return rc;
 }
 
-void movedown(tetris_state *state, figura *f, GameInfo_t *gb) {
-  if (!collisionDown(f, gb)) {
+void shifted(tetris_state *state, figura *f, GameInfo_t *game) {
+  if (!collisionDown(f, game)) {
     refreshFigure(f, 0, 1);
     *state = MOVING;
   } else {
     *state = ATTACHING;
-    if (collisionUp(f, gb)) {
-      *state = GAMEOVER;
-    }
   }
 }
 
@@ -97,10 +94,15 @@ void spawned(GameInfo_t *gb, tetris_state *state) {
   showFigure(gb->fnow);
 }
 
-void attaching(GameInfo_t *gb, figura *f) {
-  figuraGamefield(gb, f);
-  score(gb);
-  refreshGameField(gb);
+void attaching(tetris_state *state, GameInfo_t *game, figura *f) {
+    if (collisionUp(f, game)) {
+      *state = GAMEOVER;
+    }
+    else *state = SPAWN;
+  figuraGamefield(game, f);
+  score(game);
+  refreshGameField(game);
+
 }
 
 void moved(UserAction_t *userAct, tetris_state *state, GameInfo_t *gb,
@@ -118,8 +120,9 @@ void moved(UserAction_t *userAct, tetris_state *state, GameInfo_t *gb,
       break;
     case Down:
       while (*state != ATTACHING) {
-        movedown(state, fnow, gb);
+        shifted(state, fnow, gb);
       }
+      
       break;
     case Action:
       rotate(fnow, gb);
@@ -131,6 +134,7 @@ void moved(UserAction_t *userAct, tetris_state *state, GameInfo_t *gb,
       };
       refreshGameField(gb);
       refreshFigure(gb->fnow, 0, 0);
+      *state = SHIFTING;
       break;
     case Terminate:
       gameOver();
@@ -156,13 +160,15 @@ void sigact(UserAction_t *userAct, tetris_state *state, GameInfo_t *gamestats,
       break;
     case MOVING:
       moved(userAct, state, gamestats, fnow);
+  
       break;
     case SHIFTING: /*движение блока вниз*/
-      movedown(state, fnow, gamestats);
+      shifted(state, fnow, gamestats);
+
       break;
     case ATTACHING: /*положить блок на игровое поле*/
-      attaching(gamestats, fnow);
-      *state = SPAWN;
+      attaching(state, gamestats, fnow);
+      
       break;
     case GAMEOVER:
       gameOver();  // gameOVER thanks for game

@@ -56,6 +56,7 @@ clean:
 	rm -rf out/
 	rm -rf test/*.gcov.*
 	rm -rf $(TEST_BIN)
+	rm -rf tetris_max_score.txt
 
 
 
@@ -63,11 +64,15 @@ test_file:
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c test/test.c -o  test/tests.gcov.o
 
 test: test_file
-	$(CC) $(CFLAGS) $(GCOV_FLAGS) -o $(TEST_BIN) test/*.gcov.o out/brick_game/*.o  $(CHECK_LIBS)
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -o $(TEST_BIN) test/*.gcov.o out/brick_game/tetris/*.o  $(CHECK_LIBS)
 	@printf "\e[1;35;107m RUN FILE TESTING  \e[31;0m \n"
 	./$(TEST_BIN)
 	@printf "\n\e[1;35;107m END & DEL FILE TESTING    \e[31;0m \n"
 	
+	
+valgrind: clean  test
+	valgrind --leak-check=full --track-origins=yes ./$(TEST_RUN) $(GTEST_LIB)
+
 	
 cppcheck:
 	#cppcheck --enable=all --suppress=missingIncludeSystem src/brick_game/*.c

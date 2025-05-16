@@ -29,9 +29,9 @@ void showIntro(void) {
    MVPRINTW(start+3, 1, " ");
    MVPRINTW(start+5, 1, "USED:");
    MVPRINTW(start+6, 1,"P - pause");
-   MVPRINTW(start+7, 1, "SPACE - ");
-   MVPRINTW(start+8, 1, "  rotate");
-   MVPRINTW(start+9, 1,"ESC - exit");
+   MVPRINTW(start+7, 1, "SPACE - rotate ");
+   MVPRINTW(start+8, 1, "ESC - exit");
+   MVPRINTW(start+9, 1," ");
    MVPRINTW(start+10, 1, "DOWN");
    MVPRINTW(start+11, 1, "LEFT");
    MVPRINTW(start+12, 1, "RIGHT");
@@ -84,7 +84,7 @@ void print_overlay(void) {
   MVPRINTW(R_NEXT+8,  BOARD_M + SHIFT_MESSAGE, "LEVEL");
   MVPRINTW(R_NEXT+10, BOARD_M + SHIFT_MESSAGE, "SCORE");
   MVPRINTW(R_NEXT+12, BOARD_M + SHIFT_MESSAGE, "SPEED");
-  MVPRINTW(R_NEXT+15, BOARD_M + SHIFT_MESSAGE, "MAX");
+  MVPRINTW(R_NEXT+15, BOARD_M + SHIFT_MESSAGE, "MAX SCORE");
   MVPRINTW(R_NEXT+16, BOARD_M + SHIFT_MESSAGE, "SCORE");
   showIntro();
 }

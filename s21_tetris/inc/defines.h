@@ -25,8 +25,8 @@
 // начало игрового поля левый верхний угол с отступом на 0 позиции
 #define BOARDS_BEGIN 0
 #define START_X (FIELD_M / 2) - 1  // начальные позиции фигуры для игры
-#define START_Y (0)
-#define MAP_PADDING 3  // сдвиг игрового поля для фронтэнда
+#define START_Y MAP_PADDING
+#define MAP_PADDING 0  // сдвиг игрового поля для фронтэнда
 #define BOARD_N 20
 #define BOARD_M FIELD_M*2
 

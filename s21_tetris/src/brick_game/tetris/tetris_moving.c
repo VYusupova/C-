@@ -9,7 +9,7 @@ int collisionDown(figura *f, GameInfo_t *game) {
 }
 
 int collisionUp(figura *f, GameInfo_t *gb){
- if (f->y == START_Y && collisionDown(f,gb)) return ERROR;
+ if (f->y <= START_Y+2) return ERROR; // && collisionDown(f,gb)
  return SUCCESS;
 }
 
@@ -38,29 +38,33 @@ int collisionGameField(GameInfo_t *gb, int down, int left) {
    return result;
 }
 
-void rotateFigure(figura *f, GameInfo_t *gb){
+void rotateFigure(figura *f, GameInfo_t *game){
         //задаем новую фигуру 
         figura new;
         new.x = f->x;
         new.y = f->y;
         new.n = f->m;
         new.m = f->n;
+        //if (new.n == 1 ) new.y +=2;
         new.typeFigure = f->typeFigure;
         new.figur = create(FSIZE,FSIZE);
         for(int i = 0; i < new.n; i++)
             for (int j = 0; j < new.m; j++)
                new.figur[i][j] = f->figur[j][new.n-1-i];
-        //showFigure(&new); 
+
 
 // // добавить условие что если новая позиция фигуры не выходит за рамки игрового поля
 // // и не сталкивается с уже занятыми на поле ячейками (т.е другими  фигурами) выполнить поворот
         //  переписываем в старую фигуру новую
-        if (!collisionRight(&new, gb) && !collisionLeft(&new, gb) &&
-       !collisionDown(&new, gb)){
+//        if (f->x + f->m >= (FIELD_M)) { new.x -=1;}
+        if (!collisionRight(&new, game) && !collisionLeft(&new, game) &&
+       !collisionDown(&new, game)){
         for(int y = 0; y < new.n; y++)
             for (int x = 0; x < new.m; x++)
                 f->figur[y][x] =new.figur[y][x];
         f->m = new.m;
-        f->n = new.n;}
+        f->n = new.n;
+        f->x = new.x;
+        f->y = new.y;}
     tetFree(new.figur, FSIZE, FSIZE);
 }
