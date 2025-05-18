@@ -11,7 +11,7 @@ PATH_TEST = test
 TEST_BIN = run_tests
 CHECK_LIBS = $(shell pkg-config --libs check) #-lcheck -lm -lpthread -lrt -lsubunit
 
-DIR_INSTALL := ~/'Рабочий стол'/
+DIR_INSTALL := ~/#'Рабочий стол'/
 
 .PHONY: clean install uninstall
 
