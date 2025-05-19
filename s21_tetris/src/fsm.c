@@ -14,16 +14,15 @@ next one.
         1) Less memory usage.
     Cons:
         1) A lot of codelines.
-
 */
 
 UserAction_t get_signal(int user_input) {  // TO DO RENAME
   UserAction_t rc = -1;
 
   switch (user_input) {
-    case KEY_UP:
-      rc = Up;
-      break;
+    //case KEY_UP:
+    //  rc = Up;
+    //  break;
     case KEY_DOWN:
       rc = Down;
       break;
@@ -73,13 +72,14 @@ void rotate(figura *f, GameInfo_t *gb) {
 void started(UserAction_t *userAct, GameInfo_t *game, tetris_state *state) {
   switch (*userAct) {
     case Start:
+      initGame(game);
       refreshGameField(game);
       initFigure(game->fnow);  // инициализируем фигуру
       initFigure(game->fnext);
       *state = SPAWN;
       break;
     case Terminate:
-      *state = GAMEOVER;
+      *state = EXIT;
       break;
     default:
       break;
@@ -94,7 +94,7 @@ void spawned(GameInfo_t *gb, tetris_state *state) {
   showFigure(gb->fnow);
 }
 
-void attaching(tetris_state *state, GameInfo_t *game, figura *f) {
+void attach(tetris_state *state, GameInfo_t *game, figura *f) {
     if (collisionUp(f, game)) {
       *state = GAMEOVER;
     }
@@ -116,8 +116,8 @@ void moved(UserAction_t *userAct, tetris_state *state, GameInfo_t *gb,
       if (!collisionRight(gb->fnow, gb)) refreshFigure(gb->fnow, 1, 0);
       *state = SHIFTING;
       break;
-    case Up:
-      break;
+    //case Up:
+    //  break;
     case Down:
       while (*state != ATTACHING) {
         shifted(state, fnow, gb);
@@ -137,8 +137,8 @@ void moved(UserAction_t *userAct, tetris_state *state, GameInfo_t *gb,
       *state = SHIFTING;
       break;
     case Terminate:
-      gameOver();
-      *state = GAMEOVER;
+      //gameOver();
+      *state = EXIT;
       break;
     default:
       *state = SHIFTING;
@@ -167,12 +167,13 @@ void sigact(UserAction_t *userAct, tetris_state *state, GameInfo_t *gamestats,
 
       break;
     case ATTACHING: /*положить блок на игровое поле*/
-      attaching(state, gamestats, fnow);
+      attach(state, gamestats, fnow);
       
       break;
     case GAMEOVER:
       gameOver();  // gameOVER thanks for game
       timeout(1700);
+      *state = START;
       break;
     default:
       break;

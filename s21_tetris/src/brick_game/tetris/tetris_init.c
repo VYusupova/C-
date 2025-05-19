@@ -81,6 +81,7 @@ void initGame(GameInfo_t *game) {
   game->score = 0;
   game->high_score = readScore();
   game->speed = 770;
+  game->pause = 0;
   initStartPosFigure(game->fnow, START_X, START_Y);
   initStartPosFigure(game->fnext, R_NEXT_X, R_NEXT_Y);
   game->field = create(FIELD_N, FIELD_M);

@@ -38,8 +38,12 @@ void showIntro(void) {
 }
 
 void gameOver(void) {
-  MVPRINTW(BOARD_N / 2, MAP_PADDING, OVER_MESSAGE1);
-  MVPRINTW(BOARD_N / 2 + 1, MAP_PADDING, OVER_MESSAGE2);
+  MVPRINTW(BOARD_N / 2, BOARD_M/2, "GAME");
+  MVPRINTW(BOARD_N / 2 + 1,  BOARD_M/2, "OVER");
+  MVPRINTW(BOARD_N / 2 + 3, BOARD_M/2-2, "Press");
+  MVPRINTW(BOARD_N / 2 + 4, BOARD_M/2-2,"ENTER");
+  MVPRINTW(BOARD_N / 2 + 5, BOARD_M/2, "to");
+  MVPRINTW(BOARD_N / 2 + 5, BOARD_M/2-2, "start");
 }
 
 // отрисовка прямоугольника с координатми

@@ -35,10 +35,10 @@ void game_loop() {
   game.fnow = &fnow;
   game.fnext = &fnext;
   initGame(&game);
-  game.speed = 700;
+  //game.speed = 700;
 
   while (break_flag) {
-    if (state == GAMEOVER) {
+    if (state == EXIT) {
       break_flag = FALSE;
       // gameOver();
     }

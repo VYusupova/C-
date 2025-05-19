@@ -54,7 +54,7 @@ void writeScore(GameInfo_t *stats) {
 int readScore(void) {
    FILE *file = fopen(MAX_SCORE, "r");
     if (file == NULL) {
-        perror("Ошибка при открытии файла");
+        //perror("Ошибка при открытии файла");
         return 0;
     }
 
