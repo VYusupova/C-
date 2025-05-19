@@ -22,29 +22,44 @@ void initColors() {
 }
 
 void showIntro(void) {
-  int start = 6;
-   MVPRINTW(start, 1, "Press");
-   MVPRINTW(start+1, 1,"ENTER");
-   MVPRINTW(start+2, 1, "to start");
-   MVPRINTW(start+3, 1, " ");
-   MVPRINTW(start+5, 1, "USED:");
-   MVPRINTW(start+6, 1,"P - pause");
-   MVPRINTW(start+7, 1, "SPACE - rotate ");
-   MVPRINTW(start+8, 1, "ESC - exit");
-   MVPRINTW(start+9, 1," ");
-   MVPRINTW(start+10, 1, "DOWN");
-   MVPRINTW(start+11, 1, "LEFT");
-   MVPRINTW(start+12, 1, "RIGHT");
+  int start = BOARD_N / 2 - 6;
+  int Y = 4;
+   MVPRINTW(start, Y, "Press");
+   MVPRINTW(start+1, Y,"ENTER - start");
+  // MVPRINTW(start+2, Y, "to start");
+//   MVPRINTW(start+3,  Y, " ");
+   MVPRINTW(start+5,  Y, "USED:");
+   MVPRINTW(start+6,  Y, "P     - pause");
+   MVPRINTW(start+7,  Y, "SPACE - rotate ");
+   MVPRINTW(start+8,  Y, "ESC   - exit");
+   MVPRINTW(start+9,  Y, "DOWN");
+   MVPRINTW(start+10, Y, "LEFT");
+   MVPRINTW(start+11, Y, "RIGHT");
 }
 
 void gameOver(void) {
   MVPRINTW(BOARD_N / 2, BOARD_M/2, "GAME");
   MVPRINTW(BOARD_N / 2 + 1,  BOARD_M/2, "OVER");
-  MVPRINTW(BOARD_N / 2 + 3, BOARD_M/2-2, "Press");
-  MVPRINTW(BOARD_N / 2 + 4, BOARD_M/2-2,"ENTER");
+  MVPRINTW(BOARD_N / 2 + 3, BOARD_M/2-1, "Press");
+  MVPRINTW(BOARD_N / 2 + 4, BOARD_M/2-1,"ENTER");
   MVPRINTW(BOARD_N / 2 + 5, BOARD_M/2, "to");
-  MVPRINTW(BOARD_N / 2 + 5, BOARD_M/2-2, "start");
+  MVPRINTW(BOARD_N / 2 + 5, BOARD_M/2-1, "start");
 }
+
+// отрисовка уровня и очков
+void print_stats(GameInfo_t *game) {
+  bkgdset(COLOR_PAIR(MASSEGE));
+  
+  MVPRINTW(R_NEXT, BOARD_M + SHIFT_MESSAGE, "NEXT");
+  if (game->pause) MVPRINTW(R_NEXT+6, BOARD_M + SHIFT_MESSAGE, "  PAUSE");
+  else MVPRINTW(R_NEXT+6, BOARD_M + SHIFT_MESSAGE, "       ");
+  MVPRINTW(R_NEXT+9, BOARD_M + SHIFT_MESSAGE, "%d", game->level);
+  MVPRINTW(R_NEXT+11, BOARD_M + SHIFT_MESSAGE, "%d", game->score);
+  MVPRINTW(R_NEXT+13, BOARD_M + SHIFT_MESSAGE, "%d", game->speed);
+  if (game->score > game->high_score) MVPRINTW(R_NEXT+17, BOARD_M + SHIFT_MESSAGE, "%d", game->score);
+  else MVPRINTW(R_NEXT+17, BOARD_M + SHIFT_MESSAGE, "%d", game->high_score);
+}
+
 
 // отрисовка прямоугольника с координатми
 void print_rectangle(int top_y, int bottom_y, int left_x, int right_x) {
@@ -68,15 +83,6 @@ void print_rectangle(int top_y, int bottom_y, int left_x, int right_x) {
   MVADDCH(bottom_y, i, ACS_LRCORNER);
 }
 
-// отрисовка уровня и очков
-void print_stats(GameInfo_t *stats) {
-  bkgdset(COLOR_PAIR(MASSEGE));
-  MVPRINTW(R_NEXT, BOARD_M + SHIFT_MESSAGE, "NEXT");
-  MVPRINTW(R_NEXT+9, BOARD_M + SHIFT_MESSAGE, "%d", stats->level);
-  MVPRINTW(R_NEXT+11, BOARD_M + SHIFT_MESSAGE, "%d", stats->score);
-  MVPRINTW(R_NEXT+13, BOARD_M + SHIFT_MESSAGE, "%d", stats->speed);
-  MVPRINTW(R_NEXT+17, BOARD_M + SHIFT_MESSAGE, "%d", stats->high_score);
-}
 
 void print_overlay(void) {
   print_rectangle(0, BOARD_N + 1, 0, BOARD_M + 2);  // отрисовка игрового поля
@@ -166,4 +172,5 @@ void refreshGameField(GameInfo_t *gameBakend) {
         PRINT(j, i);
     }
   printGameField(gameBakend);
+  
 }

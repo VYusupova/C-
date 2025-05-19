@@ -16,42 +16,39 @@ next one.
         1) A lot of codelines.
 */
 
-UserAction_t get_signal(int user_input) {  // TO DO RENAME
-  UserAction_t rc = -1;
+UserAction_t get_signal(int user_input) {  
+  UserAction_t action = -1;
 
   switch (user_input) {
-    //case KEY_UP:
-    //  rc = Up;
-    //  break;
     case KEY_DOWN:
-      rc = Down;
+      action = Down;
       break;
     case KEY_LEFT:
-      rc = Left;
+      action = Left;
       break;
     case KEY_RIGHT:
-      rc = Right;
+      action = Right;
       break;
     case ESCAPE:
-      rc = Terminate;
+      action = Terminate;
       break;
     case ENTER_KEY:
-      rc = Start;
+      action = Start;
       break;
     case SPACE:
-      rc = Action;
+      action = Action;
       break;
     case PAUSE_p:
-      rc = Pause;
+      action = Pause;
       break;
     case PAUSE_P:
-      rc = Pause;
+      action = Pause;
       break;
     default:
       // rc = Down;
       break;
   }
-  return rc;
+  return action;
 }
 
 void shifted(tetris_state *state, figura *f, GameInfo_t *game) {
@@ -102,42 +99,50 @@ void attach(tetris_state *state, GameInfo_t *game, figura *f) {
   figuraGamefield(game, f);
   score(game);
   refreshGameField(game);
-
 }
 
-void moved(UserAction_t *userAct, tetris_state *state, GameInfo_t *gb,
+void moved(UserAction_t *userAct, tetris_state *state, GameInfo_t *game,
            figura *fnow) {
   switch (*userAct) {
     case Left:
-      if (!collisionLeft(gb->fnow, gb)) refreshFigure(gb->fnow, -1, 0);
+      if (!collisionLeft(game->fnow, game)) refreshFigure(game->fnow, -1, 0);
       *state = SHIFTING;
       break;
     case Right:
-      if (!collisionRight(gb->fnow, gb)) refreshFigure(gb->fnow, 1, 0);
+      if (!collisionRight(game->fnow, game)) refreshFigure(game->fnow, 1, 0);
       *state = SHIFTING;
       break;
     //case Up:
     //  break;
     case Down:
       while (*state != ATTACHING) {
-        shifted(state, fnow, gb);
+        shifted(state, fnow, game);
       }
-      
       break;
     case Action:
-      rotate(fnow, gb);
+      rotate(fnow, game);
       *state = SHIFTING;
       break;
     case Pause:
+    *state = SHIFTING;
       printPause();
-      while (get_signal(GET_USER_INPUT) != Pause) {
-      };
-      refreshGameField(gb);
-      refreshFigure(gb->fnow, 0, 0);
-      *state = SHIFTING;
+      game->pause = 1;
+        print_stats(game);
+//      while (get_signal(GET_USER_INPUT) != Pause) {
+//      };
+	while (game->pause) {
+	UserAction_t action = get_signal(GET_USER_INPUT);
+	if (action == Pause) game->pause = 0;
+	if (action == Start) game->pause = 0;
+	if (action == Terminate) {game->pause = 0;*state = EXIT;}
+	}
+//      game->pause = 0;
+        print_stats(game);
+      refreshGameField(game);
+      refreshFigure(game->fnow, 0, 0);
+
       break;
     case Terminate:
-      //gameOver();
       *state = EXIT;
       break;
     default:

@@ -26,10 +26,9 @@ void attach(tetris_state *state, GameInfo_t *game, figura *f);
 
 UserAction_t get_signal(int user_input);
 
-//void moveleft(GameInfo_t *gamestats);
 int check(figura *f, GameInfo_t *gb);
 
-//int collisionDown(figura *f, GameInfo_t *gb);
+GameInfo_t updateCurrentState();
 
 
 
