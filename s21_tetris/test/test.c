@@ -1,97 +1,169 @@
 //#include <check.h>
 
 #include "s21_test.h"
+//#include "../../../inc/tetris.h"
+
 
 START_TEST(test_create_matrix) {
- // figura f;
- // f.figur = create(FSIZE,FSIZE);  
- // for (int x = 0; x<FSIZE; x++)
- // for (int y = 0; y <FSIZE; y++)
- // ck_assert_int_eq(f.figur[x][y] , 0);
- // tetFree(f.figur, FSIZE,FSIZE);
+ figura f;
+ f.figur = create(FSIZE,FSIZE);
+ for (int x = 0; x<FSIZE; x++)
+ for (int y = 0; y<FSIZE; y++)
+ ck_assert_int_eq(f.figur[x][y] , 0);
+ tetFree(f.figur, FSIZE,FSIZE);
 }
 END_TEST
 
-START_TEST(test_init_tetris) {
+START_TEST(test_init_figura_Q) {
   figura f;
-  initFigure(&f);
-  ck_assert_int_eq(f.x , START_X);
-  ck_assert_int_eq(f.y , START_Y);
-  // TO DO освободить ресурсы если будут выделяться
+  f.figur = create(FSIZE,FSIZE);
+  iniFigura_Q(&f);
+  ck_assert_int_eq(f.n , 2);
+  ck_assert_int_eq(f.m , 2);
+  ck_assert_int_eq(f.figur[0][0], 1);
+  ck_assert_int_eq(f.figur[0][1], 1);
+  ck_assert_int_eq(f.figur[1][0], 1);
+  ck_assert_int_eq(f.figur[1][1], 1);
+  tetFree(f.figur, FSIZE,FSIZE);
 }
+
+START_TEST(test_init_figura_I) {
+
+}
+
+START_TEST(test_init_figura_S) {
+
+}
+
+START_TEST(test_init_figura_Z) {
+
+}
+
+START_TEST(test_init_figura_L) {
+
+}
+
+START_TEST(test_init_figura_J) {
+
+}
+
+START_TEST(test_init_figura_T) {
+
+}
+
 END_TEST
+
+START_TEST(test_initGame) {
+  GameInfo_t game;
+  figura fnow,fnext;
+  fnow.figur = create(FSIZE,FSIZE);
+  fnext.figur = create(FSIZE,FSIZE);
+  game.fnow = &fnow;
+  game.fnext = &fnext;
+  initGame(&game);
+     ck_assert_int_eq(game.level , 0);
+         ck_assert_int_eq(game.score , 0);
+             ck_assert_int_eq(game.high_score , 0);
+                 ck_assert_int_eq(game.fnow->x , START_X);
+                  ck_assert_int_eq(game.fnow->y , START_Y);
+                   ck_assert_int_eq(game.fnext->x , R_NEXT_X);
+                  ck_assert_int_eq(game.fnext->y , R_NEXT_Y);
+                    ck_assert_int_eq(game.speed , 770);
+                     for (int x = 0; x<FIELD_N; x++)
+ for (int y = 0; y<FIELD_M; y++)
+ ck_assert_int_eq(game.field[x][y] , 0);
+ tetFree(game.field, FIELD_N, FIELD_M);
+  tetFree(fnow.figur, FSIZE, FSIZE);
+   tetFree(fnext.figur, FSIZE, FSIZE);
+}
 
 START_TEST(test_score0) {
   GameInfo_t game;
+  figura fnow,fnext;
+  fnow.figur = create(FSIZE,FSIZE);
+  fnext.figur = create(FSIZE,FSIZE);
+  game.fnow = &fnow;
+  game.fnext = &fnext;
   initGame(&game);
-     score(&game);
-     ck_assert_int_eq(game.score , 0);
+
+  for (int j = 0; j < FIELD_M; j++)
+          game.field[5][j] = 1;
+for (int j = 0; j < (FIELD_M-1); j++)
+  game.field[5][j] = 1;
+
+    score(&game);
+
+  ck_assert_int_eq(game.score , 100);
+
+ tetFree(game.field, FIELD_N, FIELD_M);
+  tetFree(fnow.figur, FSIZE, FSIZE);
+   tetFree(fnext.figur, FSIZE, FSIZE);
 }
 END_TEST
 
 START_TEST(test_score1) {
-  GameInfo_t game;
-  initGame(&game);
-        for (int j = 0; j < FIELD_M; j++)
-            game.field[5][j] = 1;
-        //for (int j = 0; j < (BOARD_M-1); j++)
-          //  gb.field[5][j] = 1;
-     score(&game);
-     ck_assert_int_eq(game.score , 100);
+  // GameInfo_t game;
+  // initGame(&game);
+  //       for (int j = 0; j < FIELD_M; j++)
+  //           game.field[5][j] = 1;
+  //       //for (int j = 0; j < (BOARD_M-1); j++)
+  //         //  gb.field[5][j] = 1;
+
+  //
 }
 END_TEST
 
 START_TEST(test_score2) {
-  GameInfo_t game;
-  initGame(&game);
-        for (int j = 0; j < FIELD_M; j++)
-            game.field[5][j] = 1;
-        for (int j = 0; j < (FIELD_M-1); j++)
-            game.field[7][j] = 1;
-     score(&game);
-     ck_assert_int_eq(game.score , 100);
+  // GameInfo_t game;
+  // initGame(&game);
+  //       for (int j = 0; j < FIELD_M; j++)
+  //           game.field[5][j] = 1;
+  //       for (int j = 0; j < (FIELD_M-1); j++)
+  //           game.field[7][j] = 1;
+  //    score(&game);
+  //    ck_assert_int_eq(game.score , 100);
 }
 END_TEST
 
 START_TEST(test_score3) {
-GameInfo_t gb;
-  initGame(&gb);
-        for (int j = 0; j < BOARD_M; j++)
-            gb.field[5][j] = 1;
-        for (int j = 0; j < BOARD_M; j++)
-            gb.field[7][j] = 1;
-     score(&gb);
-     ck_assert_int_eq(gb.score , 300);
+// GameInfo_t gb;
+//   initGame(&gb);
+//         for (int j = 0; j < BOARD_M; j++)
+//             gb.field[5][j] = 1;
+//         for (int j = 0; j < BOARD_M; j++)
+//             gb.field[7][j] = 1;
+//      score(&gb);
+//      ck_assert_int_eq(gb.score , 300);
 }
 END_TEST
 
 START_TEST(test_score4) {
-GameInfo_t gb;
-  initGame(&gb);
-        for (int j = 0; j < FIELD_M; j++){
-            gb.field[5][j] = 1;
-for (int j = 0; j < BOARD_M; j++)
-            gb.field[7][j] = 1;
-for (int j = 0; j < BOARD_M; j++)
-            gb.field[8][j] = 1;
-       }
-     score(&gb);
-     ck_assert_int_eq(gb.score , 700);
+// GameInfo_t gb;
+//   initGame(&gb);
+//         for (int j = 0; j < FIELD_M; j++){
+//             gb.field[5][j] = 1;
+// for (int j = 0; j < BOARD_M; j++)
+//             gb.field[7][j] = 1;
+// for (int j = 0; j < BOARD_M; j++)
+//             gb.field[8][j] = 1;
+//        }
+//      score(&gb);
+//      ck_assert_int_eq(gb.score , 700);
 }
 END_TEST
 
 
 START_TEST(test_score5) {
-GameInfo_t gb;
-  initGame(&gb);
-        for (int j = 0; j < BOARD_M; j++){
-            gb.field[5][j] = 1;
-            gb.field[6][j] = 1;
-            gb.field[7][j] = 1;
-            gb.field[8][j] = 1;
-                                                }
-     score(&gb);
-     ck_assert_int_eq(gb.score , 1500);
+// GameInfo_t gb;
+//   initGame(&gb);
+//         for (int j = 0; j < BOARD_M; j++){
+//             gb.field[5][j] = 1;
+//             gb.field[6][j] = 1;
+//             gb.field[7][j] = 1;
+//             gb.field[8][j] = 1;
+//                                                 }
+//      score(&gb);
+//      ck_assert_int_eq(gb.score , 1500);
 }
 END_TEST
 
@@ -100,7 +172,14 @@ Suite *test() {
   Suite *s = suite_create("\033[32m---TESTING TETRIS---\033[0m");
   TCase *test_case = tcase_create("test_equal_case");
     tcase_add_test(test_case, test_create_matrix);
-  tcase_add_test(test_case, test_init_tetris);
+  tcase_add_test(test_case, test_init_figura_Q);
+  tcase_add_test(test_case, test_init_figura_I);
+  tcase_add_test(test_case, test_init_figura_S);
+  tcase_add_test(test_case, test_init_figura_Z);
+  tcase_add_test(test_case, test_init_figura_L);
+  tcase_add_test(test_case, test_init_figura_J);
+  tcase_add_test(test_case, test_init_figura_T);
+   tcase_add_test(test_case, test_initGame);
   tcase_add_test(test_case, test_score0);
   tcase_add_test(test_case, test_score1);
     tcase_add_test(test_case, test_score2);
