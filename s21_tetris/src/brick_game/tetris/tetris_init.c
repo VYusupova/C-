@@ -4,7 +4,7 @@
 #ifndef TETRIS_INIT
 #define TETRIS_INIT
 
-#include "tetris.h"
+#include "../../../inc/tetris.h"
 
 int **create(int size_n, int size_m){
 	int **matrix = (int**)calloc(size_n, sizeof(int*));
@@ -57,7 +57,8 @@ void initFigure(figura *f){
         iniFigura_T(f);
         break;       
     }
-     f->typeFigure = (rand() % FIGURE_T)+1; 
+     f->typeFigure = (int)(rand() % COLOR_PINK)+1; 
+     while(f->typeFigure < 0){     f->typeFigure = (int)(rand() % COLOR_PINK)+1; }
 }
 
 void initStartPosFigure(figura *f, int x, int y){
@@ -80,7 +81,7 @@ void initGame(GameInfo_t *game) {
   game->level = 0;
   game->score = 0;
   game->high_score = readScore();
-  game->speed = 770;
+  game->speed = SPEED;
   game->pause = 0;
   initStartPosFigure(game->fnow, START_X, START_Y);
   initStartPosFigure(game->fnext, R_NEXT_X, R_NEXT_Y);

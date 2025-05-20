@@ -1,4 +1,4 @@
-#include "tetris.h"
+#include "../../../inc/tetris.h"
 
 int collisionDown(figura *f, GameInfo_t *game) {
   int result = SUCCESS;

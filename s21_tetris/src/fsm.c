@@ -128,19 +128,15 @@ void moved(UserAction_t *userAct, tetris_state *state, GameInfo_t *game,
       printPause();
       game->pause = 1;
         print_stats(game);
-//      while (get_signal(GET_USER_INPUT) != Pause) {
-//      };
 	while (game->pause) {
 	UserAction_t action = get_signal(GET_USER_INPUT);
 	if (action == Pause) game->pause = 0;
 	if (action == Start) game->pause = 0;
-	if (action == Terminate) {game->pause = 0;*state = EXIT;}
+	if (action == Terminate) {game->pause = 0; *state = EXIT;}
 	}
-//      game->pause = 0;
         print_stats(game);
       refreshGameField(game);
       refreshFigure(game->fnow, 0, 0);
-
       break;
     case Terminate:
       *state = EXIT;

@@ -15,9 +15,16 @@ void initColors() {
   init_pair(FIGURE_I, COLOR_BLACK, COLOR_CYAN);
   init_pair(FIGURE_S, COLOR_BLACK, COLOR_RED);
   init_pair(FIGURE_Z, COLOR_BLACK, COLOR_GREEN);
-  init_pair(FIGURE_L, COLOR_YELLOW, COLOR_RED);
+  init_pair(FIGURE_L, COLOR_BLACK, COLOR_RED);
   init_pair(FIGURE_J, COLOR_BLACK, COLOR_MAGENTA);
-  init_pair(FIGURE_T, COLOR_YELLOW, COLOR_CYAN);
+  init_pair(FIGURE_T, COLOR_BLACK, 100);
+  init_pair(COLOR_1, COLOR_BLACK, 110);
+    init_pair(COLOR_2, COLOR_BLACK, 120);
+      init_pair(COLOR_3, COLOR_BLACK, 130);
+            init_pair(COLOR_4, COLOR_BLACK, 140);
+                  init_pair(COLOR_5, COLOR_BLACK, 150);
+                        init_pair(COLOR_6, COLOR_BLACK, 160);
+  init_pair(COLOR_PINK, COLOR_BLACK, 213);
   init_pair(MASSEGE, COLOR_WHITE, COLOR_BLACK);
 }
 
@@ -103,34 +110,6 @@ void printPause(void) {
   bkgdset(COLOR_PAIR(MASSEGE));
   MVPRINTW(BOARD_N/2, BOARD_M/2, "PAUSE");
 }
-
-// void print_finished(board_t *game) {
-//   for (int i = 0; i < BOARD_M; i++) {
-//     if (game->finish[i] == '0')
-//       MVADDCH(1, i + 1, ACS_BLOCK);
-//     else
-//       MVADDCH(1, i + 1, ' ');
-//   }
-// }
-// void print_banner(game_stats_t *stats) {
-//  banner_t banner;
-
-//  memset(banner.matrix, 0, (BANNER_N + 1) * (BANNER_M + 1));
-
-//  clear();
-
-//  if (!(read_banner(stats, &banner))) {
-//    for (int i = 0; i < BANNER_N; i++)
-//      for (int j = 0; j < BANNER_M; j++)
-//        if (banner.matrix[i][j] == '#')
-//          MVADDCH(i, j, ACS_BLOCK);
-//        else
-//          MVADDCH(i, j, ' ');
-//    refresh();
-
-//  }
-//}
-
 
 void printFigure(figura *f) {
   for (int i = 1; i < f->n+1; i++)

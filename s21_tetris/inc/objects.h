@@ -69,7 +69,14 @@ typedef enum
    FIGURE_Z,
    FIGURE_L,
    FIGURE_J,
-   FIGURE_T
+   FIGURE_T,
+   COLOR_1,
+   COLOR_2,
+   COLOR_3,
+      COLOR_4,
+         COLOR_5,
+            COLOR_6,
+   COLOR_PINK
 } ColorsFigures;
 
 typedef enum

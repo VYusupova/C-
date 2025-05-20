@@ -7,7 +7,7 @@ writeScore & readScore - хранение максимального колич�
 #ifndef TETRIS_SCORE
 #define TETRIS_SCORE
 
-#include "tetris.h"
+#include "../../../inc/tetris.h"
 
 void score(GameInfo_t *game) {
   int cell = 0; 
@@ -71,7 +71,7 @@ void levelUP(GameInfo_t *game){
  int level = game->score / 600 ;
  if (level > game->level)  {
 	 game->level = level;
-	 game->speed = game->speed - 10*game->level;
+	 game->speed = game->speed*0.9;
 		 }
 }
 

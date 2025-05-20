@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 #define FIGURE_HIDE 0
-#define MASSEGE 9
+#define MASSEGE 50
 
 
 void initColors();
