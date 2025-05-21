@@ -1,35 +1,35 @@
 CC := gcc
 CFLAGS := -I inc -std=c11 -Wall -Werror -Wpedantic
+GCOV_FLAGS = -fprofile-arcs -ftest-coverage
+CHECK_LIBS = $(shell pkg-config --libs check) #-lcheck -lm -lpthread -lrt -lsubunit
+
 OBJS_FSMSWITCHCASE :=  out/tetris.o out/fsm.o 
 BACKEND := out/brick_game/tetris/
 BACK := $(BACKEND)tetris_init.o $(BACKEND)tetris_moving.o $(BACKEND)tetris_score.o
 FRONT := out/gui/cli/tetris_frontend.o
-#OBJS_FSMTABLE := out/frogger.o out/fsm_matrix.o  out/frontend.c.o
+#OBJS_FSMTABLE := out/tetris.o out/fsm_matrix.o  out/frontend.o
 
-GCOV_FLAGS = -fprofile-arcs -ftest-coverage
 PATH_TEST = test
 TEST_BIN = run_tests
-CHECK_LIBS = $(shell pkg-config --libs check) #-lcheck -lm -lpthread -lrt -lsubunit
-
 DIR_INSTALL := ~/#'Рабочий стол'/
 
 .PHONY: clean install uninstall
 
 all: clean install
 
-install: mkdir tetris
+install: mkdir tetris #clean - возможность очищать вспомогательные файлы после того как игра установлена 
 ifdef DIR_INSTALL
 	@if [ -d $(DIR_INSTALL) ]; then \
-	  echo "\n >>> TETRIS GAME install in catalog $(DIR_INSTALL) >>>" ; install tetris $(DIR_INSTALL) ; \
+	  echo "\n >>>🔧🚀📊✅  TETRIS GAME install in catalog $(DIR_INSTALL) >>>" ;\
+          install tetris $(DIR_INSTALL) ; \
 	  else echo "\ninstall aborted ... " ; \
 	       echo "$(DIR_INSTALL) >>> not found catalog" ; \
-	fi
-	
+	fi	
 else
 	$(error DIR_INSTALL must be set!)
 endif
+./$(DIR_INSTALL)/tetris
 
-	
 uninstall: clean
 	$(RM) $(DIR_INSTALL)/tetris
 	$(RM) $(DIR_INSTALL)/tetris_max_score.txt
@@ -52,11 +52,11 @@ mkdir:
 	mkdir out/gui/cli/
 
 clean:
-	$(RM) out/*.o tetris frogger_fsmtable
+	#$(RM) out/*.o tetris frogger_fsmtable  - возможность очищать вспомогательные файлы после того как игра установлена 
 	rm -rf out/
 	rm -rf test/*.gcov.*
 	rm -rf $(TEST_BIN)
-	rm -rf tetris_max_score.txt
+	#rm -rf tetris_max_score.txt
 
 
 
@@ -78,7 +78,19 @@ cppcheck:
 	#cppcheck --enable=all --suppress=missingIncludeSystem src/brick_game/*.c
 	cppcheck --enable=all --suppress=missingIncludeSystem src/*.c
 	#cppcheck -q --enable=all --inconclusive *.cpp
+? 
+arch:
+	mkdir $(ARCHDIR) $(ARCHDIR)/gui $(ARCHDIR)/brick_game
+	cp -r $(LIBDIR) $(ARCHDIR)/$(LIBDIR) && cp -r $(GUIDIR) $(ARCHDIR)/$(GUIDIR) && cp -r $(HDIR) $(ARCHDIR) && cp -r $(INSTDIR) $(ARCHDIR) && cp Makefile $(ARCHDIR) && cp readme.txt $(ARCHDIR)
+	tar -cvf willumye.tetris.tar.gz $(ARCHDIR)
+	-rm -rf $(ARCHDIR)
 
+dvi:
+	mkdir -p dvi
+	texi2dvi readme.texi --dvi -o readme.dvi
+	mv readme.* dvi
+	mv dvi/readme.txt .
+	mv dvi/readme.texi .
 
 # $^ это набор зависимых файлов, используемых для создания чего-то другого.
 # $@ это имя цели, которая будет построена.
