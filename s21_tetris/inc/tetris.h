@@ -39,6 +39,7 @@ void score(GameInfo_t *game);
 void levelUP(GameInfo_t *game);
 void shiftField(GameInfo_t *game, int y);
 int readScore();
+void writeScore(GameInfo_t *game);
 
 void initStartPosFigure(figura *f, int x, int y);
 void initMatrix(figura *f);

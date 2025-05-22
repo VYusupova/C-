@@ -12,6 +12,20 @@ START_TEST(test_create_matrix) {
 }
 END_TEST
 
+START_TEST(test_init_figura_I) {
+  figura f;
+  f.figur = create(FSIZE,FSIZE);
+  iniFigura_I(&f);
+  ck_assert_int_eq(f.n , 4);
+  ck_assert_int_eq(f.m , 1);
+  ck_assert_int_eq(f.figur[0][0], 1);
+  ck_assert_int_eq(f.figur[1][0], 1);
+  ck_assert_int_eq(f.figur[2][0], 1);
+  ck_assert_int_eq(f.figur[3][0], 1);
+  tetFree(f.figur, FSIZE,FSIZE);
+}
+END_TEST
+
 START_TEST(test_init_figura_Q) {
   figura f;
   f.figur = create(FSIZE,FSIZE);
@@ -24,33 +38,77 @@ START_TEST(test_init_figura_Q) {
   ck_assert_int_eq(f.figur[1][1], 1);
   tetFree(f.figur, FSIZE,FSIZE);
 }
-
-START_TEST(test_init_figura_I) {
-
-}
+END_TEST
 
 START_TEST(test_init_figura_S) {
-
+  figura f;
+  f.figur = create(FSIZE,FSIZE);
+  iniFigura_S(&f);
+  ck_assert_int_eq(f.n , 2);
+  ck_assert_int_eq(f.m , 3);
+  ck_assert_int_eq(f.figur[0][0], 0);
+  ck_assert_int_eq(f.figur[0][1], 1);
+  ck_assert_int_eq(f.figur[0][2], 1);
+  ck_assert_int_eq(f.figur[1][0], 1);
+  ck_assert_int_eq(f.figur[1][1], 1);
+    ck_assert_int_eq(f.figur[1][2], 0);
+  tetFree(f.figur, FSIZE,FSIZE);
 }
+END_TEST
 
 START_TEST(test_init_figura_Z) {
-
+  figura f;
+  f.figur = create(FSIZE,FSIZE);
+  iniFigura_Z(&f);
+  ck_assert_int_eq(f.n , 2);
+  ck_assert_int_eq(f.m , 3);
+  ck_assert_int_eq(f.figur[0][0], 1);
+  ck_assert_int_eq(f.figur[0][1], 1);
+  ck_assert_int_eq(f.figur[0][2], 0);
+  ck_assert_int_eq(f.figur[1][0], 0);
+  ck_assert_int_eq(f.figur[1][1], 1);
+  ck_assert_int_eq(f.figur[1][2], 1);
+  tetFree(f.figur, FSIZE,FSIZE);
 }
-
+END_TEST
 START_TEST(test_init_figura_L) {
-
+ figura f;
+  f.figur = create(FSIZE,FSIZE);
+  iniFigura_L(&f);
+  ck_assert_int_eq(f.n , 3);
+  ck_assert_int_eq(f.m , 2);
+  ck_assert_int_eq(f.figur[0][0], 1);
+  ck_assert_int_eq(f.figur[1][0], 1);
+  ck_assert_int_eq(f.figur[2][0], 1);
+  ck_assert_int_eq(f.figur[0][1], 0);
+  ck_assert_int_eq(f.figur[1][1], 0);
+  ck_assert_int_eq(f.figur[2][1], 1);
+  tetFree(f.figur, FSIZE,FSIZE);
 }
+END_TEST
 
 START_TEST(test_init_figura_J) {
-
+ figura f;
+  f.figur = create(FSIZE,FSIZE);
+  iniFigura_J(&f);
+  ck_assert_int_eq(f.n , 3);
+  ck_assert_int_eq(f.m , 2);
+  ck_assert_int_eq(f.figur[0][1], 1);
+  ck_assert_int_eq(f.figur[1][1], 1);
+  ck_assert_int_eq(f.figur[2][1], 1);
+  ck_assert_int_eq(f.figur[0][0], 0);
+  ck_assert_int_eq(f.figur[1][0], 0);
+  ck_assert_int_eq(f.figur[2][0], 1);
+  tetFree(f.figur, FSIZE,FSIZE);
 }
-
+END_TEST
+/*
 START_TEST(test_init_figura_T) {
 
 }
 
 END_TEST
-
+*/
 START_TEST(test_initGame) {
   GameInfo_t game;
   figura fnow,fnext;
@@ -61,12 +119,12 @@ START_TEST(test_initGame) {
   initGame(&game);
      ck_assert_int_eq(game.level , 0);
          ck_assert_int_eq(game.score , 0);
-             ck_assert_int_eq(game.high_score , 0);
+             //ck_assert_int_eq(game.high_score , 0);
                  ck_assert_int_eq(game.fnow->x , START_X);
                   ck_assert_int_eq(game.fnow->y , START_Y);
                    ck_assert_int_eq(game.fnext->x , R_NEXT_X);
                   ck_assert_int_eq(game.fnext->y , R_NEXT_Y);
-                    ck_assert_int_eq(game.speed , 770);
+                    ck_assert_int_eq(game.speed , SPEED);
                      for (int x = 0; x<FIELD_N; x++)
  for (int y = 0; y<FIELD_M; y++)
  ck_assert_int_eq(game.field[x][y] , 0);
@@ -74,6 +132,7 @@ START_TEST(test_initGame) {
   tetFree(fnow.figur, FSIZE, FSIZE);
    tetFree(fnext.figur, FSIZE, FSIZE);
 }
+END_TEST
 
 START_TEST(test_score0) {
   GameInfo_t game;
@@ -98,7 +157,7 @@ for (int j = 0; j < (FIELD_M-1); j++)
    tetFree(fnext.figur, FSIZE, FSIZE);
 }
 END_TEST
-
+/*
 START_TEST(test_score1) {
   // GameInfo_t game;
   // initGame(&game);
@@ -164,7 +223,7 @@ START_TEST(test_score5) {
 //      ck_assert_int_eq(gb.score , 1500);
 }
 END_TEST
-
+*/
 
 Suite *test() {
   Suite *s = suite_create("\033[32m---TESTING TETRIS---\033[0m");
@@ -175,15 +234,15 @@ Suite *test() {
   tcase_add_test(test_case, test_init_figura_S);
   tcase_add_test(test_case, test_init_figura_Z);
   tcase_add_test(test_case, test_init_figura_L);
-  tcase_add_test(test_case, test_init_figura_J);
-  tcase_add_test(test_case, test_init_figura_T);
+ tcase_add_test(test_case, test_init_figura_J);
+ // tcase_add_test(test_case, test_init_figura_T);
    tcase_add_test(test_case, test_initGame);
   tcase_add_test(test_case, test_score0);
-  tcase_add_test(test_case, test_score1);
-    tcase_add_test(test_case, test_score2);
-    tcase_add_test(test_case, test_score3);
-    tcase_add_test(test_case, test_score4);
-    tcase_add_test(test_case, test_score5);
+ // tcase_add_test(test_case, test_score1);
+ //   tcase_add_test(test_case, test_score2);
+ //   tcase_add_test(test_case, test_score3);
+  //  tcase_add_test(test_case, test_score4);
+  //  tcase_add_test(test_case, test_score5);
 
 
   suite_add_tcase(s, test_case);

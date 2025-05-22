@@ -1,3 +1,5 @@
+NAME := tetris
+
 CC := gcc
 CFLAGS := -I inc -std=c11 -Wall -Werror -Wpedantic
 GCOV_FLAGS = -fprofile-arcs -ftest-coverage
@@ -5,12 +7,14 @@ CHECK_LIBS = $(shell pkg-config --libs check) #-lcheck -lm -lpthread -lrt -lsubu
 
 OBJS_FSMSWITCHCASE :=  out/tetris.o out/fsm.o 
 BACKEND := out/brick_game/tetris/
+FRONTEND := out/gui/cli/
 BACK := $(BACKEND)tetris_init.o $(BACKEND)tetris_moving.o $(BACKEND)tetris_score.o
-FRONT := out/gui/cli/tetris_frontend.o
+FRONT := $(FRONTEND)tetris_frontend.o
 #OBJS_FSMTABLE := out/tetris.o out/fsm_matrix.o  out/frontend.o
 
+
 PATH_TEST = test
-TEST_BIN = run_tests
+TEST = run_tests
 DIR_INSTALL := ~/#'Рабочий стол'/
 
 .PHONY: clean install tetris uninstall
@@ -20,9 +24,10 @@ all: clean install
 install: mkdir tetris #clean - возможность очищать вспомогательные файлы после того как игра установлена 
 ifdef DIR_INSTALL
 	@if [ -d $(DIR_INSTALL) ]; then \
-	  echo "\n 🚀📊✅  TETRIS GAME install in catalog $(DIR_INSTALL) >>>" ;\
-          install tetris $(DIR_INSTALL) ; \
-          $(DIR_INSTALL)./tetris; \
+	  echo "\n ✅  TETRIS GAME install in catalog $(DIR_INSTALL) >>>" ;\
+          install tetris $(DIR_INSTALL) ; 	\
+          printf " 🚀 Running tetris game ? [Y/N] > " && read ans && if [ $${ans:-'N'} = 'y' ]; \
+          then $(DIR_INSTALL)./tetris; fi \
 	  else echo "\ninstall aborted ... " ; \
 	       echo "$(DIR_INSTALL) >>> not found catalog" ; \
 	fi	
@@ -32,10 +37,10 @@ endif
 
 
 uninstall: clean
-	$(RM) $(DIR_INSTALL)/tetris
-	$(RM) $(DIR_INSTALL)/tetris_max_score.txt
+	$(RM) $(DIR_INSTALL)tetris
+	$(RM) $(DIR_INSTALL)tetris_max_score.txt
 
-tetris:  $(OBJS_FSMSWITCHCASE) $(BACK) $(FRONT)
+tetris: $(OBJS_FSMSWITCHCASE) $(BACK) $(FRONT)
 	#clang-format -i src/*.c
 	$(CC) $(CFLAGS) $^ -o $@ -lncurses
 
@@ -46,18 +51,16 @@ out/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@ 
 
 mkdir:
-	#mkdir out/
-	#mkdir out/brick_game/
-	mkdir -p out/brick_game/tetris/
-	#mkdir out/gui/
-	mkdir -p out/gui/cli/
+	mkdir -p $(BACKEND)
+	mkdir -p $(FRONTEND)
 
 clean:
 	$(RM) out/*.o tetris #frogger_fsmtable  - возможность очищать вспомогательные файлы после того как игра установлена 
 	rm -rf out/
-	rm -rf test/*.gcov.*
-	rm -rf $(TEST_BIN)
-	#rm -rf tetris_max_score.txt
+	rm -rf gcov/
+	rm -rf *coverage.info
+	rm -rf $(TEST)
+	rm -rf tetris_max_score.txt
 
 
 
@@ -65,24 +68,30 @@ test_file:
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c test/test.c -o  test/tests.gcov.o
 
 test: test_file
-	$(CC) $(CFLAGS) $(GCOV_FLAGS) -o $(TEST_BIN) test/*.gcov.o out/brick_game/tetris/*.o  $(CHECK_LIBS)
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -o $(TEST) test/*.gcov.o $(BACKEND)*.o  $(CHECK_LIBS)
 	@printf "\e[1;35;107m RUN FILE TESTING  \e[31;0m \n"
-	./$(TEST_BIN)
-	@printf "\n\e[1;35;107m END & DEL FILE TESTING    \e[31;0m \n"
+	./$(TEST)
+	@printf "\n\e[1;35;107m END FILE TESTING    \e[31;0m \n"
 	
+
+gcov_report: test
+	@printf "\e[1;35;107m  📊 Отчет покрытия кода в 'gcov/index.html' ┃\e[31;0m \n"
+	lcov -t "gcov_report" -o $(NAME)_coverage.info -c -d . --exclude '/usr/*' --exclude  $(TEST)
+	genhtml -o gcov $(NAME)_coverage.info
 	
-valgrind: clean  test
-	valgrind --leak-check=full --track-origins=yes ./$(TEST_RUN) $(GTEST_LIB)
+valgrind: tetris test
+	valgrind --leak-check=full --track-origins=yes ./$(TEST) $(GTEST_LIB)
 
 	
 cppcheck:
-	#cppcheck --enable=all --suppress=missingIncludeSystem src/brick_game/*.c
-	@printf "\n 🔧🔧🔧 CHECK FILE src/*.c \n" 
-	#cppcheck -q --enable=all --inconclusive src/*.c
-	#cppcheck --enable=all --suppress=missingIncludeSystem src/*.c
-	@printf "\n 🔧🔧🔧 CHECK FILE src/gui/cli/*.c \n"
-	#cppcheck -q --enable=all --inconclusive src/gui/cli/*.c
-	cppcheck --enable=all --suppress=missingIncludeSystem src/gui/cli/*.c
+	@printf "\n 🔧🔧🔧 CHECK FILE --enable=all --inconclusive \n" 
+	cppcheck -q --enable=all --inconclusive src/gui/cli/*.c src/*.c src/brick_game/tetris/*.c inc/*.h
+	@printf "\n 🔧🔧🔧 CHECK FILE --enable=all --suppress=missingIncludeSystem \n"
+	#cppcheck --enable=all --suppress=missingIncludeSystem src/gui/cli/*.c src/*.c src/brick_game/*.c ../inc/*.h
+
+
+
+
 
 arch:
 	mkdir $(ARCHDIR) $(ARCHDIR)/gui $(ARCHDIR)/brick_game

@@ -1,54 +1,21 @@
 #ifndef OBJECTS_H
 #define OBJECTS_H
 
-#include <ncurses.h>
 #include "defines.h"
 
-// конструктор для структуры 
-/*
-typedef struct Point
-{
-    Point (int x = START_X, int y = START_Y) : x(x) , y(y) {}
-    int x;
-    int y;
-};
-*/
-/*typedef struct
-{
-    int x;
-    int y;
-} player_pos;*/
-
-typedef struct
-{
-    char finish[BOARD_M + 2];
-    char ways[21 + 2][21 + 2];
-} board_t;
-
-
-/*
-* Переписываем структуру фигур добавив размер N*M 
-* при инициализации фигуры будет задаваться размер 
-* минимально необходимый для отрисовки данной фигуры на плоскости
-* т.е для фигуры I это матрица размером 4х1  или 1х4 если делаем попворот
-*/
 typedef struct
 {
     int n;
     int m;
     int x ;
     int y ;
-//    int figur[FSIZE][FSIZE]; 
-    int **figur;     //TO DO rewrite dynamic alloc memory 
+    int **figur;
     int typeFigure;
 } figura;
 
-
-
-
 typedef struct
 {
-    int **field;//[FIELD_N][FIELD_M];
+    int **field;       //[FIELD_N][FIELD_M];
     figura *fnext;
     int score;
     int high_score;
@@ -58,8 +25,6 @@ typedef struct
     figura *fnow;
 
 } GameInfo_t;
-
-
 
 typedef enum
 {

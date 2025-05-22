@@ -1,6 +1,8 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
+#include <ncurses.h>
+
 #define WIN_INIT(time)    \
   {                       \
     initscr();            \
