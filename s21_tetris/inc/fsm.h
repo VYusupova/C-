@@ -15,18 +15,8 @@ typedef enum { START = 0,
                EXIT 
 } tetris_state;
 
-void sigact(UserAction_t *userAct, tetris_state *state, GameInfo_t *gamestats,
-            figura *fnow);
-void started(UserAction_t *userAct, GameInfo_t *game, tetris_state *state);
-void moved(UserAction_t *userAct, tetris_state *state, GameInfo_t *gamestats,
-            figura *fnow);
-
-void shifted(tetris_state *state, figura *f, GameInfo_t *game);
-void attach(tetris_state *state, GameInfo_t *game, figura *f);
-
 UserAction_t get_signal(int user_input);
-
-int check(figura *f, GameInfo_t *gb);
+void sigact(const UserAction_t *act, tetris_state *state, GameInfo_t *game);
 
 GameInfo_t updateCurrentState();
 

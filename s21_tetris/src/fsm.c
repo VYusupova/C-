@@ -1,4 +1,4 @@
-#include "fsm.h"
+#include "../inc/fsm.h"
 
 // This is a finite state machine realisation based on switch-case statement.
 /*
@@ -45,33 +45,32 @@ UserAction_t get_signal(int user_input) {
       action = Pause;
       break;
     default:
-      // rc = Down;
       break;
   }
   return action;
 }
 
-void shifted(tetris_state *state, figura *f, GameInfo_t *game) {
-  if (!collisionDown(f, game)) {
-    refreshFigure(f, 0, 1);
+static void shifted(tetris_state *state, GameInfo_t *game) {
+  if (!collisionDown(game->fnow, game)) {
+    refreshFigure(game->fnow, 0, 1);
     *state = MOVING;
   } else {
     *state = ATTACHING;
   }
 }
 
-void rotate(figura *f, GameInfo_t *gb) {
-  hideFigure(f);
-  rotateFigure(f, gb);
-  showFigure(f);
+static void rotate(GameInfo_t *game) {
+  hideFigure(game->fnow);
+  rotateFigure(game->fnow, game);
+  showFigure(game->fnow);
 }
 
-void started(UserAction_t *userAct, GameInfo_t *game, tetris_state *state) {
-  switch (*userAct) {
+static void started(const UserAction_t *act, GameInfo_t *game, tetris_state *state) {
+  switch (*act) {
     case Start:
       initGame(game);
       refreshGameField(game);
-      initFigure(game->fnow);  // инициализируем фигуру
+      initFigure(game->fnow);  
       initFigure(game->fnext);
       *state = SPAWN;
       break;
@@ -83,27 +82,26 @@ void started(UserAction_t *userAct, GameInfo_t *game, tetris_state *state) {
   }
 }
 
-void spawned(GameInfo_t *gb, tetris_state *state) {
-  swapFigure(gb->fnow, gb->fnext);
-  hideFigure(gb->fnext);
-  initFigure(gb->fnext);
-  showFigure(gb->fnext);
-  showFigure(gb->fnow);
+static void spawned(GameInfo_t *game, tetris_state *state) {
+  swapFigure(game->fnow, game->fnext);
+  hideFigure(game->fnext);
+  initFigure(game->fnext);
+  showFigure(game->fnext);
+  showFigure(game->fnow);
 }
 
-void attach(tetris_state *state, GameInfo_t *game, figura *f) {
-    if (collisionUp(f, game)) {
+static void attach(tetris_state *state, GameInfo_t *game) {
+    if (collisionUp(game->fnow, game)) {
       *state = GAMEOVER;
     }
     else *state = SPAWN;
-  figuraGamefield(game, f);
+  figuraGamefield(game, game->fnow);
   score(game);
   refreshGameField(game);
 }
 
-void moved(UserAction_t *userAct, tetris_state *state, GameInfo_t *game,
-           figura *fnow) {
-  switch (*userAct) {
+static void moved(const UserAction_t *act, tetris_state *state, GameInfo_t *game) {
+  switch (*act) {
     case Left:
       if (!collisionLeft(game->fnow, game)) refreshFigure(game->fnow, -1, 0);
       *state = SHIFTING;
@@ -112,15 +110,13 @@ void moved(UserAction_t *userAct, tetris_state *state, GameInfo_t *game,
       if (!collisionRight(game->fnow, game)) refreshFigure(game->fnow, 1, 0);
       *state = SHIFTING;
       break;
-    //case Up:
-    //  break;
     case Down:
       while (*state != ATTACHING) {
-        shifted(state, fnow, game);
+        shifted(state, game);
       }
       break;
     case Action:
-      rotate(fnow, game);
+      rotate(game);
       *state = SHIFTING;
       break;
     case Pause:
@@ -147,28 +143,27 @@ void moved(UserAction_t *userAct, tetris_state *state, GameInfo_t *game,
   }
 }
 
-void sigact(UserAction_t *userAct, tetris_state *state, GameInfo_t *gamestats,
-            figura *fnow) {
-  print_stats(gamestats);
+void sigact(const UserAction_t *act, tetris_state *state, GameInfo_t *game) {
+  print_stats(game);
   // napms(2000); //func sleep for at least ms milliseconds
   switch (*state) {
     case START:
-      started(userAct, gamestats, state);
+      started(act, game, state);
       break;
     case SPAWN: /*Рождение нового блока*/
-      spawned(gamestats, state);
+      spawned(game, state);
       *state = MOVING;
       break;
     case MOVING:
-      moved(userAct, state, gamestats, fnow);
+      moved(act, state, game);
   
       break;
     case SHIFTING: /*движение блока вниз*/
-      shifted(state, fnow, gamestats);
+      shifted(state, game);
 
       break;
     case ATTACHING: /*положить блок на игровое поле*/
-      attach(state, gamestats, fnow);
+      attach(state, game);
       
       break;
     case GAMEOVER:

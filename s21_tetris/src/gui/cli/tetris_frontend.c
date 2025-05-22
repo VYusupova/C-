@@ -1,4 +1,4 @@
-#include "frontend.h"
+#include "../../../inc/frontend.h"
 
 
 
@@ -11,21 +11,30 @@ void initColors() {
   // убрать COLOR_MAGENTA - милиновый COLOR_CYAN
   start_color();
   init_pair(FIGURE_HIDE, COLOR_BLACK, COLOR_BLACK);
-  init_pair(FIGURE_Q, COLOR_BLACK, COLOR_YELLOW);
-  init_pair(FIGURE_I, COLOR_BLACK, COLOR_CYAN);
-  init_pair(FIGURE_S, COLOR_BLACK, COLOR_RED);
-  init_pair(FIGURE_Z, COLOR_BLACK, COLOR_GREEN);
-  init_pair(FIGURE_L, COLOR_BLACK, COLOR_RED);
-  init_pair(FIGURE_J, COLOR_BLACK, COLOR_MAGENTA);
-  init_pair(FIGURE_T, COLOR_BLACK, 100);
-  init_pair(COLOR_1, COLOR_BLACK, 110);
-    init_pair(COLOR_2, COLOR_BLACK, 120);
-      init_pair(COLOR_3, COLOR_BLACK, 130);
-            init_pair(COLOR_4, COLOR_BLACK, 140);
-                  init_pair(COLOR_5, COLOR_BLACK, 150);
-                        init_pair(COLOR_6, COLOR_BLACK, 160);
-  init_pair(COLOR_PINK, COLOR_BLACK, 213);
   init_pair(MASSEGE, COLOR_WHITE, COLOR_BLACK);
+  init_pair(COLOR_1, COLOR_BLACK, COLOR_YELLOW);
+  init_pair(COLOR_2, COLOR_BLACK, 190);
+  init_pair(COLOR_3, COLOR_BLACK, COLOR_RED);
+  init_pair(COLOR_4, COLOR_BLACK, COLOR_GREEN);
+  init_pair(COLOR_5, COLOR_BLACK, 70);
+  init_pair(COLOR_6, COLOR_BLACK, 60); // color darck blue
+  init_pair(COLOR_7, COLOR_BLACK, COLOR_MAGENTA);
+  init_pair(COLOR_8, COLOR_BLACK, 90);
+
+ init_pair(COLOR_9, COLOR_BLACK, COLOR_CYAN);
+                                                                                                                                                
+init_pair(COLOR_10, COLOR_BLACK, 100);
+init_pair(COLOR_11, COLOR_BLACK, 210);
+init_pair(COLOR_12, COLOR_BLACK, 220);
+init_pair(COLOR_13, COLOR_BLACK, 230);
+init_pair(COLOR_14, COLOR_BLACK, 240);
+init_pair(COLOR_15, COLOR_BLACK, 250);
+init_pair(COLOR_16, COLOR_BLACK, COLOR_RED);
+init_pair(COLOR_17, COLOR_BLACK, 100);
+init_pair(COLOR_18, COLOR_BLACK, 80);
+init_pair(COLOR_19, COLOR_BLACK, 200); // color splash PINK 
+  init_pair(COLOR_PINK, COLOR_BLACK, 213);
+
 }
 
 void showIntro(void) {
@@ -47,10 +56,9 @@ void showIntro(void) {
 void gameOver(void) {
   MVPRINTW(BOARD_N / 2, BOARD_M/2, "GAME");
   MVPRINTW(BOARD_N / 2 + 1,  BOARD_M/2, "OVER");
-  MVPRINTW(BOARD_N / 2 + 3, BOARD_M/2-1, "Press");
-  MVPRINTW(BOARD_N / 2 + 4, BOARD_M/2-1,"ENTER");
-  MVPRINTW(BOARD_N / 2 + 5, BOARD_M/2, "to");
-  MVPRINTW(BOARD_N / 2 + 5, BOARD_M/2-1, "start");
+  MVPRINTW(BOARD_N / 2 + 2, BOARD_M/2-3, "Press ENTER");
+  MVPRINTW(BOARD_N / 2 + 3, BOARD_M/2-1, "to start");
+
 }
 
 // отрисовка уровня и очков
@@ -65,6 +73,14 @@ void print_stats(GameInfo_t *game) {
   MVPRINTW(R_NEXT+13, BOARD_M + SHIFT_MESSAGE, "%d", game->speed);
   if (game->score > game->high_score) MVPRINTW(R_NEXT+17, BOARD_M + SHIFT_MESSAGE, "%d", game->score);
   else MVPRINTW(R_NEXT+17, BOARD_M + SHIFT_MESSAGE, "%d", game->high_score);
+    bkgdset(COLOR_PAIR(COLOR_8));
+    MVPRINTW(R_NEXT+19, BOARD_M + SHIFT_MESSAGE, "color_8");
+    
+    bkgdset(COLOR_PAIR(COLOR_9));
+    MVPRINTW(R_NEXT+20, BOARD_M + SHIFT_MESSAGE, "color_9");
+
+    bkgdset(COLOR_PAIR(COLOR_10));
+    MVPRINTW(R_NEXT+21, BOARD_M + SHIFT_MESSAGE, "color_10");
 }
 
 
@@ -102,7 +118,7 @@ void print_overlay(void) {
   MVPRINTW(R_NEXT+10, BOARD_M + SHIFT_MESSAGE, "SCORE");
   MVPRINTW(R_NEXT+12, BOARD_M + SHIFT_MESSAGE, "SPEED");
   MVPRINTW(R_NEXT+15, BOARD_M + SHIFT_MESSAGE, "MAX SCORE");
-  MVPRINTW(R_NEXT+16, BOARD_M + SHIFT_MESSAGE, "SCORE");
+  //MVPRINTW(R_NEXT+16, BOARD_M + SHIFT_MESSAGE, "SCORE");
   showIntro();
 }
 
@@ -111,7 +127,7 @@ void printPause(void) {
   MVPRINTW(BOARD_N/2, BOARD_M/2, "PAUSE");
 }
 
-void printFigure(figura *f) {
+void printFigure(const figura *f) {
   for (int i = 1; i < f->n+1; i++)
     for (int j = 1; j < f->m+1; j++) {
       if (f->figur[i-1][j-1] == 1) PRINT((f->x*2 + j*2), f->y + i);

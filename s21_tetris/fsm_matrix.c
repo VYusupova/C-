@@ -1,4 +1,4 @@
-#include "fsm.h"
+#include "../inc/fsm.h"
 
 // This is a finite state machine realisation based on matrix of "actions".
 /*

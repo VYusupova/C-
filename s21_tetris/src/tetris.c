@@ -1,23 +1,12 @@
 
 #include <stdio.h>
-#include <tetris.h>
+#include <../inc/tetris.h>
 #include <time.h>
 
-#include "fsm.h"
+#include "../inc/fsm.h"
 
-int main(void) {
-  WIN_INIT(250);
-  setlocale(LC_ALL, "");
-  initColors();     // инициализация цветов
-  print_overlay();  // отрисовка поля игры
-  srand(time(NULL)); // for true random
-  game_loop();
-  endwin();
 
-  return SUCCESS;
-}
-
-void game_loop() {
+static void game_loop() {
   GameInfo_t game;  
 
   figura fnow;
@@ -37,7 +26,7 @@ void game_loop() {
   while (break_flag) {
     if (state == EXIT) break_flag = FALSE;
   
-    sigact(&userAct, &state, &game, &fnow);
+    sigact(&userAct, &state, &game);
 
     if (state == MOVING || state == START) userAct = get_signal(GET_USER_INPUT);
     timeout(game.speed); //  timeout(700);
@@ -51,3 +40,16 @@ void game_loop() {
   tetFree(fnext.figur, FSIZE, FSIZE);
   tetFree(game.field, FIELD_N, FIELD_M);
 }
+
+int main(void) {
+  WIN_INIT(250);
+  setlocale(LC_ALL, "");
+  initColors();     // инициализация цветов
+  print_overlay();  // отрисовка поля игры
+  srand(time(NULL)); // for true random
+  game_loop();
+  endwin();
+
+  return SUCCESS;
+}
+

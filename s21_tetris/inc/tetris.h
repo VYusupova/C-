@@ -7,8 +7,6 @@
 #include "fsm.h"
 #include "objects.h"
 
-void game_loop();
-
 int **create(int size_n, int size_m);
 void tetFree(int **matrix, int size_n, int size_m);
 

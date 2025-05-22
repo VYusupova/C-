@@ -1,8 +1,6 @@
-//#include <check.h>
+#include <check.h>
 
 #include "s21_test.h"
-//#include "../../../inc/tetris.h"
-
 
 START_TEST(test_create_matrix) {
  figura f;

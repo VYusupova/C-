@@ -13,22 +13,23 @@ PATH_TEST = test
 TEST_BIN = run_tests
 DIR_INSTALL := ~/#'Рабочий стол'/
 
-.PHONY: clean install uninstall
+.PHONY: clean install tetris uninstall
 
 all: clean install
 
 install: mkdir tetris #clean - возможность очищать вспомогательные файлы после того как игра установлена 
 ifdef DIR_INSTALL
 	@if [ -d $(DIR_INSTALL) ]; then \
-	  echo "\n >>>🔧🚀📊✅  TETRIS GAME install in catalog $(DIR_INSTALL) >>>" ;\
+	  echo "\n 🚀📊✅  TETRIS GAME install in catalog $(DIR_INSTALL) >>>" ;\
           install tetris $(DIR_INSTALL) ; \
+          $(DIR_INSTALL)./tetris; \
 	  else echo "\ninstall aborted ... " ; \
 	       echo "$(DIR_INSTALL) >>> not found catalog" ; \
 	fi	
 else
 	$(error DIR_INSTALL must be set!)
 endif
-./$(DIR_INSTALL)/tetris
+
 
 uninstall: clean
 	$(RM) $(DIR_INSTALL)/tetris
@@ -45,14 +46,14 @@ out/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@ 
 
 mkdir:
-	mkdir out/
-	mkdir out/brick_game/
-	mkdir out/brick_game/tetris/
-	mkdir out/gui/
-	mkdir out/gui/cli/
+	#mkdir out/
+	#mkdir out/brick_game/
+	mkdir -p out/brick_game/tetris/
+	#mkdir out/gui/
+	mkdir -p out/gui/cli/
 
 clean:
-	#$(RM) out/*.o tetris frogger_fsmtable  - возможность очищать вспомогательные файлы после того как игра установлена 
+	$(RM) out/*.o tetris #frogger_fsmtable  - возможность очищать вспомогательные файлы после того как игра установлена 
 	rm -rf out/
 	rm -rf test/*.gcov.*
 	rm -rf $(TEST_BIN)
@@ -76,9 +77,13 @@ valgrind: clean  test
 	
 cppcheck:
 	#cppcheck --enable=all --suppress=missingIncludeSystem src/brick_game/*.c
-	cppcheck --enable=all --suppress=missingIncludeSystem src/*.c
-	#cppcheck -q --enable=all --inconclusive *.cpp
-? 
+	@printf "\n 🔧🔧🔧 CHECK FILE src/*.c \n" 
+	#cppcheck -q --enable=all --inconclusive src/*.c
+	#cppcheck --enable=all --suppress=missingIncludeSystem src/*.c
+	@printf "\n 🔧🔧🔧 CHECK FILE src/gui/cli/*.c \n"
+	#cppcheck -q --enable=all --inconclusive src/gui/cli/*.c
+	cppcheck --enable=all --suppress=missingIncludeSystem src/gui/cli/*.c
+
 arch:
 	mkdir $(ARCHDIR) $(ARCHDIR)/gui $(ARCHDIR)/brick_game
 	cp -r $(LIBDIR) $(ARCHDIR)/$(LIBDIR) && cp -r $(GUIDIR) $(ARCHDIR)/$(GUIDIR) && cp -r $(HDIR) $(ARCHDIR) && cp -r $(INSTDIR) $(ARCHDIR) && cp Makefile $(ARCHDIR) && cp readme.txt $(ARCHDIR)
