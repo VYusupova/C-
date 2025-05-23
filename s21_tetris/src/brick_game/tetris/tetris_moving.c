@@ -1,6 +1,16 @@
 #include "../../../inc/tetris.h"
 
-int collisionDown(figura *f, GameInfo_t *game) {
+ // f->n & FIELD_N - строк 
+ // t->m & FIELD_M - столбцов
+static int collisionGameField(GameInfo_t *game, int down, int left) {
+  int result = SUCCESS;
+  for (int y = game->fnow->y+down, k = 0; y < FIELD_N && k <  game->fnow->n; y++, k++)
+    for (int j =  game->fnow->x+left, l = 0; j < FIELD_M && l <  game->fnow->m; j++, l++)
+      if (game->field[y][j] != 0 &&  game->fnow->figur[k][l] == 1) result = ERROR;
+   return result;
+}
+
+int collisionDown(const figura *f, GameInfo_t *game) {
   int result = SUCCESS;
   if ((f->y + f->n) >= (FIELD_N)) result = ERROR;
   else 
@@ -8,35 +18,27 @@ int collisionDown(figura *f, GameInfo_t *game) {
   return result;
 }
 
-int collisionUp(figura *f, GameInfo_t *gb){
- if (f->y <= START_Y+2) return ERROR; // && collisionDown(f,gb)
+int collisionUp(const figura *f){ //to do del? 
+ if (f->y <= START_Y) return ERROR;  // TO DO 
  return SUCCESS;
 }
 
- // f->n & FIELD_N - строк 
- // t->m & FIELD_M - столбцов
-int collisionLeft(figura *f, GameInfo_t *gb) {
+int collisionLeft(const figura *f, GameInfo_t *game) {
   int result = SUCCESS;
   if ((f->x) <= 0) result = ERROR;
   else 
-  if (collisionGameField(gb,0,-1)) result = ERROR;
+  if (collisionGameField(game,0,-1)) result = ERROR;
   return result;
 }
 
-int collisionRight(figura *f, GameInfo_t *gb) {
+int collisionRight(const figura *f, GameInfo_t *game) {
    int result = SUCCESS;
    if (f->x + f->m >= (FIELD_M)) result = ERROR;
-   if (collisionGameField(gb,0,1)) result = ERROR;
+   if (collisionGameField(game,0,1)) result = ERROR;
   return result;
 }
 
-int collisionGameField(GameInfo_t *gb, int down, int left) {
-  int result = SUCCESS;
-  for (int y = gb->fnow->y+down, k = 0; y < FIELD_N && k <  gb->fnow->n; y++, k++)
-    for (int j =  gb->fnow->x+left, l = 0; j < FIELD_M && l <  gb->fnow->m; j++, l++)
-      if (gb->field[y][j] != 0 &&  gb->fnow->figur[k][l] == 1) result = ERROR;
-   return result;
-}
+
 
 void rotateFigure(figura *f, GameInfo_t *game){
         //задаем новую фигуру 

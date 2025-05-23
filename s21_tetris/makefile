@@ -1,4 +1,5 @@
 NAME := tetris
+DIR_GAME := s21_BrickGame
 
 CC := gcc
 CFLAGS := -I inc -std=c11 -Wall -Werror -Wpedantic
@@ -15,7 +16,7 @@ FRONT := $(FRONTEND)tetris_frontend.o
 
 PATH_TEST = test
 TEST = run_tests
-DIR_INSTALL := ~/#'Рабочий стол'/
+DIR_INSTALL := ~/$(DIR_GAME)/
 
 .PHONY: clean install tetris uninstall
 
@@ -51,15 +52,17 @@ out/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@ 
 
 mkdir:
+	mkdir -p ~/$(DIR_GAME)
 	mkdir -p $(BACKEND)
 	mkdir -p $(FRONTEND)
 
 clean:
-	$(RM) out/*.o tetris #frogger_fsmtable  - возможность очищать вспомогательные файлы после того как игра установлена 
+	$(RM) out/*.o $(NAME)
 	rm -rf out/
 	rm -rf gcov/
 	rm -rf *coverage.info
 	rm -rf $(TEST)
+	rm -rf test/*.gcov.*
 	rm -rf tetris_max_score.txt
 
 
@@ -85,9 +88,11 @@ valgrind: tetris test
 	
 cppcheck:
 	@printf "\n 🔧🔧🔧 CHECK FILE --enable=all --inconclusive \n" 
-	cppcheck -q --enable=all --inconclusive src/gui/cli/*.c src/*.c src/brick_game/tetris/*.c inc/*.h
+	#cppcheck -q --enable=all --inconclusive src/gui/cli/*.c src/*.c src/brick_game/tetris/*.c inc/*.h
 	@printf "\n 🔧🔧🔧 CHECK FILE --enable=all --suppress=missingIncludeSystem \n"
-	#cppcheck --enable=all --suppress=missingIncludeSystem src/gui/cli/*.c src/*.c src/brick_game/*.c ../inc/*.h
+	cppcheck --enable=all --suppress=missingIncludeSystem src/gui/cli/*.c src/*.c src/brick_game/tetris/*.c inc/*.h
+	#cppcheck --enable=all --check-level=exhaustive --suppress=missingIncludeSystem src/gui/cli/*.c src/*.c src/brick_game/tetris/*.c inc/*.h
+# --check-level=exhaustive >>> Limiting analysis of branches. Use --check-level=exhaustive to analyze all branches. [normalCheckLevelMaxBranches]
 
 
 

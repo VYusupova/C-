@@ -102,13 +102,23 @@ START_TEST(test_init_figura_J) {
   tetFree(f.figur, FSIZE,FSIZE);
 }
 END_TEST
-/*
+
 START_TEST(test_init_figura_T) {
-
+figura f;
+  f.figur = create(FSIZE,FSIZE);
+  iniFigura_T(&f);
+  ck_assert_int_eq(f.n , 2);
+  ck_assert_int_eq(f.m , 3);
+  ck_assert_int_eq(f.figur[0][0], 0);
+  ck_assert_int_eq(f.figur[1][0], 1);
+  ck_assert_int_eq(f.figur[0][1], 1);
+  ck_assert_int_eq(f.figur[1][1], 1);
+  ck_assert_int_eq(f.figur[0][2], 0);
+  ck_assert_int_eq(f.figur[1][2], 1);
+  tetFree(f.figur, FSIZE,FSIZE);
 }
-
 END_TEST
-*/
+
 START_TEST(test_initGame) {
   GameInfo_t game;
   figura fnow,fnext;
@@ -146,7 +156,7 @@ START_TEST(test_score0) {
   for (int j = 0; j < FIELD_M; j++)
           game.field[5][j] = 1;
 for (int j = 0; j < (FIELD_M-1); j++)
-  game.field[5][j] = 1;
+  game.field[7][j] = 1;
 
     score(&game);
 
@@ -157,43 +167,84 @@ for (int j = 0; j < (FIELD_M-1); j++)
    tetFree(fnext.figur, FSIZE, FSIZE);
 }
 END_TEST
-/*
-START_TEST(test_score1) {
-  // GameInfo_t game;
-  // initGame(&game);
-  //       for (int j = 0; j < FIELD_M; j++)
-  //           game.field[5][j] = 1;
-  //       //for (int j = 0; j < (BOARD_M-1); j++)
-  //         //  gb.field[5][j] = 1;
 
-  //
+START_TEST(test_score1) {
+  GameInfo_t game;
+  figura fnow,fnext;
+  fnow.figur = create(FSIZE,FSIZE);
+  fnext.figur = create(FSIZE,FSIZE);
+  game.fnow = &fnow;
+  game.fnext = &fnext;
+  initGame(&game);
+
+  for (int j = 0; j < FIELD_M; j++)
+          game.field[5][j] = 1;
+for (int j = 0; j < (FIELD_M); j++)
+  game.field[7][j] = 1;
+
+    score(&game);
+
+  ck_assert_int_eq(game.score , 300);
+
+ tetFree(game.field, FIELD_N, FIELD_M);
+  tetFree(fnow.figur, FSIZE, FSIZE);
+   tetFree(fnext.figur, FSIZE, FSIZE);
+   
 }
 END_TEST
 
 START_TEST(test_score2) {
-  // GameInfo_t game;
-  // initGame(&game);
-  //       for (int j = 0; j < FIELD_M; j++)
-  //           game.field[5][j] = 1;
-  //       for (int j = 0; j < (FIELD_M-1); j++)
-  //           game.field[7][j] = 1;
-  //    score(&game);
-  //    ck_assert_int_eq(game.score , 100);
+ GameInfo_t game;
+  figura fnow,fnext;
+  fnow.figur = create(FSIZE,FSIZE);
+  fnext.figur = create(FSIZE,FSIZE);
+  game.fnow = &fnow;
+  game.fnext = &fnext;
+  initGame(&game);
+
+  for (int j = 0; j < FIELD_M; j++){
+          game.field[5][j] = 1;
+  game.field[7][j] = 1;
+  game.field[8][j] = 1;
+  }
+
+    score(&game);
+
+  ck_assert_int_eq(game.score , 700);
+
+ tetFree(game.field, FIELD_N, FIELD_M);
+  tetFree(fnow.figur, FSIZE, FSIZE);
+   tetFree(fnext.figur, FSIZE, FSIZE);
+     
 }
 END_TEST
 
 START_TEST(test_score3) {
-// GameInfo_t gb;
-//   initGame(&gb);
-//         for (int j = 0; j < BOARD_M; j++)
-//             gb.field[5][j] = 1;
-//         for (int j = 0; j < BOARD_M; j++)
-//             gb.field[7][j] = 1;
-//      score(&gb);
-//      ck_assert_int_eq(gb.score , 300);
-}
-END_TEST
+ GameInfo_t game;
+  figura fnow,fnext;
+  fnow.figur = create(FSIZE,FSIZE);
+  fnext.figur = create(FSIZE,FSIZE);
+  game.fnow = &fnow;
+  game.fnext = &fnext;
+  initGame(&game);
 
+  for (int j = 0; j < FIELD_M; j++){
+          game.field[5][j] = 1;
+  game.field[7][j] = 1;
+  game.field[8][j] = 1;
+    game.field[1][j] = 1;
+  }
+
+    score(&game);
+
+  ck_assert_int_eq(game.score , 1500);
+
+ tetFree(game.field, FIELD_N, FIELD_M);
+  tetFree(fnow.figur, FSIZE, FSIZE);
+   tetFree(fnext.figur, FSIZE, FSIZE);
+     }
+END_TEST
+/*
 START_TEST(test_score4) {
 // GameInfo_t gb;
 //   initGame(&gb);
@@ -235,12 +286,12 @@ Suite *test() {
   tcase_add_test(test_case, test_init_figura_Z);
   tcase_add_test(test_case, test_init_figura_L);
  tcase_add_test(test_case, test_init_figura_J);
- // tcase_add_test(test_case, test_init_figura_T);
+ tcase_add_test(test_case, test_init_figura_T);
    tcase_add_test(test_case, test_initGame);
   tcase_add_test(test_case, test_score0);
- // tcase_add_test(test_case, test_score1);
- //   tcase_add_test(test_case, test_score2);
- //   tcase_add_test(test_case, test_score3);
+ tcase_add_test(test_case, test_score1);
+    tcase_add_test(test_case, test_score2);
+    tcase_add_test(test_case, test_score3);
   //  tcase_add_test(test_case, test_score4);
   //  tcase_add_test(test_case, test_score5);
 

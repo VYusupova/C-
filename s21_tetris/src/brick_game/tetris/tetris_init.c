@@ -6,10 +6,84 @@
 
 #include "../../../inc/tetris.h"
 
+
+static void iniFigura_Q(figura *f){
+    f->n = 2;
+    f->m = 2;
+    f->figur[0][0] = 1; 
+    f->figur[0][1] = 1;
+    f->figur[1][0] = 1;
+    f->figur[1][1] = 1;
+}
+
+static void iniFigura_I(figura *f){
+    f->n = 4;
+    f->m = 1;
+    f->figur[0][0] = 1; 
+    f->figur[1][0] = 1;
+    f->figur[2][0] = 1;
+    f->figur[3][0] = 1;
+}
+
+static void iniFigura_S(figura *f){
+    f->n = 2;
+    f->m = 3;
+    f->figur[0][0] = 0; 
+    f->figur[0][1] = 1; 
+    f->figur[0][2] = 1; 
+    f->figur[1][0] = 1;
+    f->figur[1][1] = 1;
+    f->figur[1][2] = 0;
+}
+static void iniFigura_Z(figura *f){
+    f->n = 2;
+    f->m = 3;
+    f->figur[0][0] = 1; 
+    f->figur[0][1] = 1; 
+    f->figur[0][2] = 0;
+    f->figur[1][0] = 0;
+    f->figur[1][1] = 1;
+    f->figur[1][2] = 1;
+}
+static void iniFigura_L(figura *f){
+    f->n = 3;
+    f->m = 2;
+    f->figur[0][0] = 1; 
+    f->figur[1][0] = 1; 
+    f->figur[2][0] = 1;
+    f->figur[0][1] = 0; 
+    f->figur[1][1] = 0; 
+    f->figur[2][1] = 1;
+}
+static void iniFigura_J(figura *f){
+    f->n = 3;
+    f->m = 2;
+    f->figur[0][1] = 1; 
+    f->figur[1][1] = 1; 
+    f->figur[2][1] = 1;
+    f->figur[0][0] = 0; 
+    f->figur[1][0] = 0; 
+    f->figur[2][0] = 1;
+}
+static void iniFigura_T(figura *f){
+    f->n = 2;
+    f->m = 3;
+    f->figur[0][0] = 0;
+    f->figur[1][0] = 1; 
+    f->figur[0][1] = 1; 
+    f->figur[1][1] = 1;
+    f->figur[0][2] = 0;
+    f->figur[1][2] = 1;
+}
+
+
 int **create(int size_n, int size_m){
 	int **matrix = (int**)calloc(size_n, sizeof(int*));
+	if (matrix != NULL){
+	
 	for (size_t i = 0; i < (size_t)size_n; i++){
 		matrix[i] = (int*)calloc(size_m, sizeof(int));
+	}
 	}
 	return matrix;
 }
@@ -23,7 +97,7 @@ void tetFree(int **matrix, int size_n, int size_m){
 	free(matrix);
 }
 
-void fillZero(int **matrix, int size_n, int size_m) {
+static void fillZero(int **matrix, int size_n, int size_m) {
     for (int i = 0; i < size_n; i++)
        for (int j = 0; j < size_m; j++) 
          matrix[i][j] = 0; 
@@ -61,10 +135,6 @@ void initFigure(figura *f){
      while(f->typeFigure < 0){     f->typeFigure = (int)(rand() % COLOR_PINK)+1; }
 }
 
-void initStartPosFigure(figura *f, int x, int y){
-    f->x = x;
-    f->y = y;
-}
 
 void swapFigure(figura *fnow, figura *fnext){
    fnow->x = START_X;
@@ -75,6 +145,11 @@ void swapFigure(figura *fnow, figura *fnext){
     for (int x = 0; x < FSIZE; x++)
         for (int y = 0; y < FSIZE; y++)
             fnow->figur[y][x] = fnext->figur[y][x];
+}
+
+static void initStartPosFigure(figura *f, int x, int y){
+    f->x = x;
+    f->y = y;
 }
 
 void initGame(GameInfo_t *game) { 
@@ -90,78 +165,12 @@ void initGame(GameInfo_t *game) {
 }
 
 //запомним и зафиксируем фигуру на игровом поле
-void figuraGamefield(GameInfo_t *gb, figura *f){
-    for(int y = f->y, k = 0; y <  FIELD_N && k < f->n; y++, k++)
-        for(int x = f->x, l = 0; x < FIELD_M && l < f->m; x++, l++)
-            if(f->figur[k][l]) gb->field[y][x] = f->typeFigure;
+void putGamefield(GameInfo_t *game){
+    for(int y = game->fnow->y, k = 0; y <  FIELD_N && k < game->fnow->n; y++, k++)
+        for(int x = game->fnow->x, l = 0; x < FIELD_M && l < game->fnow->m; x++, l++)
+            if(game->fnow->figur[k][l]) game->field[y][x] = game->fnow->typeFigure;
 }
 
 
-void iniFigura_Q(figura *f){
-    f->n = 2;
-    f->m = 2;
-    f->figur[0][0] = 1; 
-    f->figur[0][1] = 1;
-    f->figur[1][0] = 1;
-    f->figur[1][1] = 1;
-}
-void iniFigura_I(figura *f){
-    f->n = 4;
-    f->m = 1;
-    f->figur[0][0] = 1; 
-    f->figur[1][0] = 1;
-    f->figur[2][0] = 1;
-    f->figur[3][0] = 1;
-}
-void iniFigura_S(figura *f){
-    f->n = 2;
-    f->m = 3;
-    f->figur[0][0] = 0; 
-    f->figur[0][1] = 1; 
-    f->figur[0][2] = 1; 
-    f->figur[1][0] = 1;
-    f->figur[1][1] = 1;
-    f->figur[1][2] = 0;
-}
-void iniFigura_Z(figura *f){
-    f->n = 2;
-    f->m = 3;
-    f->figur[0][0] = 1; 
-    f->figur[0][1] = 1; 
-    f->figur[0][2] = 0;
-    f->figur[1][0] = 0;
-    f->figur[1][1] = 1;
-    f->figur[1][2] = 1;
-}
-void iniFigura_L(figura *f){
-    f->n = 3;
-    f->m = 2;
-    f->figur[0][0] = 1; 
-    f->figur[1][0] = 1; 
-    f->figur[2][0] = 1;
-    f->figur[0][1] = 0; 
-    f->figur[1][1] = 0; 
-    f->figur[2][1] = 1;
-}
-void iniFigura_J(figura *f){
-    f->n = 3;
-    f->m = 2;
-    f->figur[0][1] = 1; 
-    f->figur[1][1] = 1; 
-    f->figur[2][1] = 1;
-    f->figur[0][0] = 0; 
-    f->figur[1][0] = 0; 
-    f->figur[2][0] = 1;
-}
-void iniFigura_T(figura *f){
-    f->n = 2;
-    f->m = 3;
-    f->figur[0][0] = 0;
-    f->figur[1][0] = 1; 
-    f->figur[0][1] = 1; 
-    f->figur[1][1] = 1;
-    f->figur[0][2] = 0;
-    f->figur[1][2] = 1;
-}
 
 #endif

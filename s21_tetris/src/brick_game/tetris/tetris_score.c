@@ -9,11 +9,32 @@ writeScore & readScore - хранение максимального колич�
 
 #include "../../../inc/tetris.h"
 
+
+static void levelUP(GameInfo_t *game){
+ if(game->level == 10) return;
+ int level = game->score / 600 ;
+ if (level > game->level)  {
+	 game->level = level;
+	 game->speed = game->speed*0.9;
+		 }
+}
+
+static void shiftField(GameInfo_t *game, int y){	
+	for(int y1 = y; y1 >=1; y1--)
+		for(int x = 0; x < FIELD_M; x++)
+		game->field[y1][x] = game->field[y1-1][x];
+	for(int x = 0; x < FIELD_M; x++)
+		game->field[0][x] = 0;
+		
+}
+
+
+
 void score(GameInfo_t *game) {
-  int cell = 0; 
+
   int lines = 0;
   for(int y = FIELD_N-1; y >= 0; y--){
-	cell = 0;
+	int cell = 0;
         for(int x = FIELD_M-1; x >= 0; x--){
             if(game->field[y][x] == 0) break;
             else cell++;
@@ -31,23 +52,16 @@ void score(GameInfo_t *game) {
   levelUP(game);
 }
 
-void shiftField(GameInfo_t *gb, int y){	
-	for(int y1 = y; y1 >=1; y1--)
-		for(int x = 0; x < FIELD_M; x++)
-		gb->field[y1][x] = gb->field[y1-1][x];
-	for(int x = 0; x < FIELD_M; x++)
-		gb->field[0][x] = 0;
-		
-}
 
-void writeScore(GameInfo_t *stats) {
-  if (stats->high_score < stats->score){
+void writeScore(const GameInfo_t *game) {
+  if (game->high_score < game->score){
       FILE *file = fopen(MAX_SCORE, "w");
     if (file == NULL) {
         perror("Ошибка при открытии файла");
     }
-    fprintf(file, "%d", stats->score);
-    fclose(file);
+    else {
+    fprintf(file, "%d", game->score);
+    fclose(file);}
   }
 }
 
@@ -57,22 +71,13 @@ int readScore(void) {
         //perror("Ошибка при открытии файла");
         return 0;
     }
+    else {
 
     int maxScore;
     fscanf(file, "%d", &maxScore);
     fclose(file);
-    return maxScore;
+    return maxScore;}
 }
 
-// TO DO #2 Добавь в игру механику уровней. Каждый раз, когда игрок набирает 600 очков, уровень увеличивается на 1. Повышение уровня увеличивает скорость движения фигур. 
-//Максимальное количество уровней — 10.
-void levelUP(GameInfo_t *game){
- if(game->level == 10) return;
- int level = game->score / 600 ;
- if (level > game->level)  {
-	 game->level = level;
-	 game->speed = game->speed*0.9;
-		 }
-}
 
 #endif

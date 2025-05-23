@@ -68,6 +68,7 @@ static void rotate(GameInfo_t *game) {
 static void started(const UserAction_t *act, GameInfo_t *game, tetris_state *state) {
   switch (*act) {
     case Start:
+      hideFigure(game->fnext);
       initGame(game);
       refreshGameField(game);
       initFigure(game->fnow);  
@@ -91,11 +92,11 @@ static void spawned(GameInfo_t *game, tetris_state *state) {
 }
 
 static void attach(tetris_state *state, GameInfo_t *game) {
-    if (collisionUp(game->fnow, game)) {
+    if (collisionUp(game->fnow)) {
       *state = GAMEOVER;
     }
     else *state = SPAWN;
-  figuraGamefield(game, game->fnow);
+  putGamefield(game);
   score(game);
   refreshGameField(game);
 }
@@ -168,7 +169,6 @@ void sigact(const UserAction_t *act, tetris_state *state, GameInfo_t *game) {
       break;
     case GAMEOVER:
       gameOver();  // gameOVER thanks for game
-      timeout(1700);
       *state = START;
       break;
     default:
