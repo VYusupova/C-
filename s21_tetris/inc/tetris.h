@@ -10,7 +10,7 @@
 int **create(int size_n, int size_m);
 void tetFree(int **matrix, int size_n, int size_m);
 
-void initFigure(figura *f);
+void initFigure(figura *f, int typeFigur);
 
 void swapFigure(figura *fnow, figura *fnext);
 void initGame(GameInfo_t *game);

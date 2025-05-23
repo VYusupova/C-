@@ -7,6 +7,7 @@ GCOV_FLAGS = -fprofile-arcs -ftest-coverage
 CHECK_LIBS = $(shell pkg-config --libs check) #-lcheck -lm -lpthread -lrt -lsubunit
 
 OBJS_FSMSWITCHCASE :=  out/tetris.o out/fsm.o 
+BACK_SRC := src/brick_game/tetris/
 BACKEND := out/brick_game/tetris/
 FRONTEND := out/gui/cli/
 BACK := $(BACKEND)tetris_init.o $(BACKEND)tetris_moving.o $(BACKEND)tetris_score.o
@@ -62,16 +63,21 @@ clean:
 	rm -rf gcov/
 	rm -rf *coverage.info
 	rm -rf $(TEST)
-	rm -rf test/*.gcov.*
+	$(RM) test/*.gcov.*
+	$(RM) *.gcno
 	rm -rf tetris_max_score.txt
 
-
-
-test_file:
+test_file: 
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c test/test.c -o  test/tests.gcov.o
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $(BACK_SRC)tetris_init.c -o  test/init.gcov.o
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $(BACK_SRC)tetris_score.c -o  test/score.gcov.o
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $(BACK_SRC)tetris_moving.c -o  test/move.gcov.o
+	#$(CC) $(CFLAGS) $(GCOV_FLAGS) -c src/tetris.c -o  test/teris.gcov.o
+	#$(CC) $(CFLAGS) $(GCOV_FLAGS) -c src/gui/cli/tetris_frontend.c -o  test/front.gcov.o 
+	#$(CC) $(CFLAGS) $(GCOV_FLAGS) -c src/fsm.c -o  test/fsm.gcov.o
 
-test: test_file
-	$(CC) $(CFLAGS) $(GCOV_FLAGS) -o $(TEST) test/*.gcov.o $(BACKEND)*.o  $(CHECK_LIBS)
+test: test_file 
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -o $(TEST) test/*.gcov.o   $(CHECK_LIBS)
 	@printf "\e[1;35;107m RUN FILE TESTING  \e[31;0m \n"
 	./$(TEST)
 	@printf "\n\e[1;35;107m END FILE TESTING    \e[31;0m \n"
@@ -79,8 +85,9 @@ test: test_file
 
 gcov_report: test
 	@printf "\e[1;35;107m  📊 Отчет покрытия кода в 'gcov/index.html' ┃\e[31;0m \n"
-	lcov -t "gcov_report" -o $(NAME)_coverage.info -c -d . --exclude '/usr/*' --exclude  $(TEST)
+	lcov -t "gcov_report" -o $(NAME)_coverage.info -c -d . 
 	genhtml -o gcov $(NAME)_coverage.info
+	$(RM) test/*.gcov.*
 	
 valgrind: tetris test
 	valgrind --leak-check=full --track-origins=yes ./$(TEST) $(GTEST_LIB)
@@ -88,10 +95,10 @@ valgrind: tetris test
 	
 cppcheck:
 	@printf "\n 🔧🔧🔧 CHECK FILE --enable=all --inconclusive \n" 
-	#cppcheck -q --enable=all --inconclusive src/gui/cli/*.c src/*.c src/brick_game/tetris/*.c inc/*.h
+	#cppcheck -q --enable=all --inconclusive src/gui/cli/*.c src/*.c $(BACK_SRC)*.c inc/*.h
 	@printf "\n 🔧🔧🔧 CHECK FILE --enable=all --suppress=missingIncludeSystem \n"
-	cppcheck --enable=all --suppress=missingIncludeSystem src/gui/cli/*.c src/*.c src/brick_game/tetris/*.c inc/*.h
-	#cppcheck --enable=all --check-level=exhaustive --suppress=missingIncludeSystem src/gui/cli/*.c src/*.c src/brick_game/tetris/*.c inc/*.h
+	cppcheck --enable=all --suppress=missingIncludeSystem src/gui/cli/*.c src/*.c $(BACK_SRC)*.c inc/*.h
+	#cppcheck --enable=all --check-level=exhaustive --suppress=missingIncludeSystem src/gui/cli/*.c src/*.c $(BACK_SRC)*.c inc/*.h
 # --check-level=exhaustive >>> Limiting analysis of branches. Use --check-level=exhaustive to analyze all branches. [normalCheckLevelMaxBranches]
 
 

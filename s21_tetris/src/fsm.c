@@ -71,8 +71,8 @@ static void started(const UserAction_t *act, GameInfo_t *game, tetris_state *sta
       hideFigure(game->fnext);
       initGame(game);
       refreshGameField(game);
-      initFigure(game->fnow);  
-      initFigure(game->fnext);
+      initFigure(game->fnow, ((rand() % 8)+1));  
+      initFigure(game->fnext, ((rand() % 8)+1));
       *state = SPAWN;
       break;
     case Terminate:
@@ -86,7 +86,7 @@ static void started(const UserAction_t *act, GameInfo_t *game, tetris_state *sta
 static void spawned(GameInfo_t *game, tetris_state *state) {
   swapFigure(game->fnow, game->fnext);
   hideFigure(game->fnext);
-  initFigure(game->fnext);
+  initFigure(game->fnext, ((rand() % 8)+1));
   showFigure(game->fnext);
   showFigure(game->fnow);
 }

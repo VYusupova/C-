@@ -15,7 +15,7 @@ END_TEST
 START_TEST(test_init_figura_I) {
   figura f;
   f.figur = create(FSIZE,FSIZE);
-  iniFigura_I(&f);
+  initFigure(&f,2);
   ck_assert_int_eq(f.n , 4);
   ck_assert_int_eq(f.m , 1);
   ck_assert_int_eq(f.figur[0][0], 1);
@@ -29,7 +29,7 @@ END_TEST
 START_TEST(test_init_figura_Q) {
   figura f;
   f.figur = create(FSIZE,FSIZE);
-  iniFigura_Q(&f);
+  initFigure(&f,1);
   ck_assert_int_eq(f.n , 2);
   ck_assert_int_eq(f.m , 2);
   ck_assert_int_eq(f.figur[0][0], 1);
@@ -43,7 +43,7 @@ END_TEST
 START_TEST(test_init_figura_S) {
   figura f;
   f.figur = create(FSIZE,FSIZE);
-  iniFigura_S(&f);
+  initFigure(&f,3);
   ck_assert_int_eq(f.n , 2);
   ck_assert_int_eq(f.m , 3);
   ck_assert_int_eq(f.figur[0][0], 0);
@@ -59,7 +59,7 @@ END_TEST
 START_TEST(test_init_figura_Z) {
   figura f;
   f.figur = create(FSIZE,FSIZE);
-  iniFigura_Z(&f);
+  initFigure(&f,4);
   ck_assert_int_eq(f.n , 2);
   ck_assert_int_eq(f.m , 3);
   ck_assert_int_eq(f.figur[0][0], 1);
@@ -74,7 +74,7 @@ END_TEST
 START_TEST(test_init_figura_L) {
  figura f;
   f.figur = create(FSIZE,FSIZE);
-  iniFigura_L(&f);
+  initFigure(&f,5);
   ck_assert_int_eq(f.n , 3);
   ck_assert_int_eq(f.m , 2);
   ck_assert_int_eq(f.figur[0][0], 1);
@@ -90,7 +90,7 @@ END_TEST
 START_TEST(test_init_figura_J) {
  figura f;
   f.figur = create(FSIZE,FSIZE);
-  iniFigura_J(&f);
+  initFigure(&f,6);
   ck_assert_int_eq(f.n , 3);
   ck_assert_int_eq(f.m , 2);
   ck_assert_int_eq(f.figur[0][1], 1);
@@ -106,7 +106,7 @@ END_TEST
 START_TEST(test_init_figura_T) {
 figura f;
   f.figur = create(FSIZE,FSIZE);
-  iniFigura_T(&f);
+  initFigure(&f,7);
   ck_assert_int_eq(f.n , 2);
   ck_assert_int_eq(f.m , 3);
   ck_assert_int_eq(f.figur[0][0], 0);

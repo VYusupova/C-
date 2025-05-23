@@ -26,6 +26,7 @@ typedef struct
 
 } GameInfo_t;
 
+
 typedef enum
 {
    FIGURE_Q = 1,

@@ -103,12 +103,11 @@ static void fillZero(int **matrix, int size_n, int size_m) {
          matrix[i][j] = 0; 
 }
 
-void initFigure(figura *f){
+void initFigure(figura *f, int typeFigur){
 
     fillZero(f->figur, FSIZE, FSIZE);
-
-    int fig = (rand() % 8)+1;   
-    switch (fig){
+//, ((rand() % FIGURE_T)+1)
+    switch (typeFigur){
     case FIGURE_Q :   
         iniFigura_Q(f);
         break;
