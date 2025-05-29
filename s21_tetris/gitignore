@@ -1,0 +1,6 @@
+tetris
+*.gcov.*
+gcov/
+run_tests
+*.info
+tetris_max_score.txt
