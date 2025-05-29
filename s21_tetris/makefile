@@ -89,7 +89,7 @@ gcov_report: test
 	genhtml -o gcov $(NAME)_coverage.info
 	$(RM) test/*.gcov.*
 	
-valgrind: tetris test
+valgrind: mkdir tetris test
 	valgrind --leak-check=full --track-origins=yes ./$(TEST) $(GTEST_LIB)
 
 	
