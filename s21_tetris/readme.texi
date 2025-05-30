@@ -9,36 +9,36 @@
 @top Tetris BrickGame v1.0
 
 @menu
-* Introduction::
-* Installation::
+* Вступление::
+* Установка::
 * Usage::
 * Testing::
 * Files::
 * Makefile Targets::
 @end menu
 
-@node Introduction
+@node Вступление
 @section Introduction
 
-BrickGame v1.0 is a simple implementation of the classic Tetris game. It is built using C and ncurses for the terminal interface.
+Это задание является первым из серии BrickGame. 
 
-@node Installation
+@node Установка
 @section Installation
 
-To install the game:
+git clone XXX && make
 
 @enumerate
 @item
-Type @code{make install} in the project directory.
+Выполнив @code{make install} в каталоге проекта.
 @item
-You will be prompted to specify an installation directory. If you do not specify a directory, the game will be installed to the @file{./build} directory by default.
+Игра будет установлена в каталог s21_BrickGame домашнего каталога. Если необходимо изменить каталог установки, то в @code{Makefile} переопределите переменную @code{DIR_GAME}.
 @end enumerate
 
-To uninstall the game:
+Что бы удалить игру выполните:
 
 @enumerate
 @item
-Type @code{make uninstall} in the project directory.
+@code{make uninstall}
 @end enumerate
 
 @node Usage
@@ -48,98 +48,90 @@ To run the game:
 
 @enumerate
 @item
-After installing, navigate to the installation directory and run the @file{tetris.bin} executable.
+После установки перейдите в каталог установки и запустите исполняемый файл @file{tetris}.
 @end enumerate
 
-Game controls:
+Управление:
 
 @itemize
 @item
-@strong{Left Arrow}: Move the tetromino left.
+@strong{<-}: переместить блок влево.
 @item
-@strong{Right Arrow}: Move the tetromino right.
+@strong{->}: переместить блок вправо.
 @item
-@strong{Down Arrow}: Accelerate the fall of the tetromino.
+@strong{стрелка вниз}: сразу же опустить блок.
 @item
-@strong{Up Arrow}: Rotate the tetromino.
+@strong{пробле}: повернуть блок.
 @item
-@strong{Spacebar}: Hard drop (immediately drop the tetromino to the bottom).
+@strong{P}: поставить на паузу игру.
 @item
-@strong{P}: Pause the game.
-@item
-@strong{Esc}: End the game.
+@strong{Esc}: законить и выйти из игры.
 @end itemize
 
-@node Testing
+@node Тестирование
 @section Testing
 
-To compile and run the tests:
+Скомпилировать и запустить тесты:
 
 @enumerate
 @item
-Type @code{make test} in the project directory.
+Выполнив @code{make test} запустятся тесты.
 @end enumerate
 
-This will execute the test suite using the @code{check} library.  Code coverage reports can be generated using the @code{make gcov_report} command.
+Просмотреть покрытие тестами выполните @code{make gcov_report}.
 
-@node Files
+@node Файлы
 @section Files
 
-The project structure is as follows:
+Структура проекта:
 
 @itemize
 @item
-@file{brick_game/tetris/}: Contains the core game logic source files.
+@file{brick_game/tetris/}: Файлы отвечающие за логику передвижения и закреления блоков наигровом поле, сохранения результатов.
 @item
-@file{gui/cli/}: Contains the command-line interface and savegame-related source files.
+@file{gui/cli/}: Интерфейс программы.
 @item
-@file{inc/}: Contains header files.
+@file{inc/}: Хэдерфайлы бэкенда и фронтенда.
 @item
-@file{tests/}: Contains test files.
+@file{tests/}: файлы тестирования.
 @item
-@file{Makefile}: The build configuration file.
+@file{Makefile}: конфигурационный файл сборки программы.
 @item
-@file{readme.txt}: A brief description of the project.
-@item
-@file{readme.texi}: The Texinfo source file for this documentation.
+@file{readme.texi}: Описание проекта.
 @end itemize
 
-@node Makefile Targets
+@node Цели Makefile
 @section Makefile Targets
-
-The following @code{make} targets are available:
 
 @itemize
 @item
-@code{all}: Builds and installs the game.
+@code{all}: Очистка, компиляция и установка программы в каталог.
 @item
-@code{install}: Installs the game to the specified directory (defaults to @file{./build}).
+@code{install}: Создание необходимых папок, сборка и установка программы в заданый каталог.
 @item
-@code{uninstall}: Removes the installed game files.
+@code{uninstall}: Удаление всех файлов установки и файлов которые возникли в результате работы Тетриса.
 @item
-@code{build}: Builds the game executable.
+@code{tetris}: Компиляция файлов прокета.
 @item
-@code{libs}: Builds the static library.
+@code{mkdir}: создание необходимых каталогов.
 @item
 @code{test}: Runs the test suite.
 @item
-@code{gcov_report}: Generates a code coverage report.
+@code{clean}: Очистка файлов которые согли были быть созаданы в результате работы целей мэйкфайла.
 @item
-@code{clean}: Removes build artifacts.
+@code{gcov_report}: Создание отчета покрытия тестами.
 @item
-@code{dist}: Creates a distribution archive.
+@code{valgrind}: Запуск тестов и поиск утечек памяти.
 @item
-@code{clang_i}: Formats code in-place using clang-format.
-@item
-@code{clang_n}: Checks code formatting using clang-format.
-@item
-@code{valgrind}: Runs tests with Valgrind.
+@code{dvi}: создание файла документации по проекту.
 @end itemize
 
 @bye
 
 
- /\_/\
-( o.o )
- > ^ <
+ /\_/\     (\(\
+( o.o )    (○∙○)
+ > ^ <     > ^ <  
+
+
 
