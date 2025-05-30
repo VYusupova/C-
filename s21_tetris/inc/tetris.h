@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 #include "defines.h"
-
 #include "fsm.h"
 #include "objects.h"
 

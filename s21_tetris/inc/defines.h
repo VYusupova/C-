@@ -27,12 +27,12 @@
 #define START_Y MAP_PADDING
 #define MAP_PADDING 0  // сдвиг игрового поля для фронтэнда
 #define BOARD_N 20
-#define BOARD_M FIELD_M*2
- // ширина и высота игрового поля для матрицы бэкенда
-#define FIELD_N 20 
+#define BOARD_M FIELD_M * 2
+// ширина и высота игрового поля для матрицы бэкенда
+#define FIELD_N 20
 #define FIELD_M 10
 // ширана  поля для вывода информации по уровням и т.д.
-#define HUD_WIDTH 10  
+#define HUD_WIDTH 10
 
 #define MAX_SCORE "tetris_max_score.txt"
 
@@ -52,7 +52,6 @@
 #define PAUSE_p 112
 #define PAUSE_P 80
 #define SPACE ' '
-
 
 #define SHIFT_MESSAGE 4
 // координаты отрисовки поля под новую фигуру

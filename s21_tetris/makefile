@@ -7,8 +7,17 @@ CFLAGS := -I inc -std=c11 -Wall -Werror -Wpedantic
 GCOV_FLAGS = -fprofile-arcs -ftest-coverage
 CHECK_LIBS = $(shell pkg-config --libs check) #-lcheck -lm -lpthread -lrt -lsubunit
 
+#CPPCHECK = --enable=all --suppress=missingIncludeSystem
+#CPPCHECK = -q --enable=all --inconclusive
+CPPCHECK = --enable=all --check-level=exhaustive --suppress=missingIncludeSystem
+# --check-level=exhaustive >>> Limiting analysis of branches. Use --check-level=exhaustive to analyze all branches. [normalCheckLevelMaxBranches]
+
+
+
 OBJS_FSMSWITCHCASE :=  out/tetris.o out/fsm.o 
 BACK_SRC := brick_game/tetris/
+FRONT_SRC := gui/cli/
+HEAD_SRC := inc/
 BACKEND := out/brick_game/tetris/
 FRONTEND := out/gui/cli/
 BACK := $(BACKEND)tetris_init.o $(BACKEND)tetris_moving.o $(BACKEND)tetris_score.o
@@ -69,7 +78,7 @@ test_file:
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $(BACK_SRC)tetris_score.c -o  test/score.gcov.o
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $(BACK_SRC)tetris_moving.c -o  test/move.gcov.o
 	#$(CC) $(CFLAGS) $(GCOV_FLAGS) -c src/tetris.c -o  test/teris.gcov.o
-	#$(CC) $(CFLAGS) $(GCOV_FLAGS) -c src/gui/cli/tetris_frontend.c -o  test/front.gcov.o 
+	#$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $(FRONT_SRC)tetris_frontend.c -o  test/front.gcov.o 
 	#$(CC) $(CFLAGS) $(GCOV_FLAGS) -c src/fsm.c -o  test/fsm.gcov.o
 
 test: test_file 
@@ -89,14 +98,9 @@ valgrind: mkdir tetris test
 	valgrind --leak-check=full --track-origins=yes ./$(TEST) $(GTEST_LIB)
 
 	
-cppcheck:
-	@printf "\n 🔧🔧🔧 CHECK FILE --enable=all --inconclusive \n" 
-	#cppcheck -q --enable=all --inconclusive src/gui/cli/*.c src/*.c $(BACK_SRC)*.c inc/*.h
-	@printf "\n 🔧🔧🔧 CHECK FILE --enable=all --suppress=missingIncludeSystem \n"
-	cppcheck --enable=all --suppress=missingIncludeSystem src/gui/cli/*.c src/*.c $(BACK_SRC)*.c inc/*.h
-	#cppcheck --enable=all --check-level=exhaustive --suppress=missingIncludeSystem src/gui/cli/*.c src/*.c $(BACK_SRC)*.c inc/*.h
-# --check-level=exhaustive >>> Limiting analysis of branches. Use --check-level=exhaustive to analyze all branches. [normalCheckLevelMaxBranches]
-
+cppcheck:	
+	@printf "\n 🔧🔧🔧 CHECK FILE \n"
+	cppcheck $(CPPCHECK) *.c $(FRONT_SRC)*.c $(BACK_SRC)*.c $(HEAD_SRC)*.h
 
 dvi:
 	mkdir -p dvi
@@ -104,6 +108,12 @@ dvi:
 	mv readme.* dvi
 	mv dvi/readme.dvi $(DIR_INSTALL)
 	mv dvi/readme.texi .
+	
+clang_n:
+	clang-format -n *.c $(FRONT_SRC)*.c $(BACK_SRC)*.c $(HEAD_SRC)*.h
+
+clang_i:
+	clang-format -i *.c $(FRONT_SRC)*.c $(BACK_SRC)*.c $(HEAD_SRC)*.h
 
 arch:
 	mkdir $(ARCHDIR) $(ARCHDIR)/gui $(ARCHDIR)/brick_game

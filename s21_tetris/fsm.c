@@ -16,7 +16,7 @@ next one.
         1) A lot of codelines.
 */
 
-UserAction_t get_signal(int user_input) {  
+UserAction_t get_signal(int user_input) {
   UserAction_t action = -1;
 
   switch (user_input) {
@@ -65,14 +65,15 @@ static void rotate(GameInfo_t *game) {
   showFigure(game->fnow);
 }
 
-static void started(const UserAction_t *act, GameInfo_t *game, tetris_state *state) {
+static void started(const UserAction_t *act, GameInfo_t *game,
+                    tetris_state *state) {
   switch (*act) {
     case Start:
       hideFigure(game->fnext);
       initGame(game);
       refreshGameField(game);
-      initFigure(game->fnow, ((rand() % 8)+1));  
-      initFigure(game->fnext, ((rand() % 8)+1));
+      initFigure(game->fnow, ((rand() % 8) + 1));
+      initFigure(game->fnext, ((rand() % 8) + 1));
       *state = SPAWN;
       break;
     case Terminate:
@@ -86,22 +87,23 @@ static void started(const UserAction_t *act, GameInfo_t *game, tetris_state *sta
 static void spawned(GameInfo_t *game, tetris_state *state) {
   swapFigure(game->fnow, game->fnext);
   hideFigure(game->fnext);
-  initFigure(game->fnext, ((rand() % 8)+1));
+  initFigure(game->fnext, ((rand() % 8) + 1));
   showFigure(game->fnext);
   showFigure(game->fnow);
 }
 
 static void attach(tetris_state *state, GameInfo_t *game) {
-    if (collisionUp(game->fnow)) {
-      *state = GAMEOVER;
-    }
-    else *state = SPAWN;
+  if (collisionUp(game->fnow)) {
+    *state = GAMEOVER;
+  } else
+    *state = SPAWN;
   putGamefield(game);
   score(game);
   refreshGameField(game);
 }
 
-static void moved(const UserAction_t *act, tetris_state *state, GameInfo_t *game) {
+static void moved(const UserAction_t *act, tetris_state *state,
+                  GameInfo_t *game) {
   switch (*act) {
     case Left:
       if (!collisionLeft(game->fnow, game)) refreshFigure(game->fnow, -1, 0);
@@ -121,17 +123,20 @@ static void moved(const UserAction_t *act, tetris_state *state, GameInfo_t *game
       *state = SHIFTING;
       break;
     case Pause:
-    *state = SHIFTING;
+      *state = SHIFTING;
       printPause();
       game->pause = 1;
-        print_stats(game);
-	while (game->pause) {
-	UserAction_t action = get_signal(GET_USER_INPUT);
-	if (action == Pause) game->pause = 0;
-	if (action == Start) game->pause = 0;
-	if (action == Terminate) {game->pause = 0; *state = EXIT;}
-	}
-        print_stats(game);
+      print_stats(game);
+      while (game->pause) {
+        UserAction_t action = get_signal(GET_USER_INPUT);
+        if (action == Pause) game->pause = 0;
+        if (action == Start) game->pause = 0;
+        if (action == Terminate) {
+          game->pause = 0;
+          *state = EXIT;
+        }
+      }
+      print_stats(game);
       refreshGameField(game);
       refreshFigure(game->fnow, 0, 0);
       break;
@@ -157,7 +162,7 @@ void sigact(const UserAction_t *act, tetris_state *state, GameInfo_t *game) {
       break;
     case MOVING:
       moved(act, state, game);
-  
+
       break;
     case SHIFTING: /*движение блока вниз*/
       shifted(state, game);
@@ -165,7 +170,7 @@ void sigact(const UserAction_t *act, tetris_state *state, GameInfo_t *game) {
       break;
     case ATTACHING: /*положить блок на игровое поле*/
       attach(state, game);
-      
+
       break;
     case GAMEOVER:
       gameOver();  // gameOVER thanks for game
