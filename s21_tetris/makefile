@@ -1,5 +1,6 @@
 NAME := tetris
 DIR_GAME := s21_BrickGame
+DIR_INSTALL := ~/$(DIR_GAME)/
 
 CC := gcc
 CFLAGS := -I inc -std=c11 -Wall -Werror -Wpedantic
@@ -7,23 +8,21 @@ GCOV_FLAGS = -fprofile-arcs -ftest-coverage
 CHECK_LIBS = $(shell pkg-config --libs check) #-lcheck -lm -lpthread -lrt -lsubunit
 
 OBJS_FSMSWITCHCASE :=  out/tetris.o out/fsm.o 
-BACK_SRC := src/brick_game/tetris/
+BACK_SRC := brick_game/tetris/
 BACKEND := out/brick_game/tetris/
 FRONTEND := out/gui/cli/
 BACK := $(BACKEND)tetris_init.o $(BACKEND)tetris_moving.o $(BACKEND)tetris_score.o
 FRONT := $(FRONTEND)tetris_frontend.o
-#OBJS_FSMTABLE := out/tetris.o out/fsm_matrix.o  out/frontend.o
-
 
 PATH_TEST = test
 TEST = run_tests
-DIR_INSTALL := ~/$(DIR_GAME)/
+
 
 .PHONY: clean install tetris uninstall
 
 all: clean install
 
-install: mkdir tetris #clean - возможность очищать вспомогательные файлы после того как игра установлена 
+install: mkdir tetris 
 ifdef DIR_INSTALL
 	@if [ -d $(DIR_INSTALL) ]; then \
 	  echo "\n ✅  TETRIS GAME install in catalog $(DIR_INSTALL) >>>" ;\
@@ -46,10 +45,7 @@ tetris: $(OBJS_FSMSWITCHCASE) $(BACK) $(FRONT)
 	#clang-format -i src/*.c
 	$(CC) $(CFLAGS) $^ -o $@ -lncurses
 
-#frogger_fsmtable: $(OBJS_FSMTABLE)
-#	$(CC) $(CFLAGS) $^ -o $@ -lncurses
-
-out/%.o: src/%.c
+out/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@ 
 
 mkdir:
@@ -59,8 +55,7 @@ mkdir:
 
 clean:
 	$(RM) out/*.o $(NAME)
-	rm -rf out/
-	rm -rf gcov/
+	rm -rf out/ dvi/ gcov/
 	rm -rf *coverage.info
 	rm -rf $(TEST)
 	$(RM) test/*.gcov.*
@@ -113,10 +108,11 @@ arch:
 
 dvi:
 	mkdir -p dvi
-	texi2dvi readme.texi --dvi -o readme.dvi
+	texi2dvi --pdf readme.texi -I . -o dvi/readme.dvi
 	mv readme.* dvi
-	mv dvi/readme.txt .
+	mv dvi/readme.dvi .
 	mv dvi/readme.texi .
+	rm -rf /dvi
 
 # $^ это набор зависимых файлов, используемых для создания чего-то другого.
 # $@ это имя цели, которая будет построена.

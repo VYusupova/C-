@@ -1,4 +1,4 @@
-#include "../../../inc/tetris.h"
+#include "../../inc/tetris.h"
 
  // f->n & FIELD_N - строк 
  // t->m & FIELD_M - столбцов

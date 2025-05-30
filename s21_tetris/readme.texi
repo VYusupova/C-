@@ -20,7 +20,7 @@
 @node Introduction
 @section Introduction
 
-Tetris BrickGame v1.0 is a simple implementation of the classic Tetris game. It is built using C and ncurses for the terminal interface.
+BrickGame v1.0 is a simple implementation of the classic Tetris game. It is built using C and ncurses for the terminal interface.
 
 @node Installation
 @section Installation

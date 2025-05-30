@@ -7,7 +7,7 @@ writeScore & readScore - хранение максимального колич�
 #ifndef TETRIS_SCORE
 #define TETRIS_SCORE
 
-#include "../../../inc/tetris.h"
+#include "../../inc/tetris.h"
 
 
 static void levelUP(GameInfo_t *game){

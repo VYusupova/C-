@@ -4,7 +4,7 @@
 #ifndef TETRIS_INIT
 #define TETRIS_INIT
 
-#include "../../../inc/tetris.h"
+#include "../../inc/tetris.h"
 
 
 static void iniFigura_Q(figura *f){

@@ -1,4 +1,4 @@
-#include "../../../inc/frontend.h"
+#include "../../inc/frontend.h"
 
 void initColors(void) {
   if (!has_colors()) {
