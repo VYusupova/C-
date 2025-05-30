@@ -18,3 +18,10 @@ git clone git@github.com:VYusupova/C-.git
 # then open makefile look this file, and to write variable  FILESDIR = /usr/bin/
 # restart $sudo make install
 # check version command $cppcheck --version
+
+sudo apt install clang-format
+sudo apt install valgrind
+sudo apt-get install ucspi-tcp # I dont know why
+sudo apt-get install texi2dvi
+sudo apt-get install texinfo
+sudo apt-get install texlive
