@@ -22,7 +22,7 @@ TEST = run_tests
 
 all: clean install
 
-install: mkdir tetris 
+install: mkdir tetris dvi 
 ifdef DIR_INSTALL
 	@if [ -d $(DIR_INSTALL) ]; then \
 	  echo "\n ✅  TETRIS GAME install in catalog $(DIR_INSTALL) >>>" ;\
@@ -40,6 +40,7 @@ endif
 uninstall: clean
 	$(RM) $(DIR_INSTALL)tetris
 	$(RM) $(DIR_INSTALL)tetris_max_score.txt
+	$(RM) $(DIR_INSTALL)readme.dvi
 
 tetris: $(OBJS_FSMSWITCHCASE) $(BACK) $(FRONT)
 	#clang-format -i src/*.c
@@ -97,22 +98,18 @@ cppcheck:
 # --check-level=exhaustive >>> Limiting analysis of branches. Use --check-level=exhaustive to analyze all branches. [normalCheckLevelMaxBranches]
 
 
-
-
+dvi:
+	mkdir -p dvi
+	texi2dvi --pdf readme.texi -I . -o dvi/readme.dvi
+	mv readme.* dvi
+	mv dvi/readme.dvi $(DIR_INSTALL)
+	mv dvi/readme.texi .
 
 arch:
 	mkdir $(ARCHDIR) $(ARCHDIR)/gui $(ARCHDIR)/brick_game
 	cp -r $(LIBDIR) $(ARCHDIR)/$(LIBDIR) && cp -r $(GUIDIR) $(ARCHDIR)/$(GUIDIR) && cp -r $(HDIR) $(ARCHDIR) && cp -r $(INSTDIR) $(ARCHDIR) && cp Makefile $(ARCHDIR) && cp readme.txt $(ARCHDIR)
 	tar -cvf willumye.tetris.tar.gz $(ARCHDIR)
 	-rm -rf $(ARCHDIR)
-
-dvi:
-	mkdir -p dvi
-	texi2dvi --pdf readme.texi -I . -o dvi/readme.dvi
-	mv readme.* dvi
-	mv dvi/readme.dvi .
-	mv dvi/readme.texi .
-	rm -rf /dvi
 
 # $^ это набор зависимых файлов, используемых для создания чего-то другого.
 # $@ это имя цели, которая будет построена.
