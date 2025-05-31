@@ -31,7 +31,7 @@ TEST = run_tests
 
 all: clean install
 
-install: mkdir tetris dvi 
+install: mkdir tetris 
 ifdef DIR_INSTALL
 	@if [ -d $(DIR_INSTALL) ]; then \
 	  echo "\n ✅  TETRIS GAME install in catalog $(DIR_INSTALL) >>>" ;\
@@ -109,18 +109,27 @@ dvi:
 	mv dvi/readme.dvi $(DIR_INSTALL)
 	mv dvi/readme.texi .
 	
+
 clang_n:
-	clang-format -n *.c $(FRONT_SRC)*.c $(BACK_SRC)*.c $(HEAD_SRC)*.h
+	clang-format -n *.c
+	clang-format -n $(FRONT_SRC)*.c
+	clang-format -n $(BACK_SRC)*.c
+	clang-format -n $(HEAD_SRC)*.h
+	clang-format -n test/*.[ch]
 
 clang_i:
-	clang-format -i *.c $(FRONT_SRC)*.c $(BACK_SRC)*.c $(HEAD_SRC)*.h
+	clang-format -i *.c $(FRONT_SRC)*.c $(BACK_SRC)*.c $(HEAD_SRC)*.h test/test.c test/test.h
 
 arch:
-	mkdir $(ARCHDIR) $(ARCHDIR)/gui $(ARCHDIR)/brick_game
-	cp -r $(LIBDIR) $(ARCHDIR)/$(LIBDIR) && cp -r $(GUIDIR) $(ARCHDIR)/$(GUIDIR) && cp -r $(HDIR) $(ARCHDIR) && cp -r $(INSTDIR) $(ARCHDIR) && cp Makefile $(ARCHDIR) && cp readme.txt $(ARCHDIR)
-	tar -cvf willumye.tetris.tar.gz $(ARCHDIR)
+	mkdir -p $(ARCHDIR)/$(HEAD_SRC) $(ARCHDIR)/$(FRONT_SRC) $(ARCHDIR)/$(BACK_SRC)
+	cp -r *.c $(ARCHDIR)
+	cp -r $(HEAD_SRC)* $(ARCHDIR)/$(HEAD_SRC)
+	cp -r $(FRONT_SRC)* $(ARCHDIR)/$(FRONT_SRC)
+	cp -r $(BACK_SRC)* $(ARCHDIR)/$(BACK_SRC)
+	cp makefile $(ARCHDIR)
+	#cp readme.txt $(ARCHDIR)
+	tar -cvf lymondka.tetris.tar.gz $(ARCHDIR)
 	-rm -rf $(ARCHDIR)
-
 # $^ это набор зависимых файлов, используемых для создания чего-то другого.
 # $@ это имя цели, которая будет построена.
 
