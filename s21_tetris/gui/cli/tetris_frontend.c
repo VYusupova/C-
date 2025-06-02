@@ -17,7 +17,6 @@ void initColors(void) {
   init_pair(COLOR_7, COLOR_BLACK, COLOR_MAGENTA);
   init_pair(COLOR_8, COLOR_BLACK, 90);
   init_pair(COLOR_9, COLOR_BLACK, COLOR_CYAN);
-
   init_pair(COLOR_10, COLOR_BLACK, 100);
   init_pair(COLOR_11, COLOR_BLACK, 210);
   init_pair(COLOR_12, COLOR_BLACK, 220);
@@ -96,20 +95,14 @@ void print_stats(GameInfo_t *game) {
 
 // отрисовка прямоугольника с координатми
 static void print_rectangle(int top_y, int bottom_y, int left_x, int right_x) {
-  // ACS_BLOCK
-
   MVADDCH(top_y, left_x, ACS_ULCORNER);
-
   int i = left_x + 1;
-
   for (; i < right_x; i++) MVADDCH(top_y, i, ACS_HLINE);
   MVADDCH(top_y, i, ACS_URCORNER);
-
   for (i = top_y + 1; i < bottom_y; i++) {
     MVADDCH(i, left_x, ACS_VLINE);
     MVADDCH(i, right_x, ACS_VLINE);
   }
-
   MVADDCH(bottom_y, left_x, ACS_LLCORNER);
   i = left_x + 1;
   for (; i < right_x; i++) MVADDCH(bottom_y, i, ACS_HLINE);
@@ -117,23 +110,13 @@ static void print_rectangle(int top_y, int bottom_y, int left_x, int right_x) {
 }
 
 void print_overlay(void) {
-  print_rectangle(0, BOARD_N + 1, 0, BOARD_M + 2);  // отрисовка игрового поля
-  // print_rectangle(0, BOARD_N + 1, BOARD_M + 3,
-  //                BOARD_M + HUD_WIDTH);  // отрисовка информационного поля
-  // print_rectangle(R_NEXT, R_NEXT_H, BOARD_M + 4,
-  //              BOARD_M + HUD_WIDTH - 1);  // отрисовка поля под новую фигуру
-
+  print_rectangle(0, BOARD_N + 1, 1, BOARD_M + 2);
   MVPRINTW(R_NEXT + 8, BOARD_M + SHIFT_MESSAGE, "LEVEL");
   MVPRINTW(R_NEXT + 10, BOARD_M + SHIFT_MESSAGE, "SCORE");
   MVPRINTW(R_NEXT + 12, BOARD_M + SHIFT_MESSAGE, "SPEED");
   MVPRINTW(R_NEXT + 14, BOARD_M + SHIFT_MESSAGE, "MAX SCORE");
   showIntro();
   printColorPanel();
-}
-
-void printPause(void) {
-  bkgdset(COLOR_PAIR(MASSEGE));
-  MVPRINTW(BOARD_N / 2, BOARD_M / 2, "PAUSE");
 }
 
 static void printFigure(const figura *f) {
@@ -160,7 +143,7 @@ void refreshFigure(figura *f, int dx, int dy) {
 }
 
 static void printGameField(GameInfo_t *game) {
-  for (int i = 1; i < BOARD_N + 1; i++)
+  for (int i = 1; i < FIELD_N + 1; i++)
     for (int j = 1; j < FIELD_M + 1; j++) {
       if (game->field[i - 1][j - 1]) {
         bkgdset(COLOR_PAIR(game->field[i - 1][j - 1]));
@@ -176,4 +159,6 @@ void refreshGameField(GameInfo_t *game) {
       PRINT(j, i);
     }
   printGameField(game);
+  bkgdset(COLOR_PAIR(MASSEGE));
+  print_rectangle(0, BOARD_N + 1, 1, BOARD_M + 2);
 }

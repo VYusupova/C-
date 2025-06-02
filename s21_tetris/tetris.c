@@ -1,9 +1,6 @@
-
-//#include <stdio.h>
-#include <../inc/tetris.h>
 #include <time.h>
-
-#include "../inc/fsm.h"
+#include "inc/tetris.h"
+#include "inc/fsm.h"
 
 static void game_loop() {
   GameInfo_t game;
@@ -28,12 +25,9 @@ static void game_loop() {
     sigact(&userAct, &state, &game);
 
     if (state == MOVING || state == START) userAct = get_signal(GET_USER_INPUT);
-    timeout(game.speed);  //  timeout(700);
-    // napms(500);
-    // delay_output(200);
+    timeout(game.speed);
+          writeScore(&game);
   }
-
-  writeScore(&game);
 
   tetFree(fnow.figur, FSIZE, FSIZE);
   tetFree(fnext.figur, FSIZE, FSIZE);
@@ -48,6 +42,5 @@ int main(void) {
   srand(time(NULL));  // for true random
   game_loop();
   endwin();
-
   return SUCCESS;
 }

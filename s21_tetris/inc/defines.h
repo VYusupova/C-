@@ -36,9 +36,8 @@
 
 #define MAX_SCORE "tetris_max_score.txt"
 
-//#define LEVEL_CNT 5
 #define LEVEL_MAX 10
-#define SPEED 780
+#define SPEED 1080
 
 #define MAX_WIN_COUNT 10
 

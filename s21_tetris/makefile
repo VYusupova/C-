@@ -1,6 +1,7 @@
 NAME := tetris
 DIR_GAME := s21_BrickGame
 DIR_INSTALL := ~/$(DIR_GAME)/
+ARCHDIR := arhiv_teris_game
 
 CC := gcc
 CFLAGS := -I inc -std=c11 -Wall -Werror -Wpedantic
@@ -14,7 +15,7 @@ CPPCHECK = --enable=all --check-level=exhaustive --suppress=missingIncludeSystem
 
 
 
-OBJS_FSMSWITCHCASE :=  out/tetris.o out/fsm.o 
+OBJS_FSMSWITCHCASE :=  out/tetris.o out/fsm.o
 BACK_SRC := brick_game/tetris/
 FRONT_SRC := gui/cli/
 HEAD_SRC := inc/
@@ -26,12 +27,11 @@ FRONT := $(FRONTEND)tetris_frontend.o
 PATH_TEST = test
 TEST = run_tests
 
-
 .PHONY: clean install tetris uninstall
 
 all: clean install
 
-install: mkdir tetris 
+install: mkdir tetris
 ifdef DIR_INSTALL
 	@if [ -d $(DIR_INSTALL) ]; then \
 	  echo "\n ✅  TETRIS GAME install in catalog $(DIR_INSTALL) >>>" ;\
@@ -40,7 +40,7 @@ ifdef DIR_INSTALL
           then $(DIR_INSTALL)./tetris; fi \
 	  else echo "\ninstall aborted ... " ; \
 	       echo "$(DIR_INSTALL) >>> not found catalog" ; \
-	fi	
+	fi
 else
 	$(error DIR_INSTALL must be set!)
 endif
@@ -56,7 +56,7 @@ tetris: $(OBJS_FSMSWITCHCASE) $(BACK) $(FRONT)
 	$(CC) $(CFLAGS) $^ -o $@ -lncurses
 
 out/%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@ 
+	$(CC) $(CFLAGS) -c $< -o $@
 
 mkdir:
 	mkdir -p ~/$(DIR_GAME)
@@ -72,33 +72,30 @@ clean:
 	$(RM) *.gcno
 	rm -rf tetris_max_score.txt
 
-test_file: 
+test_file:
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c test/test.c -o  test/tests.gcov.o
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $(BACK_SRC)tetris_init.c -o  test/init.gcov.o
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $(BACK_SRC)tetris_score.c -o  test/score.gcov.o
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $(BACK_SRC)tetris_moving.c -o  test/move.gcov.o
-	#$(CC) $(CFLAGS) $(GCOV_FLAGS) -c src/tetris.c -o  test/teris.gcov.o
-	#$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $(FRONT_SRC)tetris_frontend.c -o  test/front.gcov.o 
-	#$(CC) $(CFLAGS) $(GCOV_FLAGS) -c src/fsm.c -o  test/fsm.gcov.o
 
-test: test_file 
+test: test_file
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -o $(TEST) test/*.gcov.o   $(CHECK_LIBS)
 	@printf "\e[1;35;107m RUN FILE TESTING  \e[31;0m \n"
 	./$(TEST)
 	@printf "\n\e[1;35;107m END FILE TESTING    \e[31;0m \n"
-	
+
 
 gcov_report: test
-	@printf "\e[1;35;107m  📊 Отчет покрытия кода в 'gcov/index.html' ┃\e[31;0m \n"
-	lcov -t "gcov_report" -o $(NAME)_coverage.info -c -d . 
+	@printf "\e[1;35;107m  Отчет покрытия кода в 'gcov/index.html' ┃\e[31;0m   📊 \n"
+	lcov -t "gcov_report" -o $(NAME)_coverage.info -c -d .
 	genhtml -o gcov $(NAME)_coverage.info
 	$(RM) test/*.gcov.*
-	
+
 valgrind: mkdir tetris test
 	valgrind --leak-check=full --track-origins=yes ./$(TEST) $(GTEST_LIB)
 
-	
-cppcheck:	
+
+cppcheck:
 	@printf "\n 🔧🔧🔧 CHECK FILE \n"
 	cppcheck $(CPPCHECK) *.c $(FRONT_SRC)*.c $(BACK_SRC)*.c $(HEAD_SRC)*.h
 
@@ -108,7 +105,6 @@ dvi:
 	mv readme.* dvi
 	mv dvi/readme.dvi $(DIR_INSTALL)
 	mv dvi/readme.texi .
-	
 
 clang_n:
 	clang-format -n *.c
@@ -120,7 +116,7 @@ clang_n:
 clang_i:
 	clang-format -i *.c $(FRONT_SRC)*.c $(BACK_SRC)*.c $(HEAD_SRC)*.h test/test.c test/test.h
 
-arch:
+dist:
 	mkdir -p $(ARCHDIR)/$(HEAD_SRC) $(ARCHDIR)/$(FRONT_SRC) $(ARCHDIR)/$(BACK_SRC)
 	cp -r *.c $(ARCHDIR)
 	cp -r $(HEAD_SRC)* $(ARCHDIR)/$(HEAD_SRC)
@@ -130,11 +126,3 @@ arch:
 	#cp readme.txt $(ARCHDIR)
 	tar -cvf lymondka.tetris.tar.gz $(ARCHDIR)
 	-rm -rf $(ARCHDIR)
-# $^ это набор зависимых файлов, используемых для создания чего-то другого.
-# $@ это имя цели, которая будет построена.
-
-# $(RM) - переменная в Makefile. Существуют явные переменные (которые определяются внутри Makefile) и неявные переменные (определяются make и могут быть переопределены вами)
-# Вы можете увидеть список неявных переменных с этим флагом: make -p
-# Некоторые из наиболее распространённых переменных можно найти по адресу: 10.3 Переменные, используемые неявными правилами
-# Вы можете развернуть переменную с помощью следующего синтаксиса $(NAME) или ${NAME}
-

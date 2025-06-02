@@ -1,20 +1,4 @@
-#include "../inc/fsm.h"
-
-// This is a finite state machine realisation based on switch-case statement.
-/*
-
-Функция sigact() описывает логику переключения состояний.
-    States are checked in order specified in function sigact().
-    It enters a state-case which it corresponds to, where begins another
-switch-case statement. Inner switch-case statement is looking for a signal given
-by get_signal(). After finding it makes some action and switches state to the
-next one.
-
-    Pros:
-        1) Less memory usage.
-    Cons:
-        1) A lot of codelines.
-*/
+#include "inc/fsm.h"
 
 UserAction_t get_signal(int user_input) {
   UserAction_t action = -1;
@@ -95,11 +79,30 @@ static void spawned(GameInfo_t *game, tetris_state *state) {
 static void attach(tetris_state *state, GameInfo_t *game) {
   if (collisionUp(game->fnow)) {
     *state = GAMEOVER;
-  } else
+  } else {
     *state = SPAWN;
-  putGamefield(game);
-  score(game);
+    putGamefield(game);
+    score(game);
+    refreshGameField(game);
+  }
+}
+
+static void pause(GameInfo_t *game, tetris_state *state) {
+  print_stats(game);
+  game->pause = 1;
+  print_stats(game);
+  while (game->pause) {
+    UserAction_t action = get_signal(GET_USER_INPUT);
+    if (action == Pause) game->pause = 0;
+    if (action == Start) game->pause = 0;
+    if (action == Terminate) {
+      game->pause = 0;
+      *state = EXIT;
+    }
+  }
+  print_stats(game);
   refreshGameField(game);
+  refreshFigure(game->fnow, 0, 0);
 }
 
 static void moved(const UserAction_t *act, tetris_state *state,
@@ -123,22 +126,8 @@ static void moved(const UserAction_t *act, tetris_state *state,
       *state = SHIFTING;
       break;
     case Pause:
+      pause(game, state);
       *state = SHIFTING;
-      printPause();
-      game->pause = 1;
-      print_stats(game);
-      while (game->pause) {
-        UserAction_t action = get_signal(GET_USER_INPUT);
-        if (action == Pause) game->pause = 0;
-        if (action == Start) game->pause = 0;
-        if (action == Terminate) {
-          game->pause = 0;
-          *state = EXIT;
-        }
-      }
-      print_stats(game);
-      refreshGameField(game);
-      refreshFigure(game->fnow, 0, 0);
       break;
     case Terminate:
       *state = EXIT;
@@ -151,7 +140,6 @@ static void moved(const UserAction_t *act, tetris_state *state,
 
 void sigact(const UserAction_t *act, tetris_state *state, GameInfo_t *game) {
   print_stats(game);
-  // napms(2000); //func sleep for at least ms milliseconds
   switch (*state) {
     case START:
       started(act, game, state);
@@ -162,18 +150,15 @@ void sigact(const UserAction_t *act, tetris_state *state, GameInfo_t *game) {
       break;
     case MOVING:
       moved(act, state, game);
-
       break;
     case SHIFTING: /*движение блока вниз*/
       shifted(state, game);
-
       break;
     case ATTACHING: /*положить блок на игровое поле*/
       attach(state, game);
-
       break;
     case GAMEOVER:
-      gameOver();  // gameOVER thanks for game
+      gameOver(); /* gameOVER thanks for game*/
       *state = START;
       break;
     default:

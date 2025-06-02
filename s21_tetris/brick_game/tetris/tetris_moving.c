@@ -22,8 +22,8 @@ int collisionDown(const figura *f, GameInfo_t *game) {
   return result;
 }
 
-int collisionUp(const figura *f) {    // to do del?
-  if (f->y <= START_Y) return ERROR;  // TO DO
+int collisionUp(const figura *f) {
+  if (f->y <= START_Y) return ERROR;
   return SUCCESS;
 }
 
@@ -44,25 +44,20 @@ int collisionRight(const figura *f, GameInfo_t *game) {
 }
 
 void rotateFigure(figura *f, GameInfo_t *game) {
-  //задаем новую фигуру
+  if (f->m == 2 && f->n == 2) return;
   figura new;
   new.x = f->x;
   new.y = f->y;
   new.n = f->m;
   new.m = f->n;
-  // if (new.n == 1 ) new.y +=2;
   new.typeFigure = f->typeFigure;
   new.figur = create(FSIZE, FSIZE);
   for (int i = 0; i < new.n; i++)
-    for (int j = 0; j < new.m; j++)
+  for (int j = 0; j < new.m; j++)
       new.figur[i][j] = f->figur[j][new.n - 1 - i];
+  while (new.x + new.m > (FIELD_M)) new.x -= 2;
+  while (new.x <= 0 ) new.x++;
 
-  // // добавить условие что если новая позиция фигуры не выходит за рамки
-  // игрового поля
-  // // и не сталкивается с уже занятыми на поле ячейками (т.е другими фигурами)
-  // выполнить поворот
-  //  переписываем в старую фигуру новую
-  //        if (f->x + f->m >= (FIELD_M)) { new.x -=1;}
   if (!collisionRight(&new, game) && !collisionLeft(&new, game) &&
       !collisionDown(&new, game)) {
     for (int y = 0; y < new.n; y++)

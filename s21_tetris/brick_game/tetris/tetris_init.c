@@ -1,6 +1,3 @@
-// TO DO # 0 в отдельные методы вынесены операции инициализации фигуры по типу
-// TO DO # 1 проверить на утечки памяти
-
 #ifndef TETRIS_INIT
 #define TETRIS_INIT
 
@@ -157,7 +154,7 @@ void initGame(GameInfo_t *game) {
   fillZero(game->field, FIELD_N, FIELD_M);
 }
 
-//запомним и зафиксируем фигуру на игровом поле
+// запомним и зафиксируем фигуру на игровом поле
 void putGamefield(GameInfo_t *game) {
   for (int y = game->fnow->y, k = 0; y < FIELD_N && k < game->fnow->n; y++, k++)
     for (int x = game->fnow->x, l = 0; x < FIELD_M && l < game->fnow->m;
