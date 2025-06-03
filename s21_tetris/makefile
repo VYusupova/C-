@@ -31,7 +31,7 @@ TEST = run_tests
 
 all: clean install
 
-install: mkdir tetris
+install: mkdir tetris dvi
 ifdef DIR_INSTALL
 	@if [ -d $(DIR_INSTALL) ]; then \
 	  echo "\n ✅  TETRIS GAME install in catalog $(DIR_INSTALL) >>>" ;\
@@ -49,7 +49,8 @@ endif
 uninstall: clean
 	$(RM) $(DIR_INSTALL)tetris
 	$(RM) $(DIR_INSTALL)tetris_max_score.txt
-	$(RM) $(DIR_INSTALL)readme.dvi
+	$(RM) $(DIR_INSTALL)readME.md
+	rm -rf $(DIR_INSTALL)misc
 
 tetris: $(OBJS_FSMSWITCHCASE) $(BACK) $(FRONT)
 	#clang-format -i src/*.c
@@ -100,11 +101,9 @@ cppcheck:
 	cppcheck $(CPPCHECK) *.c $(FRONT_SRC)*.c $(BACK_SRC)*.c $(HEAD_SRC)*.h
 
 dvi:
-	mkdir -p dvi
-	texi2dvi --pdf readme.texi -I . -o dvi/readme.dvi
-	mv readme.* dvi
-	mv dvi/readme.dvi $(DIR_INSTALL)
-	mv dvi/readme.texi .
+	mkdir -p $(DIR_INSTALL)misc/img
+	cp -r misc/img/*.png $(DIR_INSTALL)misc/img
+	cp readME.md $(DIR_INSTALL)
 
 clang_n:
 	clang-format -n *.c
@@ -123,6 +122,8 @@ dist:
 	cp -r $(FRONT_SRC)* $(ARCHDIR)/$(FRONT_SRC)
 	cp -r $(BACK_SRC)* $(ARCHDIR)/$(BACK_SRC)
 	cp makefile $(ARCHDIR)
-	#cp readme.txt $(ARCHDIR)
+	mkdir -p $(ARCHDIR)/misc/img
+	cp -r misc/img/*.png $(ARCHDIR)/misc/img
+	cp readME.md $(ARCHDIR)
 	tar -cvf lymondka.tetris.tar.gz $(ARCHDIR)
 	-rm -rf $(ARCHDIR)
