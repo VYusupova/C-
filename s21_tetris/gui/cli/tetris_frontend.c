@@ -10,23 +10,23 @@ void initColors(void) {
   init_pair(MASSEGE, COLOR_WHITE, COLOR_BLACK);
   init_pair(COLOR_1, COLOR_BLACK, COLOR_YELLOW);
   init_pair(COLOR_2, COLOR_BLACK, 190);
-  init_pair(COLOR_3, COLOR_BLACK, COLOR_RED);
+  init_pair(COLOR_3, COLOR_BLACK, 220);
   init_pair(COLOR_4, COLOR_BLACK, COLOR_GREEN);
   init_pair(COLOR_5, COLOR_BLACK, 70);
-  init_pair(COLOR_6, COLOR_BLACK, 60);  // color darck blue
+  init_pair(COLOR_6, COLOR_BLACK, COLOR_RED);
   init_pair(COLOR_7, COLOR_BLACK, COLOR_MAGENTA);
   init_pair(COLOR_8, COLOR_BLACK, 90);
   init_pair(COLOR_9, COLOR_BLACK, COLOR_CYAN);
   init_pair(COLOR_10, COLOR_BLACK, 100);
-  init_pair(COLOR_11, COLOR_BLACK, 210);
-  init_pair(COLOR_12, COLOR_BLACK, 220);
+  init_pair(COLOR_11, COLOR_BLACK, 195); // color nice blue^ 80);
+  init_pair(COLOR_12, COLOR_BLACK, 60);  // color darck blue
   init_pair(COLOR_13, COLOR_BLACK, 230);
   init_pair(COLOR_14, COLOR_BLACK, 240);
   init_pair(COLOR_15, COLOR_BLACK, 250);
-  init_pair(COLOR_16, COLOR_BLACK, COLOR_RED);
-  init_pair(COLOR_17, COLOR_BLACK, 100);
-  init_pair(COLOR_18, COLOR_BLACK, 80);
-  init_pair(COLOR_19, COLOR_BLACK, 200);  // color splash PINK
+  init_pair(COLOR_16, COLOR_BLACK, 50);
+  init_pair(COLOR_17, COLOR_BLACK, 55);
+  init_pair(COLOR_18, COLOR_BLACK, 200);
+  init_pair(COLOR_19, COLOR_BLACK, 210);  // color splash PINK 210);
   init_pair(COLOR_PINK, COLOR_BLACK, 213);
 }
 
@@ -36,17 +36,17 @@ static void printColorPanel(void) {
   int delta = 0;
   for (int i = 1; i <= 5; i++) {
     bkgdset(COLOR_PAIR(i));
-    MVPRINTW(startX, startY + delta, " %d", i);
-    bkgdset(COLOR_PAIR(i + 4));
-    MVPRINTW(startX + 1, startY + delta, " %d", i + 4);
+    MVPRINTW(startX, startY + delta, "  ");
+    bkgdset(COLOR_PAIR(i + 5));
+    MVPRINTW(startX + 1, startY + delta, "  ");
     bkgdset(COLOR_PAIR(i + 10));
-    MVPRINTW(startX + 2, startY + delta, "%d", i + 10);
+    MVPRINTW(startX + 2, startY + delta, "  ");
     bkgdset(COLOR_PAIR(i + 15));
-    MVPRINTW(startX + 3, startY + delta, "%d", i + 15);
+    MVPRINTW(startX + 3, startY + delta, "  ");
     delta += 2;
   }
   bkgdset(COLOR_PAIR(10));
-  MVPRINTW(startX + 1, startY + 8, "10");
+  MVPRINTW(startX + 1, startY + 8, "  ");
 }
 
 static void showIntro(void) {
@@ -81,16 +81,16 @@ void print_stats(GameInfo_t *game) {
   else
     MVPRINTW(startY, BOARD_M + SHIFT_MESSAGE, "       ");
   startY += 3;
-  MVPRINTW(startY, BOARD_M + SHIFT_MESSAGE, "%d", game->level);
+  MVPRINTW(startY, BOARD_M + SHIFT_MESSAGE, "%.2d", game->level);
   startY += 2;
-  MVPRINTW(startY, BOARD_M + SHIFT_MESSAGE, "%d", game->score);
+  MVPRINTW(startY, BOARD_M + SHIFT_MESSAGE, "%.5d", game->score);
   startY += 2;
-  MVPRINTW(startY, BOARD_M + SHIFT_MESSAGE, "%d", game->speed);
+  MVPRINTW(startY, BOARD_M + SHIFT_MESSAGE, "%.4d", game->speed);
   startY += 2;
   if (game->score > game->high_score)
-    MVPRINTW(startY, BOARD_M + SHIFT_MESSAGE, "%d", game->score);
+    MVPRINTW(startY, BOARD_M + SHIFT_MESSAGE, "%.5d", game->score);
   else
-    MVPRINTW(startY, BOARD_M + SHIFT_MESSAGE, "%d", game->high_score);
+    MVPRINTW(startY, BOARD_M + SHIFT_MESSAGE, "%.5d", game->high_score);
 }
 
 // отрисовка прямоугольника с координатми

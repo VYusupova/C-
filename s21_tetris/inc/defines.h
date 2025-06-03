@@ -13,6 +13,7 @@
   }
 
 #define GET_USER_INPUT getch()
+#define RAND_TYPE_FIGUR (rand() % 8) + 1)
 
 #define PRINT(x, y) mvprintw(BOARDS_BEGIN + (y), BOARDS_BEGIN + (x), "  ")
 #define MVPRINTW(y, x, ...) \

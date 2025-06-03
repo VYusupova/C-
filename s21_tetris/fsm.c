@@ -55,8 +55,8 @@ static void started(const UserAction_t *act, GameInfo_t *game,
     case Start:
       initGame(game);
       refreshGameField(game);
-      initFigure(game->fnow, ((rand() % 8) + 1));
-      initFigure(game->fnext, ((rand() % 8) + 1));
+      initFigure(game->fnow, (RAND_TYPE_FIGUR);
+      initFigure(game->fnext, (RAND_TYPE_FIGUR);
       *state = SPAWN;
       break;
     case Terminate:
@@ -70,7 +70,7 @@ static void started(const UserAction_t *act, GameInfo_t *game,
 static void spawned(GameInfo_t *game, tetris_state *state) {
   swapFigure(game->fnow, game->fnext);
   hideFigure(game->fnext);
-  initFigure(game->fnext, ((rand() % 8) + 1));
+  initFigure(game->fnext, (RAND_TYPE_FIGUR);
   showFigure(game->fnext);
   showFigure(game->fnow);
 }
@@ -149,7 +149,6 @@ void sigact(const UserAction_t *act, tetris_state *state, GameInfo_t *game) {
       break;
     case MOVING:
       moved(act, state, game);
-      game->level = game->fnow->x;
       break;
     case SHIFTING: /*движение блока вниз*/
       shifted(state, game);
@@ -158,7 +157,6 @@ void sigact(const UserAction_t *act, tetris_state *state, GameInfo_t *game) {
       attach(state, game);
       break;
     case GAMEOVER:
-    
       gameOver(); /* gameOVER thanks for game*/
       hideFigure(game->fnext);
       *state = START;
