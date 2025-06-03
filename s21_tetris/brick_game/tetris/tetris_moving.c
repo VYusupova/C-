@@ -55,10 +55,13 @@ void rotateFigure(figura *f, GameInfo_t *game) {
   for (int i = 0; i < new.n; i++)
   for (int j = 0; j < new.m; j++)
       new.figur[i][j] = f->figur[j][new.n - 1 - i];
-  while (new.x + new.m > (FIELD_M)) new.x -= 2;
-  while (new.x <= 0 ) new.x++;
+  if (new.x + new.m > (FIELD_M)) new.x = FIELD_M-new.m ;
 
-  if (!collisionRight(&new, game) && !collisionLeft(&new, game) &&
+  while (new.x < 0 ) new.x++;
+//  game->score = new.m;
+  if (//!collisionRight(&new, game) && 
+      !collisionGameField(game, 0, 1) && !collisionGameField(game, 0, -1) && 
+      //!collisionLeft(&new, game) &&
       !collisionDown(&new, game)) {
     for (int y = 0; y < new.n; y++)
       for (int x = 0; x < new.m; x++) f->figur[y][x] = new.figur[y][x];
