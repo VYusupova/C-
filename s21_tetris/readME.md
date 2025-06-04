@@ -1,4 +1,4 @@
-# TETRIS
+# TETRIS ฅ^•ﻌ•^ฅ
 ## Установка Tetris BrickGame 
 Скачать и распаковать архив `lymondka.tetris.tar.gz`  
 В терминале выполнить команду `make`  
