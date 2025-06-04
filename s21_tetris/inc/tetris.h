@@ -1,3 +1,5 @@
+#ifndef TETRIC_H
+#define TETRIS_H
 
 #include <locale.h>
 #include <stdlib.h>
@@ -28,3 +30,5 @@ void score(GameInfo_t *game);
 int readScore();
 void writeScore(const GameInfo_t *game);
 void initMatrix(figura *f);
+
+#endif

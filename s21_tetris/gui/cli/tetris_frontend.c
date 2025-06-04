@@ -1,3 +1,6 @@
+#ifndef FRONTEND
+#define FRONTEND
+
 #include "../../inc/frontend.h"
 
 void initColors(void) {
@@ -162,3 +165,5 @@ void refreshGameField(GameInfo_t *game) {
   bkgdset(COLOR_PAIR(MASSEGE));
   print_rectangle(0, BOARD_N + 1, 1, BOARD_M + 2);
 }
+
+#endif

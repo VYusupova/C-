@@ -1,3 +1,6 @@
+#ifndef FSM_C
+#define FSM_C
+
 #include "inc/fsm.h"
 
 UserAction_t get_signal(int user_input) {
@@ -165,3 +168,5 @@ void sigact(const UserAction_t *act, tetris_state *state, GameInfo_t *game) {
       break;
   }
 }
+
+#endif

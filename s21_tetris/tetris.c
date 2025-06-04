@@ -1,3 +1,6 @@
+#ifndef TETRIC_C
+#define TETRIC_C
+
 #include <time.h>
 #include "inc/tetris.h"
 #include "inc/fsm.h"
@@ -44,3 +47,5 @@ int main(void) {
   endwin();
   return SUCCESS;
 }
+
+#endif

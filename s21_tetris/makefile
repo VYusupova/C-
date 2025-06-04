@@ -53,7 +53,6 @@ uninstall: clean
 	rm -rf $(DIR_INSTALL)misc
 
 tetris: $(OBJS_FSMSWITCHCASE) $(BACK) $(FRONT)
-	#clang-format -i src/*.c
 	$(CC) $(CFLAGS) $^ -o $@ -lncurses
 
 out/%.o: %.c

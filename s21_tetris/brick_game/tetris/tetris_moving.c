@@ -1,3 +1,6 @@
+#ifndef TETRIS_MOVING_C
+#define TETRIS_MOVING_C
+
 #include "../../inc/tetris.h"
 
 // f->n & FIELD_N - строк
@@ -70,3 +73,5 @@ void rotateFigure(figura *f, GameInfo_t *game) {
   }
   tetFree(new.figur, FSIZE, FSIZE);
 }
+
+#endif
