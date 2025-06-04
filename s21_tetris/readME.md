@@ -1,4 +1,4 @@
-# TETRIS ฅ^•ﻌ•^ฅ
+# ฅ^•ﻌ•^ฅ   TETRIS 
 ## Установка Tetris BrickGame 
 Скачать и распаковать архив `lymondka.tetris.tar.gz`  
 В терминале выполнить команду `make`  
@@ -72,4 +72,6 @@ Esc key - Завершение игры
     - [x] clang_n
     - [x] clang_i
           
-
+`/\_/\
+( o.o )
+ > ^ <
