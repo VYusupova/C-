@@ -449,6 +449,7 @@ START_TEST(test_rotate) {
   tetFree(fnow.figur, FSIZE, FSIZE);
   tetFree(fnext.figur, FSIZE, FSIZE);
 }
+END_TEST
 
 Suite *test() {
   Suite *s = suite_create("\033[32m---TESTING TETRIS---\033[0m");
@@ -496,4 +497,4 @@ int s21_test(Suite *s) {
   return (faild == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
-int main() { s21_test(test()); }
+int main() { s21_test(test()); return 0;}
