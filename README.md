@@ -19,3 +19,47 @@ int main()
   printf("%s", name);
 }
 ```
+## 3. как работать с регулярными выражениями
+https://www.opennet.ru/cgi-bin/opennet/man.cgi?topic=regcomp&category=3
+
+
+https://github.com/rynortheast/21-string/blob/main/src/CORE/s21_strerror.c
+
+https://github.com/lcoon21/s21_string/blob/main/src/s21_strerror.c
+
+
+## 4. покрасить консоль
+1. проверить что файла нет `ls -la`
+1.1 он есть в /etc/skel/.bashrc пойти и проверить 1. cd /etc/skel/.bashrc 2. ls -la
+2. скопировать его себе `cp /etc/skel/.bashrc ~/`
+3. в конец файла добавить строки
+```bash
+PS1='\[\e[0;32m\]\u\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$\[\e[m\] '
+```
+### Краткая таблица применяемых цветов:
+
+```bash
+'\e[0;30m' # Черный
+'\e[0;31m' # Красный
+'\e[0;32m' # Зеленый
+'\e[0;33m' # Желтый
+'\e[0;34m' # Синий
+'\e[0;35m' # Фиолетовый
+'\e[0;36m' # Бирюзовый
+'\e[0;37m' # Белый
+```
+
+## 6. Алиасы в консоли
+
+```bash
+#My alias в файле .bashrc
+alias gst="git status -s"
+alias comm="git add . && git commit -m"
+alias push="git push origin develop"
+alias maze="git push origin lymondka"
+#alias ..="cd .."
+```
+
+## 6. GIT
+0. `git clone`
+1. create fork `develop git branch <name>`  OR `git checkout -b <new_branch>`
