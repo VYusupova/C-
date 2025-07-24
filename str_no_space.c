@@ -27,11 +27,12 @@ static void print_str(const char * str) {
     }
     while (str[i] != '\0' )  {
         if (str[i] == '\n') break;
-        if (space == str[i] && str[i - 1] == space) {i++;}
+        if (space == str[i] && str[i - 1] == space) {}
         else {
             out[j] = str[i];
             j++; 
         }
+       i++;
     }
     if (out[j - 1] == space) out[j - 1] = '\0';    
     if (out != NULL) {printf("%s", out);free(out);}
