@@ -1,36 +1,24 @@
-void find_and_draw_path(int rows, int cols, int **maze_vert, int **maze_hor,
+void find_and_draw_path( maze_t *maze, 
                         Point start, Point end) {
   bool visited[MAZE_SIZE][MAZE_SIZE] = {false};  // Массив пути
-  Point path[rows * cols];  // Максимальная длина пути = rows * cols
+  Point path[maze->rows * maze->columns];  // Максимальная длина пути = rows * cols
   int path_length = 0;
 
   // Поиск пути
-  if (dfs(rows, cols, maze_vert, maze_hor, visited, start, end, path,
+  if (dfs(maze->rows, maze->columns, maze->wall_v, maze->wall_h, visited, start, end, path,
           &path_length)) {
-    int temp_maze[rows * cols];  // Одномерная матрица для хранения пути
-    memset(temp_maze, 0, sizeof(int) * rows * cols);
+    int temp_maze[maze->rows * maze->columns];  // Одномерная матрица для хранения пути
+    memset(temp_maze, 0, sizeof(int) * maze->rows * maze->columns);
 
     for (int i = 0; i < path_length; i++) {
-      temp_maze[path[i].x * cols + path[i].y] = 1;  // Путь отмечаем 1
+      temp_maze[path[i].x * maze->columns + path[i].y] = 1;  // Путь отмечаем 1
     }
-    draw_maze(temp_maze, rows, cols, maze_vert, maze_hor);
+    //draw_maze(temp_maze, maze->rows, maze->columns, maze->wall_v, maze->wall_h);
+    printf("YES");
   } else {
-    draw_error_message("No valid path found.\n");
+    //draw_error_message("No valid path found.\n");
+     printf("No valid path found.\n");
   }
-}
-
-const char *select_maze_file() {
-  int example_choice = select_example();
-
-  const char *filename = NULL;
-  if (example_choice == 1) {
-    filename = "files/maze_1";
-  } else if (example_choice == 2) {
-    filename = "files/maze_2";
-  } else if (example_choice == 3) {
-    filename = "files/maze_3";
-  }
-  return filename;
 }
 
 bool is_valid_move(int x, int y, int n, int m, bool visited[n][m]) {
