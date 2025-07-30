@@ -1,27 +1,27 @@
 #include "inc/maze.h"
 
-void find_and_draw_path(maze_t *maze, Point start, Point end) {
+void find_way(maze_t *maze, Point start, Point end) {
+  int row = maze->rows;
+  int col =  maze->columns;
   bool visited[MAX][MAX] = {false}; // Массив пути
-  Point
-      path[maze->rows * maze->columns]; // Максимальная длина пути = rows * cols
+  Point path[row * col]; // Максимальная длина пути = rows * cols
   int path_length = 0;
 
   // Поиск пути
-  if (dfs(maze->rows, maze->columns, maze->wall_v, maze->wall_h, visited, start,
+  if (dfs(row, col, maze->wall_v, maze->wall_h, visited, start,
           end, path, &path_length)) {
-    int temp_maze[maze->rows *
-                  maze->columns]; // Одномерная матрица для хранения пути
-    memset(temp_maze, 0, sizeof(int) * maze->rows * maze->columns);
+    int temp_maze[row *col]; // Одномерная матрица для хранения пути
+    memset(temp_maze, 0, sizeof(int) * row * col);
 
     for (int i = 0; i < path_length; i++) {
-      temp_maze[path[i].x * maze->columns + path[i].y] = 1; // Путь отмечаем 1
+      temp_maze[path[i].x * col + path[i].y] = 1; // Путь отмечаем 1
     }
-    // draw_maze(temp_maze, maze->rows, maze->columns, maze->wall_v,
+    // draw_maze(temp_maze, row, col, maze->wall_v,
     // maze->wall_h);
     printf("YES");
   } else {
     // draw_error_message("No valid path found.\n");
-    printf("No valid path found.\n");
+    printf(RED_ERROR "No valid path found.\n" COLOR_DEFAULT);
   }
 }
 
@@ -29,9 +29,9 @@ bool is_valid_move(int x, int y, int n, int m, bool visited[n][m]) {
   return x >= 0 && y >= 0 && x < n && y < m && !visited[x][y];
 }
 
-bool dfs(int n, int m, int **right_walls, int **bottom_walls,
-         bool visited[n][m], Point current, Point end, Point path[],
-         int *path_length) {
+bool dfs( maze_t *maze, bool visited[n][m], Point current, Point end, Point path[], int *path_length) {
+  int n = maze->rows;
+  int m = maze->columns;
   bool error = false;
   if (current.x == end.x && current.y == end.y) {
     path[(*path_length)++] = current;
@@ -52,26 +52,26 @@ bool dfs(int n, int m, int **right_walls, int **bottom_walls,
 
       // Проверка на правые стены
       if (i == 0 &&
-          (current.y == m - 1 || right_walls[current.x][current.y] == 1))
+          (current.y == m - 1 || maze->wall_v[current.x][current.y] == 1))
         continue;
 
       // Проверка на нижние стены
       if (i == 1 &&
-          (current.x == n - 1 || bottom_walls[current.x][current.y] == 1))
+          (current.x == n - 1 || maze->wall_h[current.x][current.y] == 1))
         continue;
 
       // Проверка на левые стены
       if (i == 2 &&
-          (current.y == 0 || right_walls[current.x][current.y - 1] == 1))
+          (current.y == 0 || maze->wall_v[current.x][current.y - 1] == 1))
         continue;
 
       // Проверка на верхние стены
       if (i == 3 &&
-          (current.x == 0 || bottom_walls[current.x - 1][current.y] == 1))
+          (current.x == 0 || maze->wall_h[current.x - 1][current.y] == 1))
         continue;
 
       if (is_valid_move(nx, ny, n, m, visited)) {
-        if (dfs(n, m, right_walls, bottom_walls, visited, (Point){nx, ny}, end,
+        if (dfs(maze, visited, (Point){nx, ny}, end,
                 path, path_length)) {
           error = true;
         }
