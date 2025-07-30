@@ -19,7 +19,7 @@ void find_way(maze_t *maze, Point start, Point end) {
     // maze->wall_h);
     printf("YES\n");
     for (int i = 0; i < path_length; i++) {
-       printf("- %d - ", temp_maze[i] ) ; //
+      printf("- %d - ", temp_maze[i]); //
     }
   } else {
     // draw_error_message("No valid path found.\n");
