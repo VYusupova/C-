@@ -27,6 +27,7 @@ void remove_maze(maze_t *A);
 void generate_maze(maze_t *maze);
 
 void find_way(maze_t *maze, Point start, Point end);
-bool dfs(maze_t *maze, bool visited[n][m], Point current, Point end, Point path[], int *path_length);
+bool dfs(maze_t *maze, bool visited[maze->rows][maze->columns], Point current,
+         Point end, Point path[], int *path_length);
 
 #endif

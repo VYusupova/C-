@@ -2,15 +2,14 @@
 
 void find_way(maze_t *maze, Point start, Point end) {
   int row = maze->rows;
-  int col =  maze->columns;
+  int col = maze->columns;
   bool visited[MAX][MAX] = {false}; // Массив пути
   Point path[row * col]; // Максимальная длина пути = rows * cols
   int path_length = 0;
 
   // Поиск пути
-  if (dfs(row, col, maze->wall_v, maze->wall_h, visited, start,
-          end, path, &path_length)) {
-    int temp_maze[row *col]; // Одномерная матрица для хранения пути
+  if (dfs(maze, visited, start, end, path, &path_length)) {
+    int temp_maze[row * col]; // Одномерная матрица для хранения пути
     memset(temp_maze, 0, sizeof(int) * row * col);
 
     for (int i = 0; i < path_length; i++) {
@@ -29,7 +28,8 @@ bool is_valid_move(int x, int y, int n, int m, bool visited[n][m]) {
   return x >= 0 && y >= 0 && x < n && y < m && !visited[x][y];
 }
 
-bool dfs( maze_t *maze, bool visited[n][m], Point current, Point end, Point path[], int *path_length) {
+bool dfs(maze_t *maze, bool visited[maze->rows][maze->columns], Point current,
+         Point end, Point path[], int *path_length) {
   int n = maze->rows;
   int m = maze->columns;
   bool error = false;
@@ -71,8 +71,7 @@ bool dfs( maze_t *maze, bool visited[n][m], Point current, Point end, Point path
         continue;
 
       if (is_valid_move(nx, ny, n, m, visited)) {
-        if (dfs(maze, visited, (Point){nx, ny}, end,
-                path, path_length)) {
+        if (dfs(maze, visited, (Point){nx, ny}, end, path, path_length)) {
           error = true;
         }
       }
