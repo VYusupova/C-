@@ -82,6 +82,9 @@ void input_maze() {
 
     generate_maze(maze);
     print_maze(maze);
+    printf("построить обход лабиринта: \n\tДа - 1\n\tНет - 2\n");
+    scanf("%d", &user_input);
+    if (user_input == 1) find_and_draw_path(maze_t *maze, {0,0}, {maze->rows-1, maze->rows-1}) ;
     write_file(maze);
     remove_maze(maze);
     break;
