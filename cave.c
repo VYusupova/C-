@@ -30,7 +30,8 @@ Part 4. Дополнительно. Генерация пещер
 
 cave_t *read_file(const char *filename, int birth_limit, int death_limit) {
   FILE *f = fopen(filename, "r");
-  if (f == NULL) return NULL;
+  if (f == NULL)
+    return NULL;
 
   int rows = 0, columns = 0;
   if (fscanf(f, "%d %d", &rows, &columns) != 2) {
@@ -58,7 +59,8 @@ cave_t *init_cave(int rows, int cols, int birth_limit, int death_limit) {
     return NULL;
 
   cave_t *cave = (cave_t *)malloc(sizeof(cave_t));
-  if (!cave) return NULL;
+  if (!cave)
+    return NULL;
 
   cave->rows = rows;
   cave->columns = cols;
@@ -89,7 +91,8 @@ cave_t *init_cave(int rows, int cols, int birth_limit, int death_limit) {
 }
 
 void generate_random_cave(cave_t *result, int chance) {
-  if (result->matrix == NULL) return;
+  if (result->matrix == NULL)
+    return;
 
   for (int i = 0; i < result->rows; i++) {
     for (int j = 0; j < result->columns; j++) {
@@ -123,7 +126,8 @@ int count_neighbors(const cave_t *cave, int row, int col) {
 
   for (int i = -1; i <= 1; i++) {
     for (int j = -1; j <= 1; j++) {
-      if (i == 0 && j == 0) continue;
+      if (i == 0 && j == 0)
+        continue;
 
       int neighbors_row = row + i;
       int neighbors_col = col + j;
@@ -154,7 +158,8 @@ cave_t *copy_cave(const cave_t *cave) {
 // Удаление матрицы
 void remove_cave(cave_t *A) {
   if (A != NULL) {
-    for (int i = 0; i < A->rows; i++) free(A->matrix[i]);
+    for (int i = 0; i < A->rows; i++)
+      free(A->matrix[i]);
     free(A->matrix);
     A->matrix = NULL;
     A->rows = 0;

@@ -8,7 +8,7 @@ HEAD_SRC := inc/
 
 install: 
 	mkdir $(DIR_INSTALL)
-	cp ./test_file/*.txt $(DIR_INSTALL)
+	#cp ./test_file/*.txt $(DIR_INSTALL)
 	$(CC) $(CFLAGS) main.c maze.c cave.c -o $(DIR_INSTALL)s21_maze.o
 	printf "\n ✅  MAZE & CAVE install in catalog $(DIR_INSTALL) >>>" ;\
 

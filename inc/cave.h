@@ -11,8 +11,8 @@ typedef struct cave_struct {
   int rows;
   int columns;
   int birth_limit;
-  int death_limit;  // Пределы «рождения» и «смерти могут иметь значения от 0
-                    // до 7.
+  int death_limit; // Пределы «рождения» и «смерти могут иметь значения от 0
+                   // до 7.
 } cave_t;
 
 void simulate_cave(cave_t *cave, int steps);
