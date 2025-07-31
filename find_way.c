@@ -49,23 +49,19 @@ bool dfs(maze_t *maze, bool visited[maze->rows][maze->columns], Point start,
       int ny = start.y + dy[i];
 
       // Проверка на правые стены
-      if (i == 0 &&
-          (start.y == m - 1 || maze->wall_v[start.x][start.y] == 1))
+      if (i == 0 && (start.y == m - 1 || maze->wall_v[start.x][start.y] == 1))
         continue;
 
       // Проверка на нижние стены
-      if (i == 1 &&
-          (start.x == n - 1 || maze->wall_h[start.x][start.y] == 1))
+      if (i == 1 && (start.x == n - 1 || maze->wall_h[start.x][start.y] == 1))
         continue;
 
       // Проверка на левые стены
-      if (i == 2 &&
-          (start.y == 0 || maze->wall_v[start.x][start.y - 1] == 1))
+      if (i == 2 && (start.y == 0 || maze->wall_v[start.x][start.y - 1] == 1))
         continue;
 
       // Проверка на верхние стены
-      if (i == 3 &&
-          (start.x == 0 || maze->wall_h[start.x - 1][start.y] == 1))
+      if (i == 3 && (start.x == 0 || maze->wall_h[start.x - 1][start.y] == 1))
         continue;
 
       if (is_valid_move(nx, ny, n, m, visited)) {

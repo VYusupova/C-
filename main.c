@@ -31,6 +31,7 @@ void input_maze() {
     maze = read_file_maze();
     if (maze != NULL) {
       print_maze(NULL, maze);
+      menu_way(maze);
       remove_maze(maze);
     } else {
       printf("не удалось считать, неправильные прараметры в файле\n");
@@ -55,23 +56,22 @@ void input_maze() {
   }
 }
 
-int input_point(char *str, Point *p, maze_t *maze){
- printf("ENTER point to %s: " , str);
-    if (2 != scanf("%d%d", &p.x, &p.y)) {
-      printf("ERROR");
-      return 1;
-    }
-    if (p.x > maze->rows - 1 || p.x < 0) {
-      printf("ERROR");
-      return 1;
-    }
-    if (p.y > maze->columns - 1 || p.x < 0) {
-      printf("ERROR");
-      return;
-    }
-   return 0;
+int input_point(char *str, Point *p, maze_t *maze) {
+  printf("ENTER point to %s: ", str);
+  if (2 != scanf("%d%d", &p->x, &p->y)) {
+    printf("ERROR");
+    return 1;
+  }
+  if (p->x > maze->rows - 1 || p->x < 0) {
+    printf("ERROR");
+    return 1;
+  }
+  if (p->y > maze->columns - 1 || p->x < 0) {
+    printf("ERROR");
+    return 1;
+  }
+  return 0;
 }
-
 
 void menu_way(maze_t *maze) {
   int user_input = 0;
@@ -79,34 +79,11 @@ void menu_way(maze_t *maze) {
   scanf("%d", &user_input);
   if (user_input == 1) {
     Point start = {0, 0};
-    if (input_point("входа в лабиринт", start, maze) != 0) return;
-    //printf("ENTER point to START: ");
-    //if (2 != scanf("%d%d", &start.x, &start.y)) {
-    //  printf("ERROR");
-    //  return;
-    //}
-    //if (start.x > maze->rows - 1 || start.x < 0) {
-    //  printf("ERROR");
-    //  return;
-    //}
-    //if (start.y > maze->columns - 1 || start.x < 0) {
-    //  printf("ERROR");
-    //  return;
-    // }
     Point end = {0, 0};
-    printf("ENTER point to END: ");
-    if (2 != scanf("%d%d", &end.x, &end.y)) {
-      printf("ERROR");
+    if (input_point("входа в лабиринт", &start, maze) != 0)
       return;
-    }
-    if (end.x > maze->rows - 1 || end.x < 0) {
-      printf("ERROR");
+    if (input_point("END", &end, maze) != 0)
       return;
-    }
-    if (end.y > maze->columns - 1 || end.x < 0) {
-      printf("ERROR");
-      return;
-    }
     find_way(maze, start, end);
   }
 }
