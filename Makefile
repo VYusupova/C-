@@ -5,11 +5,12 @@ DIR_INSTALL := build/
 all: clean clang install run
 
 HEAD_SRC := inc/
+SRC := main.c maze.c cave.c find_way.c
 
 install: 
 	mkdir $(DIR_INSTALL)
 	#cp ./test_file/*.txt $(DIR_INSTALL)
-	$(CC) $(CFLAGS) main.c maze.c cave.c find_way.c -o $(DIR_INSTALL)s21_maze.o
+	$(CC) $(CFLAGS) $(SRC) -o $(DIR_INSTALL)s21_maze.o
 	printf "\n ✅  MAZE & CAVE install in catalog $(DIR_INSTALL) >>>" ;\
 
 uninstall: clean
@@ -17,7 +18,9 @@ uninstall: clean
 clean:
 	rm -rf $(DIR_INSTALL)
 run:
-	./$(DIR_INSTALL)/s21_maze.o
+	cd $(DIR_INSTALL)
+	./s21_maze.o
+        cd ..
 tests:
 
 gcov_report:
