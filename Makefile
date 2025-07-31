@@ -3,6 +3,7 @@ CC := gcc
 CFLAGS := -Wall -Werror -Wextra  -std=c11
 GCOV_FLAGS = -fprofile-arcs -ftest-coverage 
 DIR_INSTALL := build/
+
 all: clean clang install run
 
 HEAD_SRC := inc/
@@ -19,9 +20,7 @@ uninstall: clean
 clean:
 	rm -rf $(DIR_INSTALL)
 run:
-	cd $(DIR_INSTALL)
-	./s21_maze.o
-        cd ..
+	./$(DIR_INSTALL)s21_maze.o
 tests:
 
 gcov_report:

@@ -19,6 +19,45 @@ Part 2. Генерация идеального лабиринта
 
 #include "inc/maze.h"
 
+void print_maze(int way[], maze_t *maze) {
+  printf(COLOR_M);
+  printf("+");
+  for (int col = 0; col < maze->columns; col++) {
+    printf("---+");
+  }
+  printf("\n");
+
+  for (int row = 0; row < maze->rows; row++) {
+    // Левая граница
+    printf("|");
+
+    // Ячейки и правые стены
+    for (int col = 0; col < maze->columns; col++) {
+      if (way != NULL && way[row * maze->columns + col] == 1)
+        printf(" o ");
+      else
+        printf("   ");
+      if (col < maze->columns) {
+        printf(maze->wall_v[row][col] ? "|" : " ");
+      } else {
+        printf("|");
+      }
+    }
+    printf("\n");
+
+    // Нижние стены
+    if (row < maze->rows) {
+      printf("+");
+      for (int col = 0; col < maze->columns; col++) {
+        printf(maze->wall_h[row][col] ? "---+" : "   +");
+      }
+      printf("\n");
+    }
+  }
+
+  printf(COLOR_DEFAULT "\n");
+}
+
 void write_file(const maze_t *maze) {
   FILE *file = fopen("maze.txt", "w");
   if (file == NULL) {

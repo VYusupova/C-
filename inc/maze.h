@@ -20,6 +20,7 @@ typedef struct Point_struct {
   int y;
 } Point;
 
+void print_maze(int way[], maze_t *maze);
 void write_file(const maze_t *maze);
 maze_t *read_file_maze();
 maze_t *create_maze(int rows, int columns);

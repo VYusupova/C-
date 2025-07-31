@@ -8,41 +8,7 @@
 #include "inc/define.h"
 #include "inc/maze.h"
 
-void print_maze(maze_t *maze) {
-  printf(COLOR_M);
-  printf("+");
-  for (int col = 0; col < maze->columns; col++) {
-    printf("---+");
-  }
-  printf("\n");
-
-  for (int row = 0; row < maze->rows; row++) {
-    // Левая граница
-    printf("|");
-
-    // Ячейки и правые стены
-    for (int col = 0; col < maze->columns; col++) {
-      printf("   ");
-      if (col < maze->columns) {
-        printf(maze->wall_v[row][col] ? "|" : " ");
-      } else {
-        printf("|");
-      }
-    }
-    printf("\n");
-
-    // Нижние стены
-    if (row < maze->rows) {
-      printf("+");
-      for (int col = 0; col < maze->columns; col++) {
-        printf(maze->wall_h[row][col] ? "---+" : "   +");
-      }
-      printf("\n");
-    }
-  }
-
-  printf(COLOR_DEFAULT "\n");
-}
+void menu_way(maze_t *maze);
 
 void print_cave(cave_t *cave) {
   printf("\033[H\033[J");
@@ -64,7 +30,7 @@ void input_maze() {
   case 1:
     maze = read_file_maze();
     if (maze != NULL) {
-      print_maze(maze);
+      print_maze(NULL, maze);
       remove_maze(maze);
     } else {
       printf("не удалось считать, неправильные прараметры в файле\n");
@@ -81,14 +47,48 @@ void input_maze() {
     }
 
     generate_maze(maze);
-    print_maze(maze);
-    printf("построить обход лабиринта: \n\tДа - 1\n\tНет - 2\n");
-    scanf("%d", &user_input);
-    if (user_input == 1)
-      find_way(maze, (Point){0, 0}, (Point){maze->rows - 1, maze->rows - 1});
+    print_maze(NULL, maze);
+    menu_way(maze);
     write_file(maze);
     remove_maze(maze);
     break;
+  }
+}
+
+void menu_way(maze_t *maze) {
+  int user_input = 0;
+  printf("построить обход лабиринта: \n\tДа - 1\n\tНет - 2\n");
+  scanf("%d", &user_input);
+  if (user_input == 1) {
+    Point start = {0, 0};
+    printf("ENTER point to START: ");
+    if (2 != scanf("%d%d", &start.x, &start.y)) {
+      printf("ERROR");
+      return;
+    }
+    if (start.x > maze->rows - 1 || start.x < 0) {
+      printf("ERROR");
+      return;
+    }
+    if (start.y > maze->columns - 1 || start.x < 0) {
+      printf("ERROR");
+      return;
+    }
+    Point end = {0, 0};
+    printf("ENTER point to END: ");
+    if (2 != scanf("%d%d", &end.x, &end.y)) {
+      printf("ERROR");
+      return;
+    }
+    if (end.x > maze->rows - 1 || end.x < 0) {
+      printf("ERROR");
+      return;
+    }
+    if (end.y > maze->columns - 1 || end.x < 0) {
+      printf("ERROR");
+      return;
+    }
+    find_way(maze, start, end);
   }
 }
 
