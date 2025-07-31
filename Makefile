@@ -1,6 +1,7 @@
+.PHONY: install uninstall clean run clang cppcheck
 CC := gcc
 CFLAGS := -Wall -Werror -Wextra  -std=c11
-GCOV_FLAGS = -fprofile-arcs -ftest-coverage
+GCOV_FLAGS = -fprofile-arcs -ftest-coverage 
 DIR_INSTALL := build/
 all: clean clang install run
 
