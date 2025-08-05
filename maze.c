@@ -83,11 +83,8 @@ void write_file(const maze_t *maze) {
   fclose(file);
 }
 
-maze_t *read_file_maze() {
+maze_t *read_file_maze(char *name) {
   maze_t *maze = NULL;
-  char *name = NULL;
-  printf("введите имя файла - \n");
-  scanf("%ms", &name); // динамически выделили память в конце освободили
   FILE *file = fopen(name, "r");
   if (file == NULL) {
     printf(RED_ERROR ERR_OPEN " Файл %s не найден" COLOR_DEFAULT, name);
@@ -112,7 +109,7 @@ maze_t *read_file_maze() {
     }
     fclose(file);
   }
-  free(name);
+
   return maze;
 }
 
@@ -122,8 +119,7 @@ maze_t *create_maze(int rows, int columns) {
   MAXMIN(columns);
 
   maze_t *maze = (maze_t *)malloc(sizeof(maze_t));
-  if (!maze)
-    return NULL;
+  if (!maze) return NULL;
 
   maze->rows = rows;
   maze->columns = columns;
@@ -185,7 +181,7 @@ void generate_maze(maze_t *maze) {
         if (set_counts[j] > 1 && choice == 1) {
           maze->wall_h[i][j] = 1;
           set_counts[j]--;
-          set[j] = 0; // удаление из множества
+          set[j] = 0;  // удаление из множества
         }
         // для последней строки
         maze->wall_h[maze->rows - 1][j] = 1;
@@ -199,7 +195,7 @@ void generate_maze(maze_t *maze) {
     } else {
       for (int j = 0; j < maze->columns - 1; j++) {
         if (set[j] != set[j + 1]) {
-          maze->wall_v[i][j] = 0; // удаление правых стен
+          maze->wall_v[i][j] = 0;  // удаление правых стен
           int old_set = set[j + 1];
           for (int k = 0; k < maze->columns; k++) {
             if (set[k] == old_set) {
