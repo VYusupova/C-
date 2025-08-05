@@ -9,6 +9,7 @@ all: clean clang install run
 HEAD_SRC := inc/
 SRC := main.c maze.c cave.c find_way.c
 TEST_SRC := maze.c find_way.c test/maze_test.c
+CHECK_LIBS =$(shell pkg-config --libs check)  #-lcheck -pthread -lm -lrt -lsubunit
 
 install: 
 	mkdir $(DIR_INSTALL)
@@ -27,7 +28,7 @@ run:
 	./$(DIR_INSTALL)s21_maze.o
 
 tests: 
-	$(CC) $(CFLAGS) $(TEST_SRC) -o $(TEST) -lcheck -pthread -lm -lrt -lsubunit
+	$(CC) $(CFLAGS) $(TEST_SRC) -o $(TEST) $(CHECK_LIBS)
 	./$(TEST)
 
 gcov_report: CFLAGS += -fprofile-arcs -ftest-coverage

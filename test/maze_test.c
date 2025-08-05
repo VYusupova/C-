@@ -5,7 +5,7 @@ START_TEST(test_way_DFS) {
     // Загрузим лабиринт из файла тестов
     maze_t* m = read_file_maze("test/test01.txt");
 
-    ck_assert_ptr_nonnull(m);
+    ck_assert_ptr_ne(m, NULL);
     ck_assert_int_eq(m->rows,10);
     ck_assert_int_eq(m->columns,10);
 
