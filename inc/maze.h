@@ -22,7 +22,7 @@ typedef struct Point_struct {
 
 void print_maze(int way[], maze_t *maze);
 void write_file(const maze_t *maze);
-maze_t *read_file_maze();
+maze_t *read_file_maze(char *name);
 maze_t *create_maze(int rows, int columns);
 void remove_maze(maze_t *A);
 void generate_maze(maze_t *maze);
