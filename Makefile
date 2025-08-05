@@ -8,6 +8,7 @@ all: clean clang install run
 
 HEAD_SRC := inc/
 SRC := main.c maze.c cave.c find_way.c
+TEST_SRC := maze.c find_way.c test/maze_test.c
 
 install: 
 	mkdir $(DIR_INSTALL)
@@ -19,13 +20,21 @@ uninstall: clean
 
 clean:
 	rm -rf $(DIR_INSTALL)
+	rm -rf *.o $(TEST) *.gcda *.gcno *.info report
 	rm -rf ~/bin/
 	rm -rf ~/s21_maze/
 run:
 	./$(DIR_INSTALL)s21_maze.o
-tests:
 
-gcov_report:
+tests: 
+	$(CC) $(CFLAGS) $(TEST_SRC) -o $(TEST) -lcheck -pthread -lm -lrt -lsubunit
+	./$(TEST)
+
+gcov_report: CFLAGS += -fprofile-arcs -ftest-coverage
+gcov_report: clean tests
+	lcov -c -d . -o coverage.info
+	genhtml coverage.info -o report
+	open ./report/index.html #убрать при проверке
 
 clang:
 	clang-format -i *.c $(HEAD_SRC)*.h
