@@ -28,6 +28,26 @@ START_TEST(test_way_DFS) {
 }
 END_TEST
 
+
+START_TEST(test_generate_maze) {
+    maze_t* m = create_maze(12,5);
+    generate_maze(m);
+
+    ck_assert_ptr_ne(m, NULL);
+    ck_assert_int_eq(m->rows,12);
+    ck_assert_int_eq(m->columns,5);
+
+    // задаем точки
+    Point start = {0,0};
+    Point end = {4,0};
+        bool visited[MAX][MAX] = {false};  // Массив пути
+        Point path[m->rows * m->columns];  // Максимальная длина пути = rows * cols
+        int path_length = 0;
+        ck_assert_int_eq (dfs(m, visited, start, end, path, &path_length), 1); 
+    remove_maze(m);
+}
+END_TEST
+
 Suite *maze_suite(void) {
     Suite *s;
     TCase *tc_core;
@@ -36,6 +56,7 @@ Suite *maze_suite(void) {
     tc_core = tcase_create("dfs");
     
     tcase_add_test(tc_core, test_way_DFS);
+        tcase_add_test(tc_core, test_generate_maze);
     suite_add_tcase(s, tc_core);
     
     return s;
