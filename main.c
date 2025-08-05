@@ -27,32 +27,36 @@ void input_maze() {
   printf("Загрузить из файла - 1\nСгенерировать - 2\n");
   scanf("%d", &user_input);
   switch (user_input) {
-  case 1:
-    maze = read_file_maze();
-    if (maze != NULL) {
+    case 1:
+      char *name = NULL;
+      printf("введите имя файла - \n");
+      scanf("%ms", &name);  // динамически выделили память в конце освободили
+      maze = read_file_maze(name);
+      if (maze != NULL) {
+        print_maze(NULL, maze);
+        menu_way(maze);
+        remove_maze(maze);
+      } else {
+        printf("не удалось считать, неправильные прараметры в файле\n");
+      }
+      if (name) free(name);
+      break;
+    case 2:
+      printf("введите размеры лабиринта: ");
+      scanf("%d %d", &rows, &cols);
+      maze = create_maze(rows, cols);
+
+      if (!maze) {
+        printf("Ошибка инициализации лабиринта\n");
+        return;
+      }
+
+      generate_maze(maze);
       print_maze(NULL, maze);
       menu_way(maze);
+      write_file(maze);
       remove_maze(maze);
-    } else {
-      printf("не удалось считать, неправильные прараметры в файле\n");
-    }
-    break;
-  case 2:
-    printf("введите размеры лабиринта: ");
-    scanf("%d %d", &rows, &cols);
-    maze = create_maze(rows, cols);
-
-    if (!maze) {
-      printf("Ошибка инициализации лабиринта\n");
-      return;
-    }
-
-    generate_maze(maze);
-    print_maze(NULL, maze);
-    menu_way(maze);
-    write_file(maze);
-    remove_maze(maze);
-    break;
+      break;
   }
 }
 
@@ -80,10 +84,8 @@ void menu_way(maze_t *maze) {
   if (user_input == 1) {
     Point start = {0, 0};
     Point end = {0, 0};
-    if (input_point("входа в лабиринт", &start, maze) != 0)
-      return;
-    if (input_point("END", &end, maze) != 0)
-      return;
+    if (input_point("входа в лабиринт", &start, maze) != 0) return;
+    if (input_point("END", &end, maze) != 0) return;
     find_way(maze, start, end);
   }
 }
@@ -150,18 +152,18 @@ int main() {
       break_flag = 1;
     }
     switch (user_input) {
-    case 1:
-      input_maze();
-      break;
-    case 2:
-      input_cave();
-      break;
-    case 3:
-      break_flag = 1;
-      break;
-    default:
-      printf(RED_ERROR "неверная команда!" COLOR_DEFAULT);
-      break;
+      case 1:
+        input_maze();
+        break;
+      case 2:
+        input_cave();
+        break;
+      case 3:
+        break_flag = 1;
+        break;
+      default:
+        printf(RED_ERROR "неверная команда!" COLOR_DEFAULT);
+        break;
     }
   }
 
