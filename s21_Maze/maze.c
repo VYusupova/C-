@@ -33,15 +33,20 @@ void print_maze(int way[], maze_t *maze) {
 
     // Ячейки и правые стены
     for (int col = 0; col < maze->columns; col++) {
-      if (way != NULL && way[row * maze->columns + col] == 1)
-        printf(COLOR_GREEN " o " COLOR_M);
-      else
+      int w = row * maze->columns + col;
+      int wall = maze->wall_v[row][col];
+      if (way != NULL && way[w] == 1) {
+        if ((col - 1) >= 0 && way[w - 1] == 1 && wall != 1)
+          printf(COLOR_GREEN "_ " COLOR_M);
+        else
+          printf(COLOR_GREEN " |" COLOR_M);
+        if ((col + 1) < maze->columns && way[w + 1] == 1 && wall != 1)
+          printf(COLOR_GREEN "_" COLOR_M);
+        else
+          printf(" ");
+      } else
         printf("   ");
-      if (col < maze->columns) {
-        printf(maze->wall_v[row][col] ? "|" : " ");
-      } else {
-        printf("|");
-      }
+      printf(maze->wall_v[row][col] ? "|" : " ");
     }
     printf("\n");
 
