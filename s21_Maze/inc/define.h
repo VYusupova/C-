@@ -12,10 +12,11 @@
     return NULL;
 
 #define RED_ERROR "\033[31m"
-#define COLOR_GREEN "\033[32m"
+#define COLOR_GREEN "\033[107m"
 #define ERR_OPEN "ошибка открытия файла\n"
 #define COLOR_DEFAULT "\033[0m\n"
-#define COLOR_M "\033[35m"
+#define COLOR_M "\e[0m\033[35m"
+
 
 #define WIN_INIT(time)                                                         \
   {                                                                            \
