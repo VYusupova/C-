@@ -8,7 +8,7 @@ TEST := s21_test
 all: clean clang install run
 
 HEAD_SRC := inc/
-SRC := main.c maze.c cave.c find_way.c
+SRC := main.c maze.c maze_out.c cave.c find_way.c
 TEST_SRC := maze.c find_way.c test/maze_test.c
 CHECK_LIBS := $(shell pkg-config --libs check)  #-lcheck -lpthread -lm -lrt -lsubunit
 
