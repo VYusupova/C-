@@ -57,8 +57,11 @@ HTML:
 	cp $(DIR_INSTALL)s21_maze.o ~/s21_maze/s21_maze.o
 	cp HTML/open_app.sh ~/bin/open_app.sh
 	chmod +x ~/bin/open_app.sh
+	exec HTML/create_appurl.sh
 	sudo cp HTML/appurl.desktop /usr/share/applications/appurl.desktop
 	sudo update-desktop-database
+
+
 	 
 
 	

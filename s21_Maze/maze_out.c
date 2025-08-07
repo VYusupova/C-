@@ -55,7 +55,6 @@ void print_bottom_way(int row, int col, int way[], maze_t *maze) {
       printf("   +");
   } else
     printf("   +");
-  
 }
 
 void print_maze(int way[], maze_t *maze) {
