@@ -1,4 +1,5 @@
 .gitignore
+pu.*
 .clang-format
 .vscode/
 *.kate-swp
