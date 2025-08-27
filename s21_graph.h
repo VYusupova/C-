@@ -23,6 +23,9 @@ export_graph_to_dot(char *filename) — выгрузка графа в файл 
 #define _ERR_READ_GRAPH  "ошибка чтения из файла значений графа"
 #define _ERR_CREATE_GRAPH "ошибка выделения памяти под граф"
 
+#define _ERR_SIZE "размер матрицы не может быть меньше 1 или отрицательным"
+#define _ERR_CALLOC "ошибка выделения памяти для матрицы графа"
+
 typedef struct graph {
 	int **matrix;
 	int row;
