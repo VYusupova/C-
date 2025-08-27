@@ -1,65 +1,50 @@
-CC = g++
-CFLAGS = -Wall -Wextra -Werror -std=c++17 -pedantic -lsubunit
-#-pedantic - соответствие определенному стандарту
-GCOVR_CFLAGS =-fprofile-arcs -ftest-coverage -fPIC
-GTEST_LIB = -lgtest -lgtest_main
+.PHONY: all clean test  s21_graph s21_graph_algorithms
 
-NAME = s21_matrix_oop
-SRC = $(NAME).cpp
-OBJ = $(NAME).o
-RCS = $(NAME).a
+CC := gcc
+CFLAGS := -I lib -std=c11 -Wall -Werror -Wpedantic
+GCOV_FLAGS = -fprofile-arcs -ftest-coverage
+CHECK_LIBS = $(shell pkg-config --libs check) #-lcheck -lm -lpthread -lrt -lsubunit
+LIB_MATRIX = -L/lib -l:s21_matrix.a
 
-TEST_SRC = s21_matrix_oop_test.cpp
-TEST_RUN = run_tests
 
-OUT_FILE = $(NAME).exe
+NAME := SimpleNavigator
+DIR_LIB := lib
+LIB_GRAPH := s21_graph
+LIB_GRAPH_ALG = s21_graph_algorithms
 
-GCOV_REPORT_DIR = report
-
-all: clean $(RCS)
-
-$(RCS): $(OBJ)
-	ar rcs $(RCS) $(OBJ)
-
-$(OBJ): $(SRC)
-	$(CC) $(CFLAGS) -c $(SRC)
-
-test: clean
-	$(CC) $(CFLAGS) $(SRC) $(GCOVR_CFLAGS) $(TEST_SRC) -o $(TEST_RUN) $(GTEST_LIB)
-	./$(TEST_RUN)
-
-gcov_report: test
-	@echo "\e[0;35m"
-	lcov -t "gcov_report" -o $(NAME)_coverage.info -c -d . --exclude '/usr/*' --exclude  $(TEST_SRC)
-	genhtml -o gcov $(NAME)_coverage.info
-	@echo "\e[1;35;107m" # серые буквы на белом фоне
-	@echo "┏						  ┓"
-	@echo "┃  Отчет покрытия кода создан в 'gcov/index.html' ┃"
-	@echo "┗                                                 ┛"
-	@echo "\e[0;30m"
+all: clean s21_graph s21_graph_algorithms
 
 clean:
-	rm -f $(TEST_RUN)
-	rm -rf gcov
-	rm -f *.*[oa]
-	rm -f *.info
+	$(RM) $(LIB_GRAPH)  $(LIB_GRAPH_ALG)
+	#rm -rf $(DIR_LIB)
 
-.PHONY: all clean test gcov_report rebuild valgrind formated_code cppcheck
+test:
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c test/$(LIB_GRAPH).c -o  test/$(LIB_GRAPH).gcov.o
+	$(CC) $(CFLAGS) $(GCOV_FLAGS) -o $(TEST) test/$(LIB_GRAPH).gcov.o   $(CHECK_LIBS)
+	@printf "\e[1;35;107m RUN FILE TESTING  \e[31;0m \n"
+	./$(TEST)
+	@printf "\n\e[1;35;107m END FILE TESTING    \e[31;0m \n"
+	@printf "\e[1;35;107m  Отчет покрытия кода в 'gcov/index.html' ┃\e[31;0m   📊 \n"
+	lcov -t "gcov_report" -o $(NAME)_coverage.info -c -d .
+	genhtml -o gcov $(NAME)_coverage.info
+	$(RM) test/*.gcov.*
 
-formated_code:
-	clang-format --style=Google -i *.cpp
-	clang-format --style=Google -i *.h
 
-valgrind: test
-	valgrind --leak-check=full --track-origins=yes ./$(TEST_RUN) $(GTEST_LIB)
+s21_graph:
 
-cppcheck:
-	#cppcheck --enable=all --suppress=missingIncludeSystem *.cpp
-	cppcheck -q --enable=all --inconclusive *.cpp
+	@if [ -d $(DIR_LIB) ]; then $(CC) $(CFLAGS) $(LIB_MATRIX)  $(LIB_GRAPH).c  -o $(LIB_GRAPH).a ;\
+	else mkdir -p $(DIR_LIB) ; \
+	$(CC) $(CFLAGS) $(LIB_MATRIX) $(LIB_GRAPH).c -o $(LIB_GRAPH).o ; 	\
+	ar rcs  $(LIB_GRAPH).a *.o; 	\
+	rm *.o ; 	\
+	printf " \n ✅ $(LIB_GRAPH).a created in catalog [$(DIR_LIB)] \n\n" ; \
+	fi
 
-rebuild: clean all
-
-#
-#rm -r LIB # удалить директорию и все ее содержимое рекурсивно -r
-#mv $(NAME).o LIB/$(NAME).
-#	mkdir LIB
+s21_graph_algorithms:
+	@if [ -d $(DIR_LIB) ]; then $(CC) $(CFLAGS) $(LIB_GRAPH_ALG).c -o $(LIB_GRAPH_ALG).o;\
+	else mkdir -p $(DIR_LIB) ; \
+	$(CC) $(CFLAGS) $(LIB_GRAPH_ALG).c -o $(LIB_GRAPH_ALG).o; \
+	ar rcs  $(LIB_GRAPH_ALG).a *.o; \
+	rm *.o ; \
+	printf " \n ✅ $(LIB_GRAPH_ALG).a created in catalog [$(DIR_LIB)] \n\n" ; \
+	fi
