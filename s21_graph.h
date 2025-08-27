@@ -17,6 +17,7 @@ export_graph_to_dot(char *filename) — выгрузка графа в файл 
 #define S21_GRAPH_H
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #define _ERR_OPEN  "ошибка открытия файла"
 #define _ERR_READ_SIZE  "ошибка чтения из файла размера графа"
@@ -31,5 +32,10 @@ typedef struct graph {
 	int row;
 	int cols;
 } s21_graph;
+
+s21_graph *load_graph_from_file(char *filename) ;
+void print(s21_graph *g) ;
+
+
 
 #endif

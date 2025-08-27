@@ -1,10 +1,10 @@
 .PHONY: all clean test  s21_graph s21_graph_algorithms
 
 CC := gcc
-CFLAGS := -I lib -std=c11 -Wall -Werror -Wpedantic
+CFLAGS := -std=c11 -Wall -Werror -Wpedantic
 GCOV_FLAGS = -fprofile-arcs -ftest-coverage
 CHECK_LIBS = $(shell pkg-config --libs check) #-lcheck -lm -lpthread -lrt -lsubunit
-LIB_MATRIX = -L/lib -l:s21_matrix.a
+
 
 
 NAME := SimpleNavigator
@@ -32,10 +32,10 @@ test:
 
 s21_graph:
 
-	@if [ -d $(DIR_LIB) ]; then $(CC) $(CFLAGS) $(LIB_MATRIX)  $(LIB_GRAPH).c  -o $(LIB_GRAPH).a ;\
+	@if [ -d $(DIR_LIB) ]; then $(CC) $(CFLAGS)  $(LIB_GRAPH).c  -o $(LIB_GRAPH).o ;\
 	else mkdir -p $(DIR_LIB) ; \
-	$(CC) $(CFLAGS) $(LIB_MATRIX) $(LIB_GRAPH).c -o $(LIB_GRAPH).o ; 	\
-	ar rcs  $(LIB_GRAPH).a *.o; 	\
+	$(CC) $(CFLAGS) $(LIB_GRAPH).c -o $(LIB_GRAPH).o ; 	\
+	ar rcs  $(LIB_GRAPH).o *.o; 	\
 	rm *.o ; 	\
 	printf " \n ✅ $(LIB_GRAPH).a created in catalog [$(DIR_LIB)] \n\n" ; \
 	fi

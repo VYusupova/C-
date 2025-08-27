@@ -4,12 +4,12 @@
 #include "s21_graph.h"
 
 
-void print(s21_graph g) {
-    printf("size graph %02d\n ", g.row);
+void print(s21_graph *g) {
+    printf("size graph %02d\n ", g->row);
     printf("element graph\n");
-    for (int i = 0; i < g.row; i++) {
-        for (int j = 0; j < g.row; j++)
-            printf(" %2d", g.matrix[i][j]);
+    for (int i = 0; i < g->row; i++) {
+        for (int j = 0; j < g->row; j++)
+            printf(" %2d", g->matrix[i][j]);
         printf("\n");
     }
 }
@@ -50,17 +50,18 @@ void remove_graph(s21_graph *g) {
   }
 }
 
-static void read_graph_el(FILE *f, matrix_t *graph) {
-  for (int i = 0; i < graph->rows; i++)
-    for (int j = 0; j < graph->rows; j++)
-      if (1 != fscanf(f, "%le", &graph->matrix[i][j])) {
-        s21_remove_matrix(graph);
+static void read_graph_el(FILE *f, s21_graph *graph) {
+  for (int i = 0; i < graph->row; i++)
+    for (int j = 0; j < graph->row; j++)
+      if (1 != fscanf(f, "%d", &graph->matrix[i][j])) {
+        remove_graph(graph);
         perror(_ERR_READ_GRAPH);
         return;
       }
 }
 
-matrix_t *load_graph_from_file(char *filename) {
+s21_graph *load_graph_from_file(char *filename) {
+  s21_graph *graph = NULL;
   FILE *f = fopen(filename, "r");
   if (f == NULL) {
     perror(_ERR_OPEN);
@@ -71,13 +72,15 @@ matrix_t *load_graph_from_file(char *filename) {
     perror(_ERR_READ_SIZE);
     return NULL;
   }
-  matrix_t *graph = NULL;
-  if (OK_MATRIX == s21_create_matrix(size_graph, size_graph, graph)) {
+  graph->row = size_graph;
+  graph->matrix = create_matrix(size_graph);
+   
+  if (graph->matrix != NULL) {
     read_graph_el(f, graph);
   } else {
     perror(_ERR_CREATE_GRAPH);
+    graph = NULL;
   }
-
   return graph;
   fclose(f);
 }
