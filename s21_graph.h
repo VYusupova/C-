@@ -32,13 +32,12 @@ typedef struct graph {
 	int size;
 	
 	void (*print_graph)(struct graph *g);
+	void (*del_graph)(struct graph *g);
+	void (*load_graph_from_file)(char *filename, struct graph *g) ;
+	
 } s21_graph;
 
 
-
-
-s21_graph load_graph_from_file(char *filename) ;
-void print(s21_graph *g) ;
 s21_graph graph_init();
 
 

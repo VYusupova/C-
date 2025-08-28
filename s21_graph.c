@@ -3,14 +3,8 @@
 
 #include "s21_graph.h"
 
-s21_graph graph_init(){
-s21_graph g ;
-g.print_graph = &print;
-g.size = 0;
-return g;
-}
 
-void print(s21_graph * g) {
+static void print(s21_graph * g) {
     printf("size graph %02d\n", g -> size);
     if (g -> matrix == NULL) {
         printf("ERROR\n");
@@ -26,7 +20,7 @@ void print(s21_graph * g) {
     }
 }
 
-int ** calloc_matrix(int size) {
+static int ** calloc_matrix(int size) {
     int ** result;
     if (size < 1)
         perror(_ERR_SIZE);
@@ -49,7 +43,7 @@ int ** calloc_matrix(int size) {
     return result;
 }
 
-void remove_graph(s21_graph * g) {
+static void remove_graph(s21_graph * g) {
     if (g -> matrix != NULL) {
         for (int i = 0; i < g -> size; i++) free(g -> matrix[i]);
         free(g -> matrix);
@@ -60,6 +54,7 @@ void remove_graph(s21_graph * g) {
 
 static void read_graph_el(FILE * f, s21_graph * graph) {
     if (graph->matrix != NULL) {
+
         for (int i = 0; i < graph -> size; i++) {
             for (int j = 0; j < graph -> size; j++) {
                 int el = 0;
@@ -76,30 +71,34 @@ static void read_graph_el(FILE * f, s21_graph * graph) {
     else {
         perror(_ERR_CREATE_GRAPH);
     }
+
 }
 
-s21_graph load_graph_from_file(char * filename) {
-    s21_graph graph;
+static void load_graph(char * filename, s21_graph * graph) {
     printf("load graph\n");
     FILE * f = fopen(filename, "r");
     if (f == NULL) {
         perror(_ERR_OPEN);
     }
     else {
-        printf("init size graph\n");
+
         int size_graph = 0;
         if (1 != fscanf(f, "%d", & size_graph)) {
             perror(_ERR_READ_SIZE);
         }
         else {
-            printf("malloc size graph\n");
-            graph.size = size_graph;
-            graph.matrix = calloc_matrix(size_graph);
-            read_graph_el(f, &graph);
+
+            graph->size = size_graph;
+
+            graph->matrix = calloc_matrix(size_graph);
+
+            read_graph_el(f, graph);
+
         }
     }
-    return graph;
     fclose(f);
+        printf("load graph end \n");
+ 
 }
 
 /*
@@ -107,5 +106,16 @@ s21_graph export_graph_to_dot(char *filename) {
 
 }
 */
+
+
+s21_graph graph_init(){
+s21_graph g ;
+g.print_graph = &print;
+g.load_graph_from_file = &load_graph;
+g.del_graph = &remove_graph;
+g.size = 0;
+return g;
+}
+
 
 #endif
