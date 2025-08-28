@@ -18,19 +18,18 @@ void print_m(int row, int **matrix) {
     }
 }
 
-void create_matrix(int row, int ** result) {
-
-           printf("func create matrix\n");
+int ** calloc_matrix(int row) {
+    int ** result = NULL;
     if (row < 1) {
         perror(_ERR_SIZE);
-        return ;
+        return result;
     }
 
-    result = (int ** ) calloc(row,sizeof(int * ));
+    result = (int ** ) calloc(row, sizeof(int * ));
 
     if (!result) {
         perror(_ERR_CALLOC);
-        return ;
+         return result;
     }
     for (int i = 0; i < row; i++) {
         result[i] = (int * ) calloc(row, sizeof(int));
@@ -39,12 +38,11 @@ void create_matrix(int row, int ** result) {
             while (i--) free(result[i]);
             free(result);
             perror(_ERR_CALLOC);
-            return ;
+             return result;
         }
     }
-print_m(row, result);
-           printf("func create matrix off\n");
-           
+    print_m(row, result);
+    return result;
 }
 
 void remove_graph(s21_graph *g) {
@@ -81,8 +79,7 @@ s21_graph load_graph_from_file(char *filename) {
   }
     printf("size read norm\n");
   graph.row = size_graph;
-  int **m = NULL	;
-  create_matrix(size_graph,   m);
+  int **m = calloc_matrix(size_graph);
   print_m(5,m);
   graph.matrix = m;
        printf("matrix size\n");
