@@ -101,17 +101,58 @@ static void load_graph(char * filename, s21_graph * graph) {
  
 }
 
-/*
-s21_graph export_graph_to_dot(char *filename) {
-
+static int is_directed(const graph *g) {
+  for (int i = 0; i < g->size; i++) {
+    for (int j = 1; j < i; j++) {
+      if (g->matrix[i][j] != g->matrix[j][i]) {
+        return FALSE;
+      }
+    }
+  }
+  return TRUE;
 }
-*/
+
+
+int export_graph(char *filename, s21_graph * g) {
+FILE *file = fopen(filename, "w");
+if (!file) return -1;
+
+  int isdirected = is_directed(g);
+
+  if (!isdirected) {
+    fprintf(file, "graph G {\n");
+    for (int i = 0; i < g->size; i++) {
+      for (int j = i; j < g->size; j++) {
+        if (i != j && g->matrix[i][j] != 0) {
+          fprintf(file, "\t%d -- %d [weight=%d];\n", i + 1, j + 1,
+                  g->matrix[i][j]);
+        }
+      }
+    }
+  } else {
+    fprintf(file, "digraph G {\n");
+    for (int i = 0; i < g->size; i++) {
+      for (int j = 0; j < g->size; j++) {
+        if ( g->matrix[i][j] != 0) {
+          fprintf(file, "\t%d -> %d [weight=%d];\n", i + 1, j + 1,
+                  g->matrix[i][j]);
+        }
+      }
+    }
+  }
+
+  fprintf(file, "}\n");
+  fclose(file);
+  return 0;
+}
+
 
 
 s21_graph graph_init(){
 s21_graph g ;
 g.print_graph = &print;
 g.load_graph_from_file = &load_graph;
+g.export_graph_to_dot =&export_graph;
 g.del_graph = &remove_graph;
 g.size = 0;
 return g;
