@@ -4,7 +4,7 @@
 #include "s21_graph.h"
 
 void print(s21_graph * g) {
-    printf("size graph %02d\n ", g -> size);
+    printf("size graph %02d\n", g -> size);
     if (g -> matrix == NULL) {
         printf("ERROR\n");
     }
@@ -42,57 +42,56 @@ int ** calloc_matrix(int size) {
     return result;
 }
 
-void remove_graph(s21_graph *g) {
-  if (g->matrix != NULL) {
-    for (int i = 0; i < g->size; i++) free(g->matrix[i]);
-    free(g->matrix);
-    g->matrix = NULL;
-    g->size = 0;
-  }
+void remove_graph(s21_graph * g) {
+    if (g -> matrix != NULL) {
+        for (int i = 0; i < g -> size; i++) free(g -> matrix[i]);
+        free(g -> matrix);
+        g -> matrix = NULL;
+        g -> size = 0;
+    }
 }
 
-void read_graph_el(FILE *f, s21_graph *graph) {
-  for (int i = 0; i < graph->size; i++)
-    for (int j = 0; j < graph->size; j++)
-      if (1 != fscanf(f, "%d", &graph->matrix[i][j])) {
-        remove_graph(graph);
-        perror(_ERR_READ_GRAPH);
-        return;
-      }
+static void read_graph_el(FILE * f, s21_graph * graph) {
+    if (graph->matrix != NULL) {
+        for (int i = 0; i < graph -> size; i++) {
+            for (int j = 0; j < graph -> size; j++) {
+                int el = 0;
+                if (1 != fscanf(stdin, "%d", & el)) {
+                    remove_graph( & graph);
+                    perror(_ERR_READ_GRAPH);
+                }
+                else {
+                    graph->matrix[i][j] = el;
+                }
+            }
+        }
+    }
+    else {
+        perror(_ERR_CREATE_GRAPH);
+    }
 }
 
 s21_graph load_graph_from_file(char * filename) {
     s21_graph graph;
     FILE * f = fopen(filename, "r");
     if (f == NULL) {
-        perror(_ERR_OPEN);
+        //perror(_ERR_OPEN);
     }
     else {
         int size_graph = 0;
-        if (1 != fscanf(f, "%d", & size_graph)) {
+        if (1 != fscanf(stdin, "%d", & size_graph)) {
             perror(_ERR_READ_SIZE);
         }
         else {
             graph.size = size_graph;
             graph.matrix = calloc_matrix(size_graph);
-            if (graph.matrix != NULL) {
-                for (int i = 0; i < graph.size; i++)
-                    for (int j = 0; j < graph.size; j++) {
-                        int el = 0;
-                        if (1 != fscanf(f, "%d", & el)) {
-                            remove_graph( & graph);
-                            perror(_ERR_READ_GRAPH);
-                        }
-                        else graph.matrix[i][j] = el;
-                    }
-            } else {
-                perror(_ERR_CREATE_GRAPH);
-            }
+            read_graph_el(f, &graph);
         }
     }
     return graph;
     fclose(f);
 }
+
 /*
 s21_graph export_graph_to_dot(char *filename) {
 
