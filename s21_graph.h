@@ -30,10 +30,16 @@ export_graph_to_dot(char *filename) — выгрузка графа в файл 
 typedef struct graph {
 	int **matrix;
 	int size;
+	
+	void (*print_graph)(struct graph *g);
 } s21_graph;
 
+
+
+
 s21_graph load_graph_from_file(char *filename) ;
-void print_m(int row, int **matrix) ;
+void print(s21_graph *g) ;
+s21_graph graph_init();
 
 
 

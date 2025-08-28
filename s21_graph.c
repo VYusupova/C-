@@ -3,6 +3,13 @@
 
 #include "s21_graph.h"
 
+s21_graph graph_init(){
+s21_graph g ;
+g.print_graph = &print;
+g.size = 0;
+return g;
+}
+
 void print(s21_graph * g) {
     printf("size graph %02d\n", g -> size);
     if (g -> matrix == NULL) {
@@ -56,8 +63,8 @@ static void read_graph_el(FILE * f, s21_graph * graph) {
         for (int i = 0; i < graph -> size; i++) {
             for (int j = 0; j < graph -> size; j++) {
                 int el = 0;
-                if (1 != fscanf(stdin, "%d", & el)) {
-                    remove_graph( & graph);
+                if (1 != fscanf(f, "%d", & el)) {
+                    remove_graph( graph);
                     perror(_ERR_READ_GRAPH);
                 }
                 else {
@@ -73,16 +80,19 @@ static void read_graph_el(FILE * f, s21_graph * graph) {
 
 s21_graph load_graph_from_file(char * filename) {
     s21_graph graph;
+    printf("load graph\n");
     FILE * f = fopen(filename, "r");
     if (f == NULL) {
-        //perror(_ERR_OPEN);
+        perror(_ERR_OPEN);
     }
     else {
+        printf("init size graph\n");
         int size_graph = 0;
-        if (1 != fscanf(stdin, "%d", & size_graph)) {
+        if (1 != fscanf(f, "%d", & size_graph)) {
             perror(_ERR_READ_SIZE);
         }
         else {
+            printf("malloc size graph\n");
             graph.size = size_graph;
             graph.matrix = calloc_matrix(size_graph);
             read_graph_el(f, &graph);
