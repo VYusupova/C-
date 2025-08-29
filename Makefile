@@ -15,8 +15,8 @@ LIB_GRAPH_ALG = s21_graph_algorithms
 all: clean s21_graph s21_graph_algorithms
 
 clean:
-	$(RM) $(LIB_GRAPH)  $(LIB_GRAPH_ALG)
-	#rm -rf $(DIR_LIB)
+	$(RM) $(LIB_GRAPH)  $(LIB_GRAPH_ALG) 
+	rm -rf $(DIR_LIB) $(LIB_GRAPH).o
 
 test:
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c test/$(LIB_GRAPH).c -o  test/$(LIB_GRAPH).gcov.o
@@ -48,3 +48,10 @@ s21_graph_algorithms:
 	rm *.o ; \
 	printf " \n ✅ $(LIB_GRAPH_ALG).a created in catalog [$(DIR_LIB)] \n\n" ; \
 	fi
+	
+
+dfs: clean
+	$(CC) $(CFLAGS) -c stack/stack.c -o stack/stack.o
+	$(CC) $(CFLAGS) algoritm_dfs.c stack/stack.o -o dfs
+	./dfs 
+	
