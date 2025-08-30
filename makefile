@@ -214,11 +214,12 @@ CFLAGS = -Wall -Wextra -Werror -std=c++20 #-lpthread -pedantic -lsubunit -pthrea
 #-Wbool-compire - Предупреждение о сравнении int с bool
 #-pedantic - соответствие определенному стандарту
 
-#<2> nice) 
-№OBJS_FILE :=  stack.o # тут перечислим файлы а цель %.o скомпилирует их пооочереди из файлов %.cpp
+#<2> nice) Коомпиляция и линковка
+OBJS_FILE :=  stack.o # тут перечислим файлы а цель %.o скомпилирует их пооочереди из файлов %.cpp
 #цели %.o: и stack.o:  будут делать одно и тоже
 #%.o: %.cpp %.h
 #	$(CC) $(CFLAGS) -c $< -o $@
+# -c -  этот флаг нужен когда в файле нет функции main 
 stack.o: s21_stack.h
 	$(CC) $(CFLAGS) s21_stack.сpp  -o stack.o
 
