@@ -3,7 +3,7 @@
 
 #include "s21_graph.h"
 
-static void print_graph(graph *graph, const char *filename) {
+static void print_graph(s21_graph *graph, const char *filename) {
 	char temp[256];
   strncpy(temp, filename, sizeof(temp) - 1);
   temp[sizeof(temp) - 1] = '\0';
@@ -14,7 +14,7 @@ static void print_graph(graph *graph, const char *filename) {
       *ext = '\0'; // Обрезаем
   }
 	
-	int digraph = 0 // is_digraph(graph);
+	int digraph = 0 ;// is_digraph(graph);
 	if(digraph == 0) {
 		printf("graph %s {\n", temp);
 	} else {
@@ -134,7 +134,7 @@ static void load_graph(char * filename, s21_graph * graph) {
  
 }
 
-static int is_directed(const graph *g) {
+static int is_directed(const s21_graph *g) {
   for (int i = 0; i < g->size; i++) {
     for (int j = 1; j < i; j++) {
       if (g->matrix[i][j] != g->matrix[j][i]) {
@@ -183,10 +183,11 @@ if (!file) return -1;
 
 s21_graph graph_init(){
 s21_graph g ;
-g.print_graph = &print;
+g.print_graph_matrix = &print;
 g.load_graph_from_file = &load_graph;
 g.export_graph_to_dot =&export_graph;
 g.del_graph = &remove_graph;
+g.print_graph_dot = &print_graph;
 g.size = 0;
 return g;
 }

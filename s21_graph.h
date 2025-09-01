@@ -18,6 +18,10 @@ export_graph_to_dot(char *filename) — выгрузка графа в файл 
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#define FALSE 0
+#define TRUE 1
 
 #define _ERR_OPEN  "ошибка открытия файла"
 #define _ERR_READ_SIZE  "ошибка чтения из файла размера графа"
@@ -31,7 +35,8 @@ typedef struct graph {
 	int **matrix;
 	int size;
 	
-	void (*print_graph)(struct graph *g);
+	void (*print_graph_matrix)(struct graph *g);
+        void (*print_graph_dot)(struct graph *g, const char *filename);
 	void (*del_graph)(struct graph *g);
 	void (*load_graph_from_file)(char *filename, struct graph *g) ;
     int (*export_graph_to_dot)(char *filename, struct graph *g) ;
