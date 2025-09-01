@@ -3,6 +3,39 @@
 
 #include "s21_graph.h"
 
+static void print_graph(graph *graph, const char *filename) {
+	char temp[256];
+  strncpy(temp, filename, sizeof(temp) - 1);
+  temp[sizeof(temp) - 1] = '\0';
+  
+  // Ищем расширение .txt
+  char *ext = strstr(temp, ".txt");
+  if (ext != NULL && strlen(ext) == 4) { // Проверяем что это именно конец строки
+      *ext = '\0'; // Обрезаем
+  }
+	
+	int digraph = 0 // is_digraph(graph);
+	if(digraph == 0) {
+		printf("graph %s {\n", temp);
+	} else {
+		printf("digraph %s {\n", temp);
+	}
+	for(int i = 0; i < graph->size; i++) {
+		printf("%c;\n", 'A' + i);
+	}
+	for(int i = 0; i < graph->size; i++) {
+		for(int j = i; j < graph->size; j++) {
+			if(i != j && graph->matrix[i][j] != 0 && digraph == 0) {
+				printf("%c -- %c;\n", 'A' + i, 'A' + j );
+			} else if(graph->matrix[i][j] != 0 && graph->matrix[i][j] != -1 && digraph == 1) {
+				printf("%c -> %c;\n", 'A' + i, 'A' + j );
+
+			}
+		}
+	}
+	printf("}\n");
+}
+
 
 static void print(s21_graph * g) {
     printf("size graph %02d\n", g -> size);
