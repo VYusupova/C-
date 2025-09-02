@@ -13,12 +13,27 @@ static void visited_add(int node, int *visited, int len_visit) {
     }
 }
 
-static int next(int node, s21_graph *g) {
-  for (int i = node; i < g->size; i++) {
-    if (g->matrix[node][i] != 0)
-      return i;
+static int *list_next(int node, s21_graph *g) {
+  int* list = calloc(sizeof(int));
+  int l = 0;
+  for (int i = 0; i < g->size; i++) {
+    if (g->matrix[node][i] > 0){
+      list[l] = i+1;
+      l++;
+      list = realloc(list, (l+1)*sizeof(int));
+    }
   }
-  return g->size;
+  if (list[0] == 0) return NULL;
+  else return list;
+}
+
+void put_node_in_stack(stack *s, int node, s21_graph *g,  int *visited){
+   for (int i = 0; i < g->size; i++) {
+      if (g->matrix[node][i] > 0){
+        if (node_not_in_visited(node, visited, g->size))
+            push(i+1,s); 
+      }
+   }
 }
 
 static int node_not_in_visited(int node, int *visit, int len_visit) {
@@ -27,25 +42,32 @@ static int node_not_in_visited(int node, int *visit, int len_visit) {
       return 0;
   return 1;
 }
+/*
+Алгоритм поиска в глубину работает следующим образом:
 
+1. поместите любую вершину графа на вершину стека.
+2. Возьмите верхний элемент стека и добавьте его в список “Пройденных”.
+3. Создайте список смежных вершин для этой вершины. Добавьте те вершины, которых нет в списке “Пройденных”, в верх стека.
+4. Необходимо повторять шаги 2 и 3, пока стек не станет пустым.
+
+*/
 static int *dfs_iterative(s21_graph *g, int start_node) {
   int *visited = calloc(g->size, sizeof(int));
   if (g->size == 0)
     perror("_ERR_GRAPH_IS_EMPTY");
   else {
     stack *s = malloc(sizeof(stack));
-    ;
     s = stack_init(s);
     push(start_node + 1, s);
     visited_add(start_node + 1, visited, g->size);
-    int next_node = next(start_node, g);
-    push(next_node + 1, s);
+    put_node_in_stack(s, start_node, g, visited);
     while (s->size > 0) {
       int node = top(s);
       if (node_not_in_visited(node, visited, g->size)) {
         visited_add(node, visited, g->size);
-        next_node = next(node - 1, g);
-        push(next_node + 1, s);
+        put_node_in_stack(s, node, g, visited);
+        //next_node = next(node - 1, g);
+        //push(next_node + 1, s);
       } else {
         pop(s);
       }
