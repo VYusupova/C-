@@ -11,7 +11,8 @@
  * @return Массив, содержащий результат поиска.
  */
 int *depth_first_search(graph *g, int start_vertex) {
-  if (!g || start_vertex < 1 || start_vertex > g->size) return NULL;
+  if (!g || start_vertex < 1 || start_vertex > g->size)
+    return NULL;
 
   int size = g->size;
 
@@ -49,11 +50,12 @@ int *depth_first_search(graph *g, int start_vertex) {
       }
     }
     // Если непосещенных соседей нет — вершина удаляется из стека.
-    if (!found) stack_pop(s);
+    if (!found)
+      stack_pop(s);
   }
 
   free(visited);
   stack_free(s);
-  result[idx] = -1;  // Маркер конца результата
+  result[idx] = -1; // Маркер конца результата
   return result;
 }

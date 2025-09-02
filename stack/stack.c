@@ -29,6 +29,7 @@ int pop(stack *s) {
 int top(stack *s) { return s->head->date; }
 
 void stack_free(stack *s) {
-  while (s->head) pop(s);
+  while (s->head)
+    pop(s);
   free(s);
 }

@@ -11,6 +11,6 @@
 
 Suite *test_graph(void);
 
-//Suite *test_algorithms(void);
+// Suite *test_algorithms(void);
 
-#endif  // SRC_TESTS_TEST_H_
+#endif // SRC_TESTS_TEST_H_

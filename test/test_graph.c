@@ -1,9 +1,9 @@
 #include "test.h"
 
 START_TEST(test_graph_init) {
-  s21_graph g ;
-   ck_assert_ptr_nonnull(&g);
-   
+  s21_graph g;
+  ck_assert_ptr_nonnull(&g);
+
   g = graph_init();
   ck_assert_int_eq(g.size, 0);
   ck_assert_ptr_null(g.matrix);

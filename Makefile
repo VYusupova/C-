@@ -12,6 +12,7 @@ DIR_LIB := library
 LIB_GRAPH := s21_graph
 LIB_GRAPH_ALG = s21_graph_algorithms
 TEST = run_tests
+LIB_ADD := -L ./$(DIR_LIB) -ls21_graph -ls21_graph_algorithms -lstack   #-I $(DIR_LIB) 
 
 all: clean s21_graph s21_graph_algorithms
 
@@ -62,18 +63,19 @@ $(DIR_LIB):
 	# что бы подключать библиоктеки надо что бы все они создавались с префиксом lib
 	# например libs21_graph.a
 	# компиляция конечного файла описана https://firststeps.ru/linux/r.php?5
-	# обязательно надо делать в два этапа 1 этап полчеть объектный файл, а
+	# обязательно надо делать в два этапа 1 этап compile объектный файл, а
 	# затем уже его компилить с подключением библиотек
 console: s21_graph
-	$(CC) $(CFLAGS) -c part5_console_interface/console_interface.c  -L/$(DIR_LIB) -ls21_graph  -I $(DIR_LIB) -o $@
-	$(CC) $(CFLAGS) $@ -L/$(DIR_LIB) -ls21_graph -o run
+	$(CC) $(CFLAGS) -c part5_console_interface/console_interface.c -o $@
+	$(CC) $(CFLAGS) $@  $(LIB_ADD)  -o run
 	./run
 
 
 clang:
-	clang-format -n */*.h *.h
+	clang-format -i */*.h *.h */*.c *.c
 
 cppcheck:
 	@printf "\n 🔧🔧🔧 CHECK FILE 🔧🔧🔧 \n"
 	cppcheck $(CPPCHECK) */*.c */*.h *.c *.h
+
 
