@@ -3,8 +3,8 @@
 
 #include "s21_graph.h"
 
-static void print_graph(s21_graph *graph, const char *filename) {
-  char temp[256];
+static void print_graph(s21_graph *graph) {
+  /*char temp[256];
   strncpy(temp, filename, sizeof(temp) - 1);
   temp[sizeof(temp) - 1] = '\0';
 
@@ -34,7 +34,7 @@ static void print_graph(s21_graph *graph, const char *filename) {
       }
     }
   }
-  printf("}\n");
+  printf("}\n");*/
 }
 
 static void print(s21_graph *g) {

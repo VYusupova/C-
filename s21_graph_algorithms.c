@@ -13,6 +13,7 @@ static void visited_add(int node, int *visited, int len_visit) {
     }
 }
 
+/*
 static int *list_next(int node, s21_graph *g) {
   int* list = calloc(sizeof(int));
   int l = 0;
@@ -26,6 +27,13 @@ static int *list_next(int node, s21_graph *g) {
   if (list[0] == 0) return NULL;
   else return list;
 }
+*/
+static int node_not_in_visited(int node, int *visit, int len_visit) {
+  for (int i = 0; i <= len_visit; i++)
+    if (node == visit[i])
+      return 0;
+  return 1;
+}
 
 void put_node_in_stack(stack *s, int node, s21_graph *g,  int *visited){
    for (int i = 0; i < g->size; i++) {
@@ -36,12 +44,7 @@ void put_node_in_stack(stack *s, int node, s21_graph *g,  int *visited){
    }
 }
 
-static int node_not_in_visited(int node, int *visit, int len_visit) {
-  for (int i = 0; i <= len_visit; i++)
-    if (node == visit[i])
-      return 0;
-  return 1;
-}
+
 /*
 Алгоритм поиска в глубину работает следующим образом:
 

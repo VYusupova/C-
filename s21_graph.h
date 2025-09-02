@@ -40,7 +40,7 @@ typedef struct graph {
   int size;
 
   void (*print_graph_matrix)(struct graph *g);
-  void (*print_graph_dot)(struct graph *g, const char *filename);
+  void (*print_graph_dot)(struct graph *g);
   void (*del_graph)(struct graph *g);
   void (*load_graph_from_file)(char *filename, struct graph *g);
   int (*export_graph_to_dot)(char *filename, struct graph *g);

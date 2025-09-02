@@ -37,10 +37,10 @@ static void question_print(s21_graph *g){
   scanf("%d", &user_input);
   switch (user_input) {
     case 1:
-      g.print_graph_matrix(g);
+      g->print_graph_matrix(g);
       break;
     case 2:
-      g.print_graph_dot(g);
+      //g->print_graph_dot(g);
       break;
     default:
       break;
@@ -48,17 +48,22 @@ static void question_print(s21_graph *g){
 }
 
 static void load_grap(s21_graph *g){
-      char *filename = NULL;
-      printf("введите имя файла c графом : ");
-      scanf("%ms", &filename);  // динамически выделили память в конце освободили
+      char filename[100];
+      printf("введите path имя файла c графом : ");
+            printf("not space in path : ");
+      int c = scanf("%s", filename);  
       printf("\n");
-      g.load_graph_from_file(filename, g);
+      if (c == 1) { // comment 
+      g->load_graph_from_file(filename, g);
       if (g->size == 0) {
           printf("не удалось считать, неправильные прараметры в файле\n");
+          }
       else{
         question_print(g);
       }
-      free(filename) ;
+      }
+      else printf("ERROR\n");
+      
 }
 
 static void print_DFS(s21_graph *g){
@@ -77,12 +82,12 @@ static void print_DFS(s21_graph *g){
         printf("ты ввел какую-то ерунду, поэтому вершина с которой я начну будет 0");
       }
       else {
-        visit = depth_first_search(&g, 0);
+        visit = depth_first_search(g, 0);
       }
       
     }
         printf("обход графа { ");
-  for (int i = 0; i < g.size; i++)
+  for (int i = 0; i < g->size; i++)
     printf("%d  ", visit[i]);
   printf(" }\n");
   }

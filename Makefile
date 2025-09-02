@@ -12,6 +12,12 @@ DIR_LIB := library
 LIB_GRAPH := s21_graph
 LIB_GRAPH_ALG = s21_graph_algorithms
 TEST = run_tests
+
+	# что бы подключать библиоктеки надо что бы все они создавались с префиксом lib
+	# например libs21_graph.a
+	# компиляция конечного файла описана https://firststeps.ru/linux/r.php?5
+	# обязательно надо делать в два этапа 1 этап compile объектный файл, а
+	# затем уже его компилить с подключением библиотек
 LIB_ADD := -L ./$(DIR_LIB) -ls21_graph -ls21_graph_algorithms -lstack   #-I $(DIR_LIB) 
 
 all: clean s21_graph s21_graph_algorithms
@@ -22,6 +28,7 @@ clean:
 	rm -rf test/*.gcov.*
 	rm -rf gcov/
 	rm -rf $(NAME)_coverage.info
+	rm -rf run console
 
 test: test/test.gcov.o test/test_graph.gcov.o
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $(LIB_GRAPH).c -o  test/$(LIB_GRAPH).gcov.o
@@ -60,12 +67,7 @@ $(DIR_LIB):
 	printf " ✅ directory [$@] - created  \n" ; \
 	fi
 
-	# что бы подключать библиоктеки надо что бы все они создавались с префиксом lib
-	# например libs21_graph.a
-	# компиляция конечного файла описана https://firststeps.ru/linux/r.php?5
-	# обязательно надо делать в два этапа 1 этап compile объектный файл, а
-	# затем уже его компилить с подключением библиотек
-console: s21_graph
+console: s21_graph s21_graph_algorithms stack
 	$(CC) $(CFLAGS) -c part5_console_interface/console_interface.c -o $@
 	$(CC) $(CFLAGS) $@  $(LIB_ADD)  -o run
 	./run
