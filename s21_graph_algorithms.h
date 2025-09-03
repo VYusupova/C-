@@ -44,4 +44,21 @@ breadth_first_search(graph *graph, int start_vertex) — поиск в шири�
 
 int *depth_first_search(s21_graph *graph, int start_vertex);
 
+#include "graph.h"
+
+
+typedef struct graph_algorithms graph_algorithms;
+
+
+/* Конструктор/деструктор */
+graph_algorithms *graph_algorithms_create(graph *g);
+void graph_algorithms_free(graph_algorithms *alg);
+
+
+/* Методы: возвращают расстояние (для Dijkstra) и матрицу (для Floyd). */
+int graph_algorithms_get_shortest_path_between_vertices(graph_algorithms *this, int src, int dest);
+int **graph_algorithms_get_shortest_paths_between_all_vertices(graph_algorithms *this);
+
+
+
 #endif
