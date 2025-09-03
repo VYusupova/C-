@@ -34,20 +34,20 @@ static void load_grap(s21_graph *g) {
 
 static void print_DFS(s21_graph *g) {
   int *visit;
-  if (g->size == 0) {
-    printf("граф пустой! загрузите граф, потом может построю обход =)\n");
-  } else {
-    printf("введите чило от 0 до %d вершину с которой надо начать обход :",
+  if (g->size == 0)
+    ERR_GRAF_EMPTY;
+  else {
+    printf("введите чиcло от 0 до %d вершину с которой надо начать обход :",
            g->size);
     int vertex = 0;
     if (1 != scanf("%d", &vertex))
-      ERR_INPUT_DOT
+      ERR_INPUT_DOT;
     else {
-      if (vertex > g->size)
-        ERR_INPUT_DOT
-      else {
+      if (vertex > g->size || vertex < 0)
+        ERR_INPUT_DOT;
+      else 
         visit = depth_first_search(g, vertex);
-      }
+      
     }
     printf("обход графа { ");
     for (int i = 0; i < g->size; i++)
@@ -56,7 +56,31 @@ static void print_DFS(s21_graph *g) {
   }
 }
 
-void console(s21_graph *g) {
+static void print_Dejkstra(s21_graph *g) {
+  int short_path = 0;
+  if (g->size == 0)
+    ERR_GRAF_EMPTY;
+  else {
+    printf(
+        "введите pair vertex от 0 до %d вершину с которой надо начать обход :",
+        g->size);
+    int start = 0;
+    int end = g->size;
+    if (2 != scanf("%d %d", &start, &end))
+      ERR_INPUT_DOT;
+    else {
+      if (start > g->size || start < 0 || end > g->size || end < 0 )
+        ERR_INPUT_DOT;
+      else {
+        short_path =
+            graph_algorithms_get_shortest_path_between_vertices(g, start, end);
+      }
+    }
+    printf("shortest way is %d", short_path);
+  }
+}
+
+static void console(s21_graph *g) {
   int user_input;
   PRINT_CHOOSE;
   scanf("%d", &user_input);
@@ -71,6 +95,7 @@ void console(s21_graph *g) {
     print_DFS(g);
     break;
   case 4:
+    print_Dejkstra(g);
     break;
   case 5:
     break;
