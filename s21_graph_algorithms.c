@@ -35,22 +35,22 @@ static int node_not_in_visited(int node, int *visit, int len_visit) {
   return 1;
 }
 
-void put_node_in_stack(stack *s, int node, s21_graph *g,  int *visited){
-   for (int i = 0; i < g->size; i++) {
-      if (g->matrix[node][i] > 0){
-        if (node_not_in_visited(node, visited, g->size))
-            push(i+1,s); 
-      }
-   }
+void put_node_in_stack(stack *s, int node, s21_graph *g, int *visited) {
+  for (int i = 0; i < g->size; i++) {
+    if (g->matrix[node][i] > 0) {
+      if (node_not_in_visited(i + 1, visited, g->size))
+        push(i + 1, s);
+    }
+  }
 }
-
 
 /*
 Алгоритм поиска в глубину работает следующим образом:
 
 1. поместите любую вершину графа на вершину стека.
 2. Возьмите верхний элемент стека и добавьте его в список “Пройденных”.
-3. Создайте список смежных вершин для этой вершины. Добавьте те вершины, которых нет в списке “Пройденных”, в верх стека.
+3. Создайте список смежных вершин для этой вершины. Добавьте те вершины, которых
+нет в списке “Пройденных”, в верх стека.
 4. Необходимо повторять шаги 2 и 3, пока стек не станет пустым.
 
 */
@@ -64,13 +64,12 @@ static int *dfs_iterative(s21_graph *g, int start_node) {
     push(start_node + 1, s);
     visited_add(start_node + 1, visited, g->size);
     put_node_in_stack(s, start_node, g, visited);
+    int node = start_node;
     while (s->size > 0) {
-      int node = top(s);
+      node = top(s);
       if (node_not_in_visited(node, visited, g->size)) {
         visited_add(node, visited, g->size);
-        put_node_in_stack(s, node, g, visited);
-        //next_node = next(node - 1, g);
-        //push(next_node + 1, s);
+        put_node_in_stack(s, node - 1, g, visited);
       } else {
         pop(s);
       }
