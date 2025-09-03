@@ -56,7 +56,6 @@ int *depth_first_search(s21_graph *graph, int start_vertex);
 
 /* Методы: возвращают расстояние (для Dijkstra) и матрицу (для Floyd). */
 int graph_algorithms_get_shortest_path_between_vertices(s21_graph *this, int src, int dest);
-// **graph_algorithms_get_shortest_paths_between_all_vertices(graph_algorithms
-// *this);
+int **graph_algorithms_get_shortest_paths_between_all_vertices(s21_graph *this);
 
 #endif

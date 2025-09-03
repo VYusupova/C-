@@ -80,8 +80,32 @@ static void print_Dejkstra(s21_graph *g) {
   }
 }
 
-static void console(s21_graph *g) {
+static void print_Floyd(s21_graph *g) {
+  int** short_dist = 0;
+  if (g->size == 0)
+    ERR_GRAF_EMPTY;
+  else {
+        short_dist =
+            graph_algorithms_get_shortest_paths_between_all_vertices(g);
+      }
+      printf("\t\tshortest dist \n");
+    for (int i = 0; i < g->size; i++) {
+      for (int j = 0; j < g->size; j++) {
+        printf(" %2d", short_dist[i][j]);
+      }
+      printf("\n");
+  }
+    }
+    
+
+int main() {
+  s21_graph g1 = graph_init();
+    s21_graph *g = &g1;
   int user_input;
+
+  int break_flag = 0; 
+  
+  while (!break_flag) {
   PRINT_CHOOSE;
   scanf("%d", &user_input);
   switch (user_input) {
@@ -97,25 +121,21 @@ static void console(s21_graph *g) {
   case 4:
     print_Dejkstra(g);
     break;
+
   case 5:
+    print_Floyd(g);
     break;
   case 6:
     break;
   case 7:
     break;
+  case 8:
+    break_flag = 1;
+    break;  
   default:
     ERR_INPUT;
     break;
   }
-}
-
-int main() {
-  s21_graph g = graph_init();
-
-  int break_flag = 0; // TO DO переделать
-  while (break_flag != 3) {
-    console(&g);
-    break_flag++;
   }
 
   return 0;

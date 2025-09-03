@@ -143,33 +143,32 @@ int graph_algorithms_get_shortest_path_between_vertices(s21_graph *this,
 }
 
 /* Алгоритм Флойда-Уоршелла: кратчайшие пути между всеми вершинами */
-/*int
-**graph_algorithms_get_shortest_paths_between_all_vertices(graph_algorithms
-*this) { if (!this || !this->g) return NULL;
+int **graph_algorithms_get_shortest_paths_between_all_vertices(s21_graph *this)
+ { if (!this ) return NULL;
 
-    size_t n = this->g->size;
+    size_t n = this->size;
     int **dist = malloc(n * sizeof(int *));
     for (size_t i = 0; i < n; ++i) {
         dist[i] = malloc(n * sizeof(int));
         for (size_t j = 0; j < n; ++j) {
             if (i == j)
                 dist[i][j] = 0;
-            else if (this->g->adj_matrix[i][j] >= 0)
-                dist[i][j] = this->g->adj_matrix[i][j];
+            else if (this->matrix[i][j] >= 0)
+                dist[i][j] = this->matrix[i][j];
             else
-                dist[i][j] = S21_INF;
+                dist[i][j] = 5000; //S21_INF;
         }
     }
 
     for (size_t k = 0; k < n; ++k)
         for (size_t i = 0; i < n; ++i)
             for (size_t j = 0; j < n; ++j)
-                if (dist[i][k] < S21_INF && dist[k][j] < S21_INF &&
+                if (dist[i][k] < 5000 /*S21_INF*/ && dist[k][j] < 5000 /*S21_INF*/ &&
                     dist[i][k] + dist[k][j] < dist[i][j])
                     dist[i][j] = dist[i][k] + dist[k][j];
 
     return dist;
 }
-*/
+
 
 #endif
