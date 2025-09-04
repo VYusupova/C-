@@ -69,7 +69,7 @@ get_shortest_paths_between_all_vertices(graph *graph)
 */
 /* Методы: возвращают расстояние (для Dijkstra) и матрицу (для Floyd). */
 
-int get_shortest_path_between_vertices(graph *graph, int vertex1, int vertex2);
-int ** get_shortest_paths_between_all_vertices(graph *graph) 
+int get_shortest_path_between_vertices(s21_graph *graph, int vertex1, int vertex2);
+int ** get_shortest_paths_between_all_vertices(s21_graph *graph) ;
 
 #endif
