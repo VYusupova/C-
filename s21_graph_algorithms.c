@@ -107,17 +107,16 @@ alg;
 //}
 
 /* Алгоритм Дейкстры: кратчайший путь между двумя вершинами */
-int graph_algorithms_get_shortest_path_between_vertices(s21_graph *this,
-                                                        int src, int dest) {
+int get_shortest_path_between_vertices(s21_graph *graph, int vertex1, int vertex2) {
   if (!this || !this->matrix || src >= this->size || dest >= this->size)
-    return 5000; // S21_INF;
+    return S21_INF;
 
   size_t n = this->size;
   int *dist = malloc(n * sizeof(int));
   int *visited = calloc(n, sizeof(int));
 
   for (size_t i = 0; i < n; ++i)
-    dist[i] = 50000; // S21_INF;
+    dist[i] = S21_INF;
   dist[src] = 0;
 
   for (size_t i = 0; i < n; ++i) {
@@ -126,7 +125,7 @@ int graph_algorithms_get_shortest_path_between_vertices(s21_graph *this,
       if (!visited[j] && (u == -1 || dist[j] < dist[u]))
         u = j;
 
-    if (dist[u] == 5000 /*S21_INF*/)
+    if (dist[u] == S21_INF)
       break;
     visited[u] = 1;
     for (size_t v = 0; v < n; ++v) {
@@ -143,7 +142,7 @@ int graph_algorithms_get_shortest_path_between_vertices(s21_graph *this,
 }
 
 /* Алгоритм Флойда-Уоршелла: кратчайшие пути между всеми вершинами */
-int **graph_algorithms_get_shortest_paths_between_all_vertices(s21_graph *this)
+int ** get_shortest_paths_between_all_vertices(s21_graph *this)
  { if (!this ) return NULL;
 
     size_t n = this->size;
@@ -156,14 +155,14 @@ int **graph_algorithms_get_shortest_paths_between_all_vertices(s21_graph *this)
             else if (this->matrix[i][j] >= 0)
                 dist[i][j] = this->matrix[i][j];
             else
-                dist[i][j] = 5000; //S21_INF;
+                dist[i][j] = S21_INF;
         }
     }
 
     for (size_t k = 0; k < n; ++k)
         for (size_t i = 0; i < n; ++i)
             for (size_t j = 0; j < n; ++j)
-                if (dist[i][k] < 5000 /*S21_INF*/ && dist[k][j] < 5000 /*S21_INF*/ &&
+                if (dist[i][k] < S21_INF && dist[k][j] < S21_INF &&
                     dist[i][k] + dist[k][j] < dist[i][j])
                     dist[i][j] = dist[i][k] + dist[k][j];
 
