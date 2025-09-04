@@ -3,8 +3,6 @@
 
 #include "s21_graph.h"
 
-
-
 static void print(s21_graph *g) {
   printf("size graph %02d\n", g->size);
   if (g->matrix == NULL) {
@@ -95,38 +93,39 @@ static void load_graph(char *filename, s21_graph *graph) {
 }
 
 static int is_digraph(const s21_graph *graph) {
-	int result = 0;
-	for(int i = 0; i < graph->size; i++) {
-		for(int j = 0; j < graph->size; j++) {
-			if(graph->matrix[i][j] != graph->matrix[j][i]) {
-				result = 1;
-			}
-		}
-	}
-	return result;
+  int result = 0;
+  for (int i = 0; i < graph->size; i++) {
+    for (int j = 0; j < graph->size; j++) {
+      if (graph->matrix[i][j] != graph->matrix[j][i]) {
+        result = 1;
+      }
+    }
+  }
+  return result;
 }
 
-
 int export_graph(char *filename, s21_graph *g) {
-  if (g->size == 0) return -1;
+  if (g->size == 0)
+    return -1;
   FILE *file = fopen(filename, "w");
-  if (!file) return -1;
+  if (!file)
+    return -1;
 
-  int digraph = is_digraph(graph);
+  int digraph = is_digraph(g);
 
   if (!digraph) {
     fprintf(file, "graph G {\n");
   } else {
     fprintf(file, "digraph G {\n");
   }
-    for (int i = 0; i < g->size; i++) {
-      for (int j = 0; j < g->size; j++) {
-        if (g->matrix[i][j] != 0) {
-          fprintf(file, "\t%d -> %d [weight=%d];\n", i + 1, j + 1,
-                  g->matrix[i][j]);
-        }
+  for (int i = 0; i < g->size; i++) {
+    for (int j = 0; j < g->size; j++) {
+      if (g->matrix[i][j] != 0) {
+        fprintf(file, "\t%d -> %d [weight=%d];\n", i + 1, j + 1,
+                g->matrix[i][j]);
       }
     }
+  }
 
   fprintf(file, "}\n");
   fclose(file);
@@ -134,10 +133,11 @@ int export_graph(char *filename, s21_graph *g) {
 }
 
 static void print_graph(s21_graph *graph) {
-  if (g->size == 0) perroe(_ERR_SIZE);
-  int digraph =  is_digraph(graph);
+  if (graph->size == 0)
+    perror(_ERR_SIZE);
+  int digraph = is_digraph(graph);
   if (digraph == 0) {
-    printf("graph {\n", );
+    printf("graph {\n");
   } else {
     printf("digraph {\n");
   }

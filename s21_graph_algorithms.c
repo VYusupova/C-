@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define S21_INF (2147483647 / 4) /* безопасная "бесконечность" */
+
 static void visited_add(int node, int *visited, int len_visit) {
   for (int i = 0; i < len_visit; i++)
     if (0 == visited[i]) {
@@ -107,17 +109,19 @@ alg;
 //}
 
 /* Алгоритм Дейкстры: кратчайший путь между двумя вершинами */
-int get_shortest_path_between_vertices(s21_graph *graph, int vertex1, int vertex2) {
-  if (!this || !this->matrix || src >= this->size || dest >= this->size)
+int get_shortest_path_between_vertices(s21_graph *graph, int vertex1,
+                                       int vertex2) {
+  if (!graph || !graph->matrix || vertex1 >= graph->size ||
+      vertex2 >= graph->size)
     return S21_INF;
 
-  size_t n = this->size;
+  size_t n = graph->size;
   int *dist = malloc(n * sizeof(int));
   int *visited = calloc(n, sizeof(int));
 
   for (size_t i = 0; i < n; ++i)
     dist[i] = S21_INF;
-  dist[src] = 0;
+  dist[vertex1] = 0;
 
   for (size_t i = 0; i < n; ++i) {
     int u = -1;
@@ -129,45 +133,45 @@ int get_shortest_path_between_vertices(s21_graph *graph, int vertex1, int vertex
       break;
     visited[u] = 1;
     for (size_t v = 0; v < n; ++v) {
-      int weight = this->matrix[u][v];
+      int weight = graph->matrix[u][v];
       if (weight >= 0 && dist[u] + weight < dist[v])
         dist[v] = dist[u] + weight;
     }
   }
 
-  int result = dist[dest];
+  int result = dist[vertex2];
   free(dist);
   free(visited);
   return result;
 }
 
 /* Алгоритм Флойда-Уоршелла: кратчайшие пути между всеми вершинами */
-int ** get_shortest_paths_between_all_vertices(s21_graph *this)
- { if (!this ) return NULL;
+int **get_shortest_paths_between_all_vertices(s21_graph *graph) {
+  if (!graph)
+    return NULL;
 
-    size_t n = this->size;
-    int **dist = malloc(n * sizeof(int *));
-    for (size_t i = 0; i < n; ++i) {
-        dist[i] = malloc(n * sizeof(int));
-        for (size_t j = 0; j < n; ++j) {
-            if (i == j)
-                dist[i][j] = 0;
-            else if (this->matrix[i][j] >= 0)
-                dist[i][j] = this->matrix[i][j];
-            else
-                dist[i][j] = S21_INF;
-        }
+  size_t n = graph->size;
+  int **dist = malloc(n * sizeof(int *));
+  for (size_t i = 0; i < n; ++i) {
+    dist[i] = malloc(n * sizeof(int));
+    for (size_t j = 0; j < n; ++j) {
+      if (i == j)
+        dist[i][j] = 0;
+      else if (graph->matrix[i][j] >= 0)
+        dist[i][j] = graph->matrix[i][j];
+      else
+        dist[i][j] = S21_INF;
     }
+  }
 
-    for (size_t k = 0; k < n; ++k)
-        for (size_t i = 0; i < n; ++i)
-            for (size_t j = 0; j < n; ++j)
-                if (dist[i][k] < S21_INF && dist[k][j] < S21_INF &&
-                    dist[i][k] + dist[k][j] < dist[i][j])
-                    dist[i][j] = dist[i][k] + dist[k][j];
+  for (size_t k = 0; k < n; ++k)
+    for (size_t i = 0; i < n; ++i)
+      for (size_t j = 0; j < n; ++j)
+        if (dist[i][k] < S21_INF && dist[k][j] < S21_INF &&
+            dist[i][k] + dist[k][j] < dist[i][j])
+          dist[i][j] = dist[i][k] + dist[k][j];
 
-    return dist;
+  return dist;
 }
-
 
 #endif
