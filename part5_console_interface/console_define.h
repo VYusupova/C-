@@ -15,12 +15,18 @@ s21_graph и s21_graph_algorithms. Содержит функционал:
 7. Решение задачи коммивояжера с выводом результирующего маршрута и его длины в
 консоль.
 
-*/
+добавлен дополнительный функционал печати матрицы смежности и печати в формате dot
+ и выгрузки на диск файла в формате dot
 
-#include <stdio.h>
+*/
 
 #include "../s21_graph.h"
 #include "../s21_graph_algorithms.h"
+
+#include <stdio.h>
+
+#define RED_ERROR "\033[31m"
+#define COLOR_DEFAULT "\033[0m\n"
 
 #define PRINT_CHOOSE                                                                                                               \
   printf("ВЫБОР ДЕЙСТВИЯ: \n");                                                                                                    \
@@ -37,7 +43,7 @@ s21_graph и s21_graph_algorithms. Содержит функционал:
          "результирующей матрицы смежности в консоль.\n");                                                                         \
   printf("\t7. Решение задачи коммивояжера с выводом результирующего "             \
          "маршрута и его длины в консоль.\n");                                                                                     \
-  printf("\t8. EXport\n") printf("\t9. EXIT\n");
+  printf("\t8. Выгрзуить на диск в файл с расширением dot\n") printf("\t9. EXIT\n");
 
 #define PRINT_QUESTION                                                         \
   printf("ВЫВЕСТИ ГРАФ на консоль в формате: \n");                             \
@@ -46,12 +52,13 @@ s21_graph и s21_graph_algorithms. Содержит функционал:
   printf("\tany key. без вывода\n")
 
 #define PRINT_LOAD_GRAP printf("введите путь и  имя файла c графом : ")
-#define PRINT_OUT_GRAP printf("введите путь и  имя файла c графом : ")
+#define PRINT_OUT_GRAP printf("введите путь и  имя файла куда сделать выгрузку : ")
 #define ERR_PRINT_LOAD_GRAP                                                    \
-  printf("ERRORне удалось считать, неправильные прараметры в файле\n")
-#define ERR printf("ERROR что то пошло не так\n")
-#define ERR_INPUT printf("ERROR what is this? try again\n")
+  printf( RED_ERROR "ERROR не удалось считать, неправильные прараметры в файле\n" COLOR_DEFAULT)
+#define ERR printf( RED_ERROR "ERROR что то пошло не так\n" COLOR_DEFAULT)
+#define ERR_INPUT printf(RED_ERROR "ERROR what is this? try again\n" COLOR_DEFAULT)
 #define ERR_INPUT_DOT                                                          \
-  printf("ты ввел какую-то ерунду, поэтому вершина с которой я начну будет 0")
+  printf(RED_ERROR "ERROR ты ввел какую-то ерунду, поэтому вершина с которой я начну будет 0" COLOR_DEFAULT)
 #define ERR_GRAF_EMPTY                                                         \
-  printf("граф пустой! загрузите граф, потом может построю обход =)\n")
+  printf(RED_ERROR "ERROR граф пустой! загрузите граф, потом может построю обход =)\n" COLOR_DEFAULT)
+
