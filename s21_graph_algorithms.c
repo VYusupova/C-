@@ -175,6 +175,10 @@ int **get_shortest_paths_between_all_vertices(s21_graph *graph) {
 int **get_least_spanning_tree(s21_graph *g) 
 {
   if (!g) return NULL;
+  // проверка что все ребра положительные
+  for (int i = 0; i <= g->size; i++)
+    for (int j = 0; j <= g->size; j++)
+    if (g->matrix[i][j] < 0) return NULL;
 
   int size = g->size;
   int ** mst = malloc(size * sizeof(int *));
