@@ -116,6 +116,9 @@ static void print_least_spanning_tree(s21_graph *g){
     printf("мин. остов. дерев результ. матр. смежности :\n");");
     int **mst = get_least_spanning_tree(g);
      out_matrix(g->size, mst);
+	for(int i = 0; i<g->size; i++)
+		free(mst[i]);
+	free(mst);
 }
 
 int main() {
@@ -162,3 +165,4 @@ int main() {
 
   return 0;
 }
+
