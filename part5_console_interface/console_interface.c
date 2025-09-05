@@ -113,12 +113,16 @@ static void print_Floyd(s21_graph *g) {
 }
 
 static void print_least_spanning_tree(s21_graph *g){
-    printf("мин. остов. дерев результ. матр. смежности :\n");");
+    printf("мин. остов. дерев результ. матр. смежности :\n");
     int **mst = get_least_spanning_tree(g);
+    if (mst != NULL ) {
      out_matrix(g->size, mst);
 	for(int i = 0; i<g->size; i++)
 		free(mst[i]);
 	free(mst);
+    }
+    else printf("not valid graph from PRIM\n");
+    
 }
 
 int main() {

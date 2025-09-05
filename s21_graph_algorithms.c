@@ -171,12 +171,12 @@ static int conditionsPRIM (s21_graph *g){
 int result = 1;
   if (!g) result=0;
   else {
-  for (int i = 0; i <= g->size; i++)
-    for (int j = 0; j <= g->size; j++){
+  for (int i = 0; i < g->size; i++)
+    for (int j = 0; j < g->size; j++){
         // проверка что все ребра положительные
-    if (g->matrix[i][j] < 0) result = 0;
+    if (g->matrix[i][j] < 0){ result = 0; }
       // проверка что граф не ориентированный
-    if (g->matrix[i][j] != g->matrix[j][i]) result = 0;
+    	if (g->matrix[i][j] != g->matrix[j][i]) result = 0;
    }
   }  
 return result;
@@ -192,7 +192,7 @@ return result;
 
 int **get_least_spanning_tree(s21_graph *g) 
 {
-  if (!conditionsPRIM(g)) return NULL;
+  if (conditionsPRIM(g) != 1) return NULL;
   int size = g->size;
   int ** mst = malloc(size * sizeof(int *));
 
