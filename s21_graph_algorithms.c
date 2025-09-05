@@ -5,10 +5,6 @@
 #include "s21_graph.h"
 #include "stack/stack.h"
 
-#include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
-
 #define S21_INF (2147483647 / 4) /* безопасная "бесконечность" */
 
 static void visited_add(int node, int *visited, int len_visit) {
@@ -176,14 +172,12 @@ int **get_shortest_paths_between_all_vertices(s21_graph *graph) {
    Веса рёбер должны быть положительными.
    Функция вернет NULL для несвязного графа.
  */
-s21_graph* graph *get_least_spanning_tree(s21_graph *g) 
+int **get_least_spanning_tree(s21_graph *g) 
 {
   if (!g) return NULL;
 
   int size = g->size;
-  graph *mst = graph_init();
-  mst->size = size;
-  mst->matrix = malloc(size * sizeof(int *));
+  int ** mst = malloc(size * sizeof(int *));
 
   // родительская вершина для i в MST.
   int *parent = malloc((size + 1) * sizeof(int));
@@ -196,8 +190,8 @@ s21_graph* graph *get_least_spanning_tree(s21_graph *g)
   int *in_mst = calloc((size + 1), sizeof(int));
 
   for (int i = 1; i <= size; i++) {
-    weight[i] = 21_INF;
-    mst->matrix[i - 1] = calloc(size, sizeof(int));
+    weight[i] = S21_INF;
+    mst[i - 1] = calloc(size, sizeof(int));
   }
 
   weight[1] = 0;      // Начинаем с вершины 1
@@ -210,8 +204,10 @@ s21_graph* graph *get_least_spanning_tree(s21_graph *g)
       if (!in_mst[v] && (u == -1 || weight[v] < weight[u])) u = v;
     }
     // Проверка на несвязность графа
-    if (weight[u] == 21_INF) {
-      graph_free(mst);
+    if (weight[u] == S21_INF) {
+      for (int i = 0; i <size; i++)
+      	free(mst[i]);
+      free(mst);
       free(parent);
       free(weight);
       free(in_mst);
@@ -222,8 +218,8 @@ s21_graph* graph *get_least_spanning_tree(s21_graph *g)
 
     // Если u не стартовая вершина, добавляется ребро parent[u] → u в mst
     if (parent[u] != -1) {
-      mst->matrix[parent[u] - 1][u - 1] = g->matrix[parent[u] - 1][u - 1];
-      mst->matrix[u - 1][parent[u] - 1] = g->matrix[u - 1][parent[u] - 1];
+      mst[parent[u] - 1][u - 1] = g->matrix[parent[u] - 1][u - 1];
+      mst[u - 1][parent[u] - 1] = g->matrix[u - 1][parent[u] - 1];
     }
 
     // Обновление ключей для соседей u. Если ребро u → v имеет меньший вес, чем

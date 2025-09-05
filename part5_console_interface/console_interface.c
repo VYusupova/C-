@@ -92,6 +92,15 @@ static void print_Dijkstra(s21_graph *g) {
   }
 }
 
+static void out_matrix(int size, int **m){
+	for (int i = 0; i < size; i++) {
+    for (int j = 0; j < size; j++) {
+      printf(" %2d", m[i][j]);
+    }
+    printf("\n");
+  }
+}
+
 static void print_Floyd(s21_graph *g) {
   int **short_dist = 0;
   if (g->size == 0)
@@ -100,12 +109,13 @@ static void print_Floyd(s21_graph *g) {
     short_dist = get_shortest_paths_between_all_vertices(g);
   }
   printf("\t\tshortest dist \n");
-  for (int i = 0; i < g->size; i++) {
-    for (int j = 0; j < g->size; j++) {
-      printf(" %2d", short_dist[i][j]);
-    }
-    printf("\n");
-  }
+  out_matrix(g->size, short_dist);
+}
+
+static void print_least_spanning_tree(s21_graph *g){
+    printf("мин. остов. дерев результ. матр. смежности :\n");");
+    int **mst = get_least_spanning_tree(g);
+     out_matrix(g->size, mst);
 }
 
 int main() {
@@ -135,6 +145,7 @@ int main() {
       print_Floyd(g);
       break;
     case 6:
+      print_least_spanning_tree(g);
       break;
     case 7:
       break;

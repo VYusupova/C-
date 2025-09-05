@@ -38,8 +38,11 @@ breadth_first_search(graph *graph, int start_vertex) — поиск в шири�
 
 #include "s21_graph.h"
 #include <stdio.h>
+#include <limits.h>
+#include <stdlib.h>
 
 #define _ERR_GRAPH_IS_EMPT "ошибка обхода графа - граф пустой\n"
+
 
 // typedef struct graph_algorithms {};
 
@@ -71,5 +74,7 @@ get_shortest_paths_between_all_vertices(graph *graph)
 int get_shortest_path_between_vertices(s21_graph *graph, int vertex1,
                                        int vertex2);
 int **get_shortest_paths_between_all_vertices(s21_graph *graph);
+
+int **get_least_spanning_tree(s21_graph *g) ;
 
 #endif
