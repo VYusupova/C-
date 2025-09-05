@@ -47,19 +47,23 @@ test: test/test.gcov.o test/test_graph.gcov.o
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $< -o $@
 
 s21_graph: $(DIR_LIB)
-	$(CC) $(CFLAGS) -c $@.c $@_print.c  -o $@.o
-	ar rcs $(DIR_LIB)/lib$@.a $@.o $@.h
-	@printf " ✅ $@.a created in directory [$(DIR_LIB)] \n\n"
+	$(CC) $(CFLAGS) -c $@_print.c  -o $@_print.o
+	$(CC) $(CFLAGS) -c $@.c  -o $@.o
+	ar rcs $(DIR_LIB)/lib$@.a $@.o $@_print.o $@.h
+	@printf " ✅ $lib@.a created in directory [$(DIR_LIB)] \n\n"
+	rm -rf *.o
 
 s21_graph_algorithms: $(DIR_LIB)
 	$(CC) $(CFLAGS) -c $@.c  -o $@.o
 	ar rcs $(DIR_LIB)/lib$@.a $@.o $@.h
-	@printf " ✅ $@.a created in directory [$(DIR_LIB)] \n\n"
+	@printf " ✅ $lib@.a created in directory [$(DIR_LIB)] \n\n"
+		rm -rf *.o
 
 stack: $(DIR_LIB)
 	$(CC) $(CFLAGS) -c $@/$@.c  -o $@/$@.o
 	ar rcs $(DIR_LIB)/lib$@.a $@/$@.o $@/$@.h
-	@printf " ✅ stack.a created in directory [$(DIR_LIB)] \n\n"
+	@printf " ✅ libstack.a created in directory [$(DIR_LIB)] \n\n"
+		rm -rf *.o
 
 $(DIR_LIB):
 	@if [ -d $@ ]; then printf " ✅ directory [$@] - exists  \n" ;\

@@ -42,13 +42,14 @@ typedef struct graph {
   void (*print_graph_matrix)(struct graph *g);
   void (*print_graph_dot)(struct graph *g);
   void (*del_graph)(struct graph *g);
+  int (*is_digraph)(const struct graph *g);
   void (*load_graph_from_file)(char *filename, struct graph *g);
   int (*export_graph_to_dot)(char *filename, struct graph *g);
 
 } s21_graph;
 
 s21_graph graph_init();
-void print(s21_graph *g);
-void print_graph(s21_graph *graph);
+void print_matrix(s21_graph *g);
+void print_dot(s21_graph *graph);
 
 #endif

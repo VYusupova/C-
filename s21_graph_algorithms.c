@@ -15,25 +15,10 @@ static void visited_add(int node, int *visited, int len_visit) {
   for (int i = 0; i < len_visit; i++)
     if (0 == visited[i]) {
       visited[i] = node;
-      return;
+      return;  // exit if find first vertex not visited
     }
 }
 
-/*
-static int *list_next(int node, s21_graph *g) {
-  int* list = calloc(sizeof(int));
-  int l = 0;
-  for (int i = 0; i < g->size; i++) {
-    if (g->matrix[node][i] > 0){
-      list[l] = i+1;
-      l++;
-      list = realloc(list, (l+1)*sizeof(int));
-    }
-  }
-  if (list[0] == 0) return NULL;
-  else return list;
-}
-*/
 static int node_not_in_visited(int node, int *visit, int len_visit) {
   for (int i = 0; i <= len_visit; i++)
     if (node == visit[i])
@@ -44,8 +29,10 @@ static int node_not_in_visited(int node, int *visit, int len_visit) {
 void put_node_in_stack(stack *s, int node, s21_graph *g, int *visited) {
   for (int i = 0; i < g->size; i++) {
     if (g->matrix[node][i] > 0) {
-      if (node_not_in_visited(i + 1, visited, g->size))
+      if (node_not_in_visited(i + 1, visited, g->size)){
         push(i + 1, s);
+        return;
+        }
     }
   }
 }

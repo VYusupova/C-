@@ -6,10 +6,10 @@ static void question_print(s21_graph *g) {
   scanf("%d", &user_input);
   switch (user_input) {
   case 1:
-    g->print_graph_matrix(g);
+    print_matrix(g);
     break;
   case 2:
-    g->print_graph_dot(g);
+    print_dot(g);
     break;
   default:
     ERR_INPUT;

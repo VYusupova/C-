@@ -127,6 +127,7 @@ s21_graph graph_init() {
   g.load_graph_from_file = &load_graph;
   g.export_graph_to_dot = &export_graph;
   g.del_graph = &remove_graph;
+  g.is_digraph = &is_digraph;
   g.size = 0;
   g.matrix = NULL;
   return g;
