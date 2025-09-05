@@ -47,7 +47,7 @@ test: test/test.gcov.o test/test_graph.gcov.o
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c $< -o $@
 
 s21_graph: $(DIR_LIB)
-	$(CC) $(CFLAGS) -c $@.c  -o $@.o
+	$(CC) $(CFLAGS) -c $@.c $@_print.c  -o $@.o
 	ar rcs $(DIR_LIB)/lib$@.a $@.o $@.h
 	@printf " ✅ $@.a created in directory [$(DIR_LIB)] \n\n"
 
