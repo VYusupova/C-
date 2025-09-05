@@ -48,5 +48,7 @@ typedef struct graph {
 } s21_graph;
 
 s21_graph graph_init();
+void print(s21_graph *g);
+void print_graph(s21_graph *graph);
 
 #endif
