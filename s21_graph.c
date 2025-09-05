@@ -3,20 +3,6 @@
 
 #include "s21_graph.h"
 
-static void print(s21_graph *g) {
-  printf("size graph %02d\n", g->size);
-  if (g->matrix == NULL) {
-    printf("ERROR\n");
-  } else {
-    for (int i = 0; i < g->size; i++) {
-      for (int j = 0; j < g->size; j++) {
-        printf(" %2d", g->matrix[i][j]);
-      }
-      printf("\n");
-    }
-  }
-}
-
 static int **calloc_matrix(int size) {
   int **result;
   if (size < 1)
@@ -119,8 +105,14 @@ int export_graph(char *filename, s21_graph *g) {
   for (int i = 0; i < g->size; i++) {
     for (int j = 0; j < g->size; j++) {
       if (g->matrix[i][j] != 0) {
-        fprintf(file, "    %d -> %d [weight=%d];\n", i + 1, j + 1,
+          if (!digraph) {
+    fprintf(file, "    %d -- %d [weight=%d];\n", i + 1, j + 1,
                 g->matrix[i][j]);
+  } else {
+    fprintf(file, "    %d -> %d [weight=%d];\n", i + 1, j + 1,
+                g->matrix[i][j]);
+  }
+        
       }
     }
   }
@@ -130,37 +122,11 @@ int export_graph(char *filename, s21_graph *g) {
   return 0;
 }
 
-static void print_graph(s21_graph *graph) {
-  if (graph->size == 0) perror(_ERR_SIZE);
-  int digraph = is_digraph(graph);
-  if (digraph == 0) {
-    printf("graph {\n");
-  } else {
-    printf("digraph {\n");
-  }
-  for (int i = 0; i < graph->size; i++) {
-    printf("%c;\n", 'A' + i);
-  }
-  for (int i = 0; i < graph->size; i++) {
-    for (int j = i; j < graph->size; j++) {
-      if (i != j && graph->matrix[i][j] != 0 && digraph == 0) {
-        printf("%c -- %c;\n", 'A' + i, 'A' + j);
-      } else if (graph->matrix[i][j] != 0 && graph->matrix[i][j] != -1 &&
-                 digraph == 1) {
-        printf("%c -> %c;\n", 'A' + i, 'A' + j);
-      }
-    }
-  }
-  printf("}\n");
-}
-
 s21_graph graph_init() {
   s21_graph g;  //= malloc(sizeof(s21_graph));
-  g.print_graph_matrix = &print;
   g.load_graph_from_file = &load_graph;
   g.export_graph_to_dot = &export_graph;
   g.del_graph = &remove_graph;
-  g.print_graph_dot = &print_graph;
   g.size = 0;
   g.matrix = NULL;
   return g;
