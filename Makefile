@@ -50,20 +50,26 @@ s21_graph: $(DIR_LIB)
 	$(CC) $(CFLAGS) -c $@_print.c  -o $@_print.o
 	$(CC) $(CFLAGS) -c $@.c  -o $@.o
 	ar rcs $(DIR_LIB)/lib$@.a $@.o $@_print.o $@.h
-	@printf " ✅ $lib@.a created in directory [$(DIR_LIB)] \n\n"
+	@printf " ✅ lib$@.a created in directory [$(DIR_LIB)] \n\n"
 	rm -rf *.o
 
 s21_graph_algorithms: $(DIR_LIB)
 	$(CC) $(CFLAGS) -c $@.c  -o $@.o
 	ar rcs $(DIR_LIB)/lib$@.a $@.o $@.h
-	@printf " ✅ $lib@.a created in directory [$(DIR_LIB)] \n\n"
-		rm -rf *.o
+	@printf " ✅ lib$@.a created in directory [$(DIR_LIB)] \n\n"
+	rm -rf *.o
 
 stack: $(DIR_LIB)
 	$(CC) $(CFLAGS) -c $@/$@.c  -o $@/$@.o
 	ar rcs $(DIR_LIB)/lib$@.a $@/$@.o $@/$@.h
-	@printf " ✅ libstack.a created in directory [$(DIR_LIB)] \n\n"
-		rm -rf *.o
+	@printf " ✅ lib$@.a created in directory [$(DIR_LIB)] \n\n"
+	rm -rf *.o
+
+s21_queue: $(DIR_LIB)
+	$(CC) $(CFLAGS) -c $@/$@.c  -o $@/$@.o
+	ar rcs $(DIR_LIB)/lib$@.a $@/$@.o 
+	@printf " ✅ lib$@.a created in directory [$(DIR_LIB)] \n\n"
+	rm -rf *.o
 
 $(DIR_LIB):
 	@if [ -d $@ ]; then printf " ✅ directory [$@] - exists  \n" ;\
@@ -71,7 +77,7 @@ $(DIR_LIB):
 	printf " ✅ directory [$@] - created  \n" ; \
 	fi
 
-console: s21_graph s21_graph_algorithms stack
+console: s21_graph s21_graph_algorithms stack 
 	$(CC) $(CFLAGS) -c part5_console_interface/console_interface.c -o $@
 	$(CC) $(CFLAGS) $@  $(LIB_ADD)  -o run
 	./run

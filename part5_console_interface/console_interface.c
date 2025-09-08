@@ -17,19 +17,28 @@ static void question_print(graph *g) {
   }
 }
 
-static void load_grap(graph *g) {
+static graph load_grap() {
   PRINT_LOAD_GRAP;
+  graph g = graph_init();
   char filename[100];
   int c = scanf("%s", filename);
   printf("\n");
   if (1 == c) {
-    g->load_graph_from_file(filename, g);
-    if (g->size == 0)
+     printf("start load\n");
+    
+    g = g.load_graph_from_file(filename);
+    printf("size : %d\n", g.size);
+    if (g.size == 0){
       ERR_PRINT_LOAD_GRAP;
-    else
-      question_print(g);
-  } else
-    ERR;
+      
+      }
+    else{
+      question_print(&g);
+      }
+  } else{
+    ERR;}
+    return g;
+
 }
 
 static void export_infile_dot(graph *g) {
@@ -126,8 +135,8 @@ static void print_least_spanning_tree(graph *g){
 }
 
 int main() {
-  graph g1 = graph_init();
-  graph *g = &g1;
+     printf("start\n");
+  graph g ;//= graph_create();
   int user_input;
 
   int break_flag = 0;
@@ -137,27 +146,28 @@ int main() {
     scanf("%d", &user_input);
     switch (user_input) {
     case 1:
-      load_grap(g);
+
+      g = load_grap();
       break;
     case 2:
 
       break;
     case 3:
-      print_DFS(g);
+      print_DFS(&g);
       break;
     case 4:
-      print_Dijkstra(g);
+      print_Dijkstra(&g);
       break;
     case 5:
-      print_Floyd(g);
+      print_Floyd(&g);
       break;
     case 6:
-      print_least_spanning_tree(g);
+      print_least_spanning_tree(&g);
       break;
     case 7:
       break;
     case 8:
-      export_infile_dot(g);
+      export_infile_dot(&g);
     case 9:
       break_flag = 1;
       break;

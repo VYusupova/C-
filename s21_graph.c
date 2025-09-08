@@ -3,18 +3,6 @@
 
 #include "s21_graph.h"
 
-graph *graph_create() {
-	graph *graph = malloc(sizeof(graph));
-	if(graph) {
-		graph->matrix = NULL;
-		graph->size = 0;
-    graph.load_graph_from_file = &load_graph;
-    graph.export_graph_to_dot = &export_graph;
-    graph.del_graph = &remove_graph;
-    graph.is_digraph = &is_digraph;
-	}
-	return graph;
-}
 
 /*
 static void graph_free(graph *graph) {
@@ -30,16 +18,7 @@ static void graph_free(graph *graph) {
 }
 */
 
-graph *load_graph_from_file(char *filename) {
-	FILE *file = fopen(filename, "r");
-	if(!file) return NULL;
 
-	graph *graph = graph_create();
-  load_graph(filename, graph);
-
-	
-	return graph;
-}
 
 static int is_digraph(const graph *graph) {
   int result = 0;
@@ -128,7 +107,13 @@ static void load_graph(char *filename, graph *graph) {
   printf("load graph end \n");
 }
 
+graph load_graph_from_file(char *filename) {
+	graph graph = graph_init();
+        load_graph(filename, &graph);
 
+	
+	return graph;
+}
 
 int export_graph(char *filename, graph *g) {
   if (g->size == 0) return -1;
@@ -161,10 +146,10 @@ int export_graph(char *filename, graph *g) {
   fclose(file);
   return 0;
 }
-/*
+
 graph graph_init() {
-  graph g = graph_create();
-  g.load_graph_from_file = &load_graph;
+  graph g ;//= graph_create();
+  g.load_graph_from_file = &load_graph_from_file;
   g.export_graph_to_dot = &export_graph;
   g.del_graph = &remove_graph;
   g.is_digraph = &is_digraph;
@@ -172,5 +157,21 @@ graph graph_init() {
   //g.matrix = NULL;
   return g;
 }
-*/
+
+
+
+graph *graph_create() {
+     
+	graph *graph = malloc(sizeof(graph));
+	if(graph) {
+		graph->matrix = NULL;
+		graph->size = 0;
+    //graph->load_graph_from_file = &load_graph_from_file;
+    //graph->export_graph_to_dot = &export_graph;
+    //graph->del_graph = &remove_graph;
+    //graph->is_digraph = &is_digraph;
+   
+	}
+	return graph;
+}
 #endif

@@ -96,7 +96,7 @@ static int *dfs_iterative(graph *g, int start_node) {
   return visited;
 }
 
-int *depth_first_search(s21_graph *graph, int start_vertex) {
+int *depth_first_search(graph *graph, int start_vertex) {
   int *visit = dfs_iterative(graph, start_vertex);
   return visit;
 }
