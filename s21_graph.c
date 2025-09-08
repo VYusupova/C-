@@ -41,7 +41,7 @@ graph *load_graph_from_file(char *filename) {
 	return graph;
 }
 
-static int is_digraph(const s21_graph *graph) {
+static int is_digraph(const graph *graph) {
   int result = 0;
   for (int i = 0; i < graph->size; i++) {
     for (int j = 0; j < graph->size; j++) {
@@ -75,7 +75,7 @@ static int **calloc_matrix(int size) {
   return result;
 }
 
-static void remove_graph(s21_graph *g) {
+static void remove_graph(graph *g) {
   if (g->matrix != NULL) {
     for (int i = 0; i < g->size; i++) free(g->matrix[i]);
     free(g->matrix);
@@ -84,7 +84,7 @@ static void remove_graph(s21_graph *g) {
   }
 }
 
-static void read_graph_el(FILE *f, s21_graph *graph) {
+static void read_graph_el(FILE *f, graph *graph) {
   if (graph->matrix != NULL) {
     for (int i = 0; i < graph->size; i++) {
       for (int j = 0; j < graph->size; j++) {
@@ -102,7 +102,7 @@ static void read_graph_el(FILE *f, s21_graph *graph) {
   }
 }
 
-static void load_graph(char *filename, s21_graph *graph) {
+static void load_graph(char *filename, graph *graph) {
   printf("load graph\n");
   FILE *f = fopen(filename, "r");
   if (f == NULL)
@@ -130,7 +130,7 @@ static void load_graph(char *filename, s21_graph *graph) {
 
 
 
-int export_graph(char *filename, s21_graph *g) {
+int export_graph(char *filename, graph *g) {
   if (g->size == 0) return -1;
   FILE *file = fopen(filename, "w");
   if (!file) return -1;
@@ -162,8 +162,8 @@ int export_graph(char *filename, s21_graph *g) {
   return 0;
 }
 /*
-s21_graph graph_init() {
-  s21_graph g = graph_create();
+graph graph_init() {
+  graph g = graph_create();
   g.load_graph_from_file = &load_graph;
   g.export_graph_to_dot = &export_graph;
   g.del_graph = &remove_graph;
