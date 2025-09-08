@@ -3,7 +3,7 @@
 
 #include "s21_graph.h"
 
-void print_matrix(s21_graph *g) {
+void print_matrix(graph *g) {
   printf("size graph %02d\n", g->size);
   if (g->matrix == NULL) {
     printf("ERROR\n");
@@ -17,7 +17,7 @@ void print_matrix(s21_graph *g) {
   }
 }
 
-void print_dot(s21_graph *graph) {
+void print_dot(graph *graph) {
   if (graph->size == 0) perror(_ERR_SIZE);
   int digraph = graph->is_digraph(graph);
   if (digraph == 0) {
