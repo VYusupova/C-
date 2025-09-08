@@ -1,6 +1,6 @@
 #include "console_define.h"
 
-static void question_print(s21_graph *g) {
+static void question_print(graph *g) {
   PRINT_QUESTION;
   int user_input;
   scanf("%d", &user_input);
@@ -17,7 +17,7 @@ static void question_print(s21_graph *g) {
   }
 }
 
-static void load_grap(s21_graph *g) {
+static void load_grap(graph *g) {
   PRINT_LOAD_GRAP;
   char filename[100];
   int c = scanf("%s", filename);
@@ -32,7 +32,7 @@ static void load_grap(s21_graph *g) {
     ERR;
 }
 
-static void export_infile_dot(s21_graph *g) {
+static void export_infile_dot(graph *g) {
   PRINT_OUT_GRAP;
   char filename[256];
   int c = scanf("%s", filename);
@@ -46,7 +46,7 @@ static void export_infile_dot(s21_graph *g) {
     ERR;
 }
 
-static void print_DFS(s21_graph *g) {
+static void print_DFS(graph *g) {
   int *visit;
   if (g->size == 0)
     ERR_GRAF_EMPTY;
@@ -69,7 +69,7 @@ static void print_DFS(s21_graph *g) {
   }
 }
 
-static void print_Dijkstra(s21_graph *g) {
+static void print_Dijkstra(graph *g) {
   int short_path = 0;
   if (g->size == 0)
     ERR_GRAF_EMPTY;
@@ -101,7 +101,7 @@ static void out_matrix(int size, int **m){
   }
 }
 
-static void print_Floyd(s21_graph *g) {
+static void print_Floyd(graph *g) {
   int **short_dist = 0;
   if (g->size == 0)
     ERR_GRAF_EMPTY;
@@ -112,7 +112,7 @@ static void print_Floyd(s21_graph *g) {
   out_matrix(g->size, short_dist);
 }
 
-static void print_least_spanning_tree(s21_graph *g){
+static void print_least_spanning_tree(graph *g){
     printf("мин. остов. дерев результ. матр. смежности :\n");
     int **mst = get_least_spanning_tree(g);
     if (mst != NULL ) {
@@ -126,8 +126,8 @@ static void print_least_spanning_tree(s21_graph *g){
 }
 
 int main() {
-  s21_graph g1 = graph_init();
-  s21_graph *g = &g1;
+  graph g1 = graph_init();
+  graph *g = &g1;
   int user_input;
 
   int break_flag = 0;
@@ -169,4 +169,5 @@ int main() {
 
   return 0;
 }
+
 
