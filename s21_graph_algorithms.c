@@ -2,16 +2,45 @@
 #define S21_GRAPH_ALGORITHMS_H
 
 #include "s21_graph_algorithms.h"
+//#include "s21_queue.c"
 #include "s21_graph.h"
 #include "stack/stack.h"
 
 #define S21_INF (2147483647 / 4) /* безопасная "бесконечность" */
 
+//static int *breadth_first_search(graph *graph, int start_vertex) {
+//	if(g->size == 0)
+//		perror("_ERR_GRAPH_IS_EMPTY");
+//	else {
+//		int *visited = calloc(g->size, sizeof(int));
+//		visited[start_vertex] = 1;
+//		queue *q = create_queue();
+//		enqueue(q, start_vertex);
+//		
+//		while(!is_empty(q)) {
+//			int current_vertex = dequeue(q);
+//			node *temp = graph->matrix[current_vertex];
+//
+//			while(temp) {
+//				int adj_vertex = temp->date;
+//				if(visited[adj_vertex] == 0) {
+//					visited[adj_vertex] = 1;
+//					enqueue(q, adj_vertex);
+//				}
+//				temp = temp->tail;
+//			}
+//		}
+//	}
+//	return visited;
+//}
+
+
 static void visited_add(int node, int *visited, int len_visit) {
   for (int i = 0; i < len_visit; i++)
+     // Если нашли первую непосещенную вершину, то сразу выходим
     if (0 == visited[i]) {
       visited[i] = node;
-      return;  // exit if find first vertex not visited
+      return; 
     }
 }
 
@@ -22,7 +51,7 @@ static int node_not_in_visited(int node, int *visit, int len_visit) {
   return 1;
 }
 
-void put_node_in_stack(stack *s, int node, s21_graph *g, int *visited) {
+void put_node_in_stack(stack *s, int node, graph *g, int *visited) {
   for (int i = 0; i < g->size; i++) {
     if (g->matrix[node][i] > 0) {
       if (node_not_in_visited(i + 1, visited, g->size)){
@@ -43,7 +72,7 @@ void put_node_in_stack(stack *s, int node, s21_graph *g, int *visited) {
 4. Необходимо повторять шаги 2 и 3, пока стек не станет пустым.
 
 */
-static int *dfs_iterative(s21_graph *g, int start_node) {
+static int *dfs_iterative(graph *g, int start_node) {
   int *visited = calloc(g->size, sizeof(int));
   if (g->size == 0)
     perror("_ERR_GRAPH_IS_EMPTY");
@@ -66,8 +95,6 @@ static int *dfs_iterative(s21_graph *g, int start_node) {
   }
   return visited;
 }
-
-// TO DO  добавить функцию вывода вершин которые были пройдены
 
 int *depth_first_search(s21_graph *graph, int start_vertex) {
   int *visit = dfs_iterative(graph, start_vertex);
@@ -101,7 +128,7 @@ alg;
 однако он не накладывает ограничения на вид графов для которых будет
 использоваться. Сложность O(V²) */
 
-int get_shortest_path_between_vertices(s21_graph *graph, int vertex1,
+int get_shortest_path_between_vertices(graph *graph, int vertex1,
                                        int vertex2) {
   if (!graph || !graph->matrix || vertex1 >= graph->size ||
       vertex2 >= graph->size)
@@ -138,7 +165,7 @@ int get_shortest_path_between_vertices(s21_graph *graph, int vertex1,
 }
 
 /* Алгоритм Флойда-Уоршелла: кратчайшие пути между всеми вершинами */
-int **get_shortest_paths_between_all_vertices(s21_graph *graph) {
+int **get_shortest_paths_between_all_vertices(graph *graph) {
   if (!graph)
     return NULL;
 
@@ -167,7 +194,7 @@ int **get_shortest_paths_between_all_vertices(s21_graph *graph) {
 }
 
 
-static int conditionsPRIM (s21_graph *g){
+static int conditionsPRIM (graph *g){
 int result = 1;
   if (!g) result=0;
   else {
@@ -190,20 +217,15 @@ return result;
  */
 
 
-int **get_least_spanning_tree(s21_graph *g) 
+int **get_least_spanning_tree(graph *g) 
 {
   if (conditionsPRIM(g) != 1) return NULL;
   int size = g->size;
   int ** mst = malloc(size * sizeof(int *));
 
-  // родительская вершина для i в MST.
+
   int *parent = malloc((size + 1) * sizeof(int));
-
-  // минимальный вес ребра, соединяющего вершину i с текущим MST (изначально
-  // INF).
   double *weight = malloc((size + 1) * sizeof(double));
-
-  // флаг, указывающий, включена ли вершина i в MST
   int *in_mst = calloc((size + 1), sizeof(int));
 
   for (int i = 1; i <= size; i++) {
@@ -239,8 +261,8 @@ int **get_least_spanning_tree(s21_graph *g)
       mst[u - 1][parent[u] - 1] = g->matrix[u - 1][parent[u] - 1];
     }
 
-    // Обновление ключей для соседей u. Если ребро u → v имеет меньший вес, чем
-    // текущий weight[v], обновляется weight[v] и parent[v].
+    // Обновление ключей для соседей. Если ребро  имеет меньший вес, чем
+    // текущий, обновляется вес и роидтель.
     for (int v = 1; v <= size; v++) {
       if (g->matrix[u - 1][v - 1] && !in_mst[v] &&
           g->matrix[u - 1][v - 1] < weight[v]) {
