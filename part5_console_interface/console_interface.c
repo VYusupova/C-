@@ -134,6 +134,20 @@ static void print_least_spanning_tree(graph *g){
     
 }
 
+static void analitic_solve_traviling(graph *g){
+    if (g->size > 1) {
+    tsm_result *t = greedy_tsp(g);
+    printf("solve traveling = { ");
+    for (int i = 0; i < g->size; i++)
+    	printf("%d ", t->vertices[i]);
+    printf(" } distance = %f\n", t->distance);
+    }
+    else {
+        printf("not valid graph from solve traveling\n");
+    }
+
+}
+
 int main() {
      printf("start\n");
   graph g ;//= graph_create();
@@ -145,6 +159,9 @@ int main() {
     PRINT_CHOOSE;
     scanf("%d", &user_input);
     switch (user_input) {
+    case 0:
+          break_flag = 1;
+          break;
     case 1:
 
       g = load_grap();
@@ -169,7 +186,7 @@ int main() {
     case 8:
       export_infile_dot(&g);
     case 9:
-      break_flag = 1;
+      analitic_solve_traviling(&g);
       break;
     default:
       ERR_INPUT;

@@ -1,10 +1,8 @@
-#ifndef S21_GRAPH_ALGORITHMS_H
-#define S21_GRAPH_ALGORITHMS_H
+#ifndef S21_GRAPH_ALGORITHMS_C
+#define S21_GRAPH_ALGORITHMS_C
 
 #include "s21_graph_algorithms.h"
-//#include "s21_queue.c"
-#include "s21_graph.h"
-#include "stack/stack.h"
+
 
 #define S21_INF (2147483647 / 4) /* безопасная "бесконечность" */
 
@@ -277,4 +275,68 @@ int **get_least_spanning_tree(graph *g)
   free(in_mst);
   return mst;
 }
+
+/*
+ Решение задачи коммивояжера с помощью жадного алгоритма.
+ Алгоритм для быстрого поиска приближенного решения TSM =)).
+ Начинает с фиксированной стартовой вершины (например, 1).
+ На каждом шаге выбирает ближайшую непосещенную вершину.
+ Формирует цикл, возвращаясь в стартовую вершину. Сложность O(n²)
+ */
+
+
+static int next_min_node(int current, int * visited, graph * g, int *min_dist ) {
+    int next = -1;
+    for (int j = 0; j < g -> size; j++) {
+        int edge = g -> matrix[current][j];
+        if (!visited[j] && edge > 0 && edge < *min_dist) {
+            *min_dist = edge;
+            next = j; 
+        }
+    }
+    return next;
+}
+
+tsm_result * greedy_tsp(graph * g) {
+    tsm_result * tsm;
+    if (g -> size == 0)
+        perror("_ERR_GRAPH_IS_EMPTY");
+    else {
+       tsm  = malloc(sizeof(tsm_result));
+       tsm->vertices = malloc((g->size + 1) * sizeof(int));
+       tsm->distance = 0; ;
+        //res = calloc_tsm(res, g -> size);
+        int * visited = calloc(g -> size, sizeof(int));
+        int current = 0;
+        tsm->vertices[0] = 1;
+        visited[0] = 1;
+        for (int i = 1; i < g -> size; i++) {
+            int next = -1;
+            int min_dist = INT_MAX;
+            next = next_min_node(current, visited, g, &min_dist ) ;
+            if (next == -1) {
+                    free(tsm->vertices);
+    free(tsm);
+    tsm = NULL;              break;
+            }
+            tsm -> vertices[i] = next + 1;
+            tsm -> distance += min_dist;
+            visited[next] = 1;
+            current = next;
+        }
+        if (tsm) {
+            // проверяем существует ли обратное ребро
+            if (g -> matrix[current][0] <= 0) {
+                   free(tsm->vertices);
+    free(tsm);
+    tsm = NULL;             } else {
+                tsm-> vertices[g -> size] = 1;
+                tsm-> distance += g -> matrix[current][0];
+            }
+        }
+        free(visited);
+    }
+    return tsm;
+}
+
 #endif

@@ -40,14 +40,17 @@ breadth_first_search(graph *graph, int start_vertex) — поиск в шири�
 #include <stdio.h>
 #include <limits.h>
 #include <stdlib.h>
-
-struct tsm_result {
-    int* vertices;    // массив с искомым маршрутом (с порядком обхода вершин)
-    double distance;  // длина этого маршрута
-}
-
+//#include "s21_queue.c"
+#include "s21_graph.h"
+#include "stack/stack.h"
 
 #define _ERR_GRAPH_IS_EMPT "ошибка обхода графа - граф пустой\n"
+
+
+typedef struct s21_tsm_result {
+    int* vertices;    // массив с искомым маршрутом (с порядком обхода вершин)
+    double distance;  // длина этого маршрута
+} tsm_result;
 
 int *depth_first_search(graph *graph, int start_vertex);
 
@@ -75,5 +78,6 @@ get_least_spanning_tree(graph *graph) — поиск наименьшего ос
 */
 
 int **get_least_spanning_tree(graph *g) ;
+tsm_result * greedy_tsp(graph * g);
 
 #endif

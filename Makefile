@@ -23,7 +23,7 @@ LIB_ADD := -L ./$(DIR_LIB) -ls21_graph -ls21_graph_algorithms -lstack   #-I $(DI
 all: clean s21_graph s21_graph_algorithms
 
 clean:
-	$(RM) $(TEST) $(LIB_GRAPH)  $(LIB_GRAPH_ALG) *.o
+	$(RM) $(TEST) $(LIB_GRAPH)  $(LIB_GRAPH_ALG) *.o */*.o
 	rm -rf $(DIR_LIB)
 	rm -rf test/*.gcov.*
 	rm -rf gcov/
