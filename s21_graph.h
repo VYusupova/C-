@@ -35,7 +35,7 @@ export_graph_to_dot(char *filename) — выгрузка графа в файл 
 #define _ERR_SIZE "размер матрицы не может быть меньше 1 или отрицательным"
 #define _ERR_CALLOC "ошибка выделения памяти для матрицы графа"
 
-typedef struct graph {
+typedef struct s21_graph {
   int **matrix;
   int size;
 
@@ -46,10 +46,10 @@ typedef struct graph {
   void (*load_graph_from_file)(char *filename, struct graph *g);
   int (*export_graph_to_dot)(char *filename, struct graph *g);
 
-} s21_graph;
+} graph;
 
-s21_graph graph_init();
-void print_matrix(s21_graph *g);
-void print_dot(s21_graph *graph);
+graph graph_init();
+void print_matrix(graph *g);
+void print_dot(graph *graph);
 
 #endif
