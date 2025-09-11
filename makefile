@@ -21,12 +21,6 @@ CPPCHECK = -q --enable=all --inconclusive --suppress=missingIncludeSystem --chec
 PATH_TEST = test
 TEST = run_tests
 
-STL_LIB = libmy1.a
-
-.PHONY: all clean install tetris uninstall test gcov_report rebuild valgrind formated_code cppcheck
-
-all: clean install
-
 install: mkdir tetris dvi
 ifdef DIR_INSTALL
 	@if [ -d $(DIR_INSTALL) ]; then \
@@ -41,12 +35,6 @@ else
 	$(error DIR_INSTALL must be set!)
 endif
 
-uninstall: clean
-	$(RM) $(DIR_INSTALL)tetris
-	$(RM) $(DIR_INSTALL)tetris_max_score.txt
-	$(RM) $(DIR_INSTALL)readME.md
-	rm -rf $(DIR_INSTALL)misc
-
 tetris: $(OBJS_FSMSWITCHCASE) $(BACK) $(FRONT)
 	$(CC) $(CFLAGS) $^ -o $@ -lncurses
 
@@ -57,15 +45,6 @@ mkdir:
 	mkdir -p ~/$(DIR_GAME)
 	mkdir -p $(BACKEND)
 	mkdir -p $(FRONTEND)
-
-clean:
-	$(RM) out/*.o $(NAME)
-	rm -rf out/ dvi/ gcov/
-	rm -rf *coverage.info
-	rm -rf $(TEST)
-	$(RM) test/*.gcov.*
-	$(RM) *.gcno
-	rm -rf tetris_max_score.txt
 
 test_file:
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) -c test/test.c -o  test/tests.gcov.o
@@ -198,15 +177,5 @@ CFLAGS = -Wall -Wextra -Werror -std=c++20 #-lpthread -pedantic -lsubunit -pthrea
 #-Wbool-compire - Предупреждение о сравнении int с bool
 #-pedantic - соответствие определенному стандарту
 
-
-
-# CPPCHECK = -q --enable=all --inconclusive --suppress=missingIncludeSystem --check-level=exhaustive 
-# --check-level=exhaustive  Ограничивающий анализ ветвей. Используйте --check-level=исчерпывающий для анализа всех ветвей. 
-# Параметр --enable=all в инструменте CppCheck включает все возможные проверки
-# Параметр --suppress переводится как подавлять, т.е. --suppress=missingIncludeSystem не будет писать в ошибки если не найдена какая то библиотека
-all : lib
-# Параметр -q означает «тихий» режим — выводятся только сообщения об ошибках, а не ход выполнения на экране.
- Разрешите, чтобы Cppcheck сообщал о результатах, даже если анализ не дал результатов. При
-# Параметр --inconclusive использовании этой опции возможны ложные срабатывания. Каждый результат должен быть тщательно проанализирован, прежде чем вы узнаете, хороший он или плохой.
 
 # 
