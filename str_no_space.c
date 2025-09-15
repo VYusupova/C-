@@ -5,8 +5,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
-static void print_str(const char* str) {
+/*1й вариант рабочий*/
+static void print_str1(const char* str) {
   int i = 0;
   char space = ' ';
   // посчитаем длину строки
@@ -15,7 +15,6 @@ static void print_str(const char* str) {
     i++;
   }
   //  выделим память под новую строку
-
   char* out = NULL;
   /*под результирующую строку надо выделить на один симво больше
   так можно избежать ситуации когда в веденной строке нечего будет удалять
@@ -44,7 +43,30 @@ static void print_str(const char* str) {
   printf("%s", out);
   free(out);
 }
-/*
+
+#include <string.h>
+
+/*2й вариант используя стринговые функции разбиение строки на токены
+проблем в том что финальный энтер не убрать*/
+void print_str2(char* str) {
+  char* word = strtok(str, " ");
+  if (word != NULL) {
+    printf("%s", word);
+    word = strtok(NULL, " ");
+    do {
+      printf(" %s", word);
+      char* result = strchr(word, '\n');  // Ищем символ '\n'
+      if (result != NULL) {
+        break;
+      } else {
+        word = strtok(NULL, " ");
+      }
+    } while (word != NULL);
+  }
+}
+
+/*тестовые строки
+oneword
 test string norm
 test    string     space normal
 test    string     last space
@@ -58,9 +80,12 @@ int main() {
   if (read != (unsigned long int)-1) {
     if (str != NULL) {
       // printf("%s",str);
-      printf("<");
-      print_str(str);
-      printf(">");
+      printf("\nпервый вариант <");
+      print_str1(str);
+      printf(">\n");
+      printf("\nвторой вариант <");
+      print_str2(str);
+      printf(">\n");
       free(str);
     }
   } else {
