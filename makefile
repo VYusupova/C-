@@ -1,7 +1,7 @@
 CC = gcc #-lstdc++
 CFLAGS = -Wall -Wextra -Werror  
 
-arr: 
+arr:
 	$(CC) $(CFLAGS) array_numbers.c -o task01
 	./task01
 
@@ -10,29 +10,33 @@ v_arr:
 
 c_arr:
 	#cppcheck --enable=all --suppress=missingIncludeSystem array_numbers.c
-	cppcheck -q --enable=all --inconclusive array_numbers.c
+	cppcheck --enable=all --inconclusive array_numbers.c
 		
 str: 
+	clang-format -i  *.h  *.c
+	cppcheck --enable=all str_no_space.c
 	$(CC) $(CFLAGS) str_no_space.c -o task02
-	./task02
-
-v_str: 
 	valgrind --leak-check=full --track-origins=yes ./task02
 
-c_str:
-	#cppcheck --enable=all --suppress=missingIncludeSystem str_no_space.c
-	cppcheck -q --enable=all --inconclusive str_no_space.c
-			
-formated_code:
-	clang-format --style=Google -i *.cpp
-	clang-format --style=Google -i *.h
+logic: logic_task.c
+	clang-format -i  *.h  *.c
+	cppcheck --enable=all $<
+	$(CC) $(CFLAGS) $< -o $@
+	valgrind --leak-check=full --track-origins=yes ./$@
 
+numbers: numbers.c
+	clang-format -i  *.h  *.c
+	cppcheck --enable=all $<
+	$(CC) $(CFLAGS) $< -o $@
+	valgrind --leak-check=full --track-origins=yes ./$@
 
-
+telephone: telephone.c
+	clang-format -i  *.h  *.c
+	cppcheck --enable=all $<
+	$(CC) $(CFLAGS) $< -o $@
+	valgrind --leak-check=full --track-origins=yes ./$@
 
 rebuild: clean all
 
-
-#rm -r LIB # удалить директорию и все ее содержимое рекурсивно -r
-#mv $(NAME).o LIB/$(NAME).
-#	mkdir LIB
+clean:
+	rm -rf task01 task02 logic numbers
