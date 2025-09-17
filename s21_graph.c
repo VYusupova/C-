@@ -3,23 +3,6 @@
 
 #include "s21_graph.h"
 
-
-/*
-static void graph_free(graph *graph) {
-	if(graph) {
-		if(graph->matrix) {
-			for(int i = 0; i < graph->size; i++) {
-				free(graph->matrix[i]);
-			}
-			free(graph->matrix);
-		}
-	free(graph);
-	}
-}
-*/
-
-
-
 static int is_digraph(const graph *graph) {
   int result = 0;
   for (int i = 0; i < graph->size; i++) {
@@ -32,22 +15,20 @@ static int is_digraph(const graph *graph) {
   return result;
 }
 
-static int **calloc_matrix(int size) {
+/*функция не проверят что ей передано отрицательное число
+это надо делать до вызова функции */
+static int **calloc_matrix(unsigned int size) {
   int **result;
-  if (size < 1)
-    perror(_ERR_SIZE);
-  else {
-    result = (int **)calloc(size, sizeof(int *));
-    if (!result) {
-      perror(_ERR_CALLOC);
-    } else {
-      for (int i = 0; i < size; i++) {
-        result[i] = (int *)calloc(size, sizeof(int));
-        if (!result[i]) {
-          while (i--) free(result[i]);
-          free(result);
-          perror(_ERR_CALLOC);
-        }
+  result = (int **)calloc(size, sizeof(int *));
+  if (!result) {
+    perror(_ERR_CALLOC);
+  } else {
+    for (int i = 0; i < size; i++) {
+      result[i] = (int *)calloc(size, sizeof(int));
+      if (!result[i]) {
+        while (i--) free(result[i]);
+        free(result);
+        perror(_ERR_CALLOC);
       }
     }
   }
@@ -81,8 +62,7 @@ static void read_graph_el(FILE *f, graph *graph) {
   }
 }
 
-static void load_graph(char *filename, graph *graph) {
-  printf("load graph\n");
+static void load_graph(const char *filename, graph *graph) {
   FILE *f = fopen(filename, "r");
   if (f == NULL)
     perror(_ERR_OPEN);
@@ -103,20 +83,19 @@ static void load_graph(char *filename, graph *graph) {
     }
     fclose(f);
   }
-
-  printf("load graph end \n");
 }
 
-graph load_graph_from_file(char *filename) {
-	graph graph = graph_init();
-        load_graph(filename, &graph);
-
-	
-	return graph;
+graph load_graph_from_file(const char *filename) {
+  graph graph = graph_init();
+  load_graph(filename, &graph);
+  return graph;
 }
 
-int export_graph(char *filename, graph *g) {
-  if (g->size == 0) return -1;
+int export_graph(const char *filename, const graph *g) {
+  if (g->size == 0) {
+    perror(_ERR_SIZE);
+    return -1;
+  }
   FILE *file = fopen(filename, "w");
   if (!file) return -1;
 
@@ -130,14 +109,15 @@ int export_graph(char *filename, graph *g) {
   for (int i = 0; i < g->size; i++) {
     for (int j = 0; j < g->size; j++) {
       if (g->matrix[i][j] != 0) {
-          if (!digraph) {
-    fprintf(file, "    %d -- %d [weight=%d];\n", i + 1, j + 1,
-                g->matrix[i][j]);
-  } else {
-    fprintf(file, "    %d -> %d [weight=%d];\n", i + 1, j + 1,
-                g->matrix[i][j]);
-  }
-        
+        if (!digraph) {
+          if (j >= i) {
+            fprintf(file, "    %d -- %d [weight=%d];\n", i + 1, j + 1,
+                    g->matrix[i][j]);
+          }
+        } else {
+          fprintf(file, "    %d -> %d [weight=%d];\n", i + 1, j + 1,
+                  g->matrix[i][j]);
+        }
       }
     }
   }
@@ -148,30 +128,14 @@ int export_graph(char *filename, graph *g) {
 }
 
 graph graph_init() {
-  graph g ;//= graph_create();
+  graph g;  //= graph_create();
   g.load_graph_from_file = &load_graph_from_file;
   g.export_graph_to_dot = &export_graph;
   g.del_graph = &remove_graph;
   g.is_digraph = &is_digraph;
-  //g.size = 0;
-  //g.matrix = NULL;
+  g.size = 0;
+  g.matrix = NULL;
   return g;
 }
 
-
-
-graph *graph_create() {
-     
-	graph *graph = malloc(sizeof(graph));
-	if(graph) {
-		graph->matrix = NULL;
-		graph->size = 0;
-    //graph->load_graph_from_file = &load_graph_from_file;
-    //graph->export_graph_to_dot = &export_graph;
-    //graph->del_graph = &remove_graph;
-    //graph->is_digraph = &is_digraph;
-   
-	}
-	return graph;
-}
 #endif
