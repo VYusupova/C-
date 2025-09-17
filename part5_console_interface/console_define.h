@@ -15,52 +15,78 @@ s21_graph и s21_graph_algorithms. Содержит функционал:
 7. Решение задачи коммивояжера с выводом результирующего маршрута и его длины в
 консоль.
 
-добавлен дополнительный функционал печати матрицы смежности и печати в формате dot
- и выгрузки на диск файла в формате dot
+добавлен дополнительный функционал печати матрицы смежности и печати в формате
+dot и выгрузки на диск файла в формате dot
 
 */
+
+#include <stdio.h>
+#include <time.h>
 
 #include "../s21_graph.h"
 #include "../s21_graph_algorithms.h"
 
-#include <stdio.h>
-
 #define RED_ERROR "\033[31m"
 #define COLOR_DEFAULT "\033[0m\n"
 
-#define PRINT_CHOOSE                                                                                                               \
-  printf("ВЫБОР ДЕЙСТВИЯ: \n");                                                                                                    \
-  printf("\t1. Загрузка исходного графа из файла.\n");                                                                             \
-  printf(                                                                                                                          \
-      "\t2. Обход графа в ширину с выводом результата обхода в консоль.\n");                                                       \
-  printf(                                                                                                                          \
-      "\t3. Обход графа в глубину с выводом результата обхода в консоль.\n");                                                      \
-  printf("\t4. Поиск кратчайшего пути между произвольными двумя вершинами с " \
-         "выводом результата в консоль.\n");                                                                                       \
-  printf("\t5. Поиск кратчайших путей между всеми парами вершин в графе с "       \
-         "выводом результирующей матрицы в консоль.\n");                                                                           \
-  printf("\t6. Поиск минимального остовного дерева в графе с выводом "               \
-         "результирующей матрицы смежности в консоль.\n");                                                                         \
-  printf("\t7. Решение задачи коммивояжера с выводом результирующего "             \
-         "маршрута и его длины в консоль.\n");                                                                                     \
-  printf("\t8. Выгрзуить на диск в файл с расширением dot\n");\
-   printf("\t9. Part 6\n"); \
-   printf("\t0. EXIT \n")
+#define START_VERTEX \
+  "введите чиcло от 0 до %d вершину с которой надо начать обход :"
 
-#define PRINT_QUESTION                                                         \
-  printf("ВЫВЕСТИ ГРАФ на консоль в формате: \n");                             \
-  printf("\t1. матрицы смежности\n");                                          \
-  printf("\t2. dot\n");                                                        \
+#define PRINT_CHOOSE                                                                                                            \
+  printf("ВЫБОР ДЕЙСТВИЯ: \n");                                                                                                 \
+  printf("\t1. Загрузка исходного графа из файла.\n");                                                                          \
+  printf(                                                                                                                       \
+      "\t2. Обход графа в ширину с выводом результата обхода в консоль.\n");                                                    \
+  printf(                                                                                                                       \
+      "\t3. Обход графа в глубину с выводом результата обхода в консоль.\n");                                                   \
+  printf(                                                                                                                       \
+      "\t4. Поиск кратчайшего пути между произвольными двумя вершинами с " \
+      "выводом результата в консоль.\n");                                                                                       \
+  printf(                                                                                                                       \
+      "\t5. Поиск кратчайших путей между всеми парами вершин в графе с "       \
+      "выводом результирующей матрицы в консоль.\n");                                                                           \
+  printf(                                                                                                                       \
+      "\t6. Поиск минимального остовного дерева в графе с выводом "               \
+      "результирующей матрицы смежности в консоль.\n");                                                                         \
+  printf(                                                                                                                       \
+      "\t7. Решение задачи коммивояжера с выводом результирующего "             \
+      "маршрута и его длины в консоль.\n");                                                                                     \
+  printf("\t8. Выгрузить на диск в файл с расширением dot\n");                                                                  \
+  printf(                                                                                                                       \
+      "\t9. Part 6 сравнительное исследование скорости работы трёх "                 \
+      "алгоритмов\n");                                                                                                          \
+  printf("\t0. EXIT \n")
+
+#define PRINT_QUESTION                             \
+  printf("ВЫВЕСТИ ГРАФ на консоль в формате: \n"); \
+  printf("\t1. матрицы смежности\n");              \
+  printf("\t2. dot\n");                            \
   printf("\tany key. без вывода\n")
 
-#define PRINT_LOAD_GRAP printf("введите путь и  имя файла c графом : ")
-#define PRINT_OUT_GRAP printf("введите путь и  имя файла куда сделать выгрузку : ")
-#define ERR_PRINT_LOAD_GRAP                                                    \
-  printf( RED_ERROR "ERROR не удалось считать, неправильные прараметры в файле\n" COLOR_DEFAULT)
-#define ERR printf( RED_ERROR "ERROR что то пошло не так\n" COLOR_DEFAULT)
-#define ERR_INPUT printf(RED_ERROR "ERROR what is this? try again\n" COLOR_DEFAULT)
-#define ERR_INPUT_DOT                                                          \
-  printf(RED_ERROR "ERROR ты ввел какую-то ерунду, поэтому вершина с которой я начну будет 0" COLOR_DEFAULT)
-#define ERR_GRAF_EMPTY                                                         \
-  printf(RED_ERROR "ERROR граф пустой! загрузите граф, потом может построю обход =)\n" COLOR_DEFAULT)
+#define PRINT_QUESTION_N \
+  printf(                \
+      " введите число от 1 до 1000 что бы вычислить время , \
+потраченное  на решение задачи коммивояжера N раз подряд, каждым из алгоритмов: \n")
 
+#define PRINT_LOAD_GRAP printf("введите путь и  имя файла c графом : ")
+#define PRINT_OUT_GRAP \
+  printf("введите путь и  имя файла куда сделать выгрузку : ")
+#define ERR_PRINT_LOAD_GRAP                                                                            \
+  printf(RED_ERROR                                                                                     \
+         "ERROR не удалось считать, неправильные прараметры в " \
+         "файле\n" COLOR_DEFAULT)
+#define ERR printf(RED_ERROR "что то пошло не так\n" COLOR_DEFAULT)
+#define ERR_INPUT printf(RED_ERROR "what is this? try again\n" COLOR_DEFAULT)
+#define ERR_INPUT_DOT                                                                                                 \
+  printf(RED_ERROR                                                                                                    \
+         "ты ввел какую-то ерунду, поэтому вершина с которой я начну " \
+         "будет 0" COLOR_DEFAULT)
+#define ERR_GRAF_EMPTY                                                                                          \
+  printf(RED_ERROR                                                                                              \
+         "граф пустой! загрузите граф, потом может построю обход " \
+         "=)\n" COLOR_DEFAULT)
+#define ERR_GRAF_NOT_VALID \
+  printf(RED_ERROR "Граф не подходит для алгоритма \n" COLOR_DEFAULT)
+
+#define ERR_RANGE \
+  printf(RED_ERROR "не в диапазоне от 1 до 1000\n" COLOR_DEFAULT)
