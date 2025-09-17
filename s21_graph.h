@@ -39,18 +39,13 @@ typedef struct s21_graph {
   int **matrix;
   int size;
 
-  void (*print_graph_matrix)(struct s21_graph *g);
-  void (*print_graph_dot)(struct s21_graph *g);
   void (*del_graph)(struct s21_graph *g);
   int (*is_digraph)(const struct s21_graph *g);
-  struct s21_graph (*load_graph_from_file)(char *filename);
-  int (*export_graph_to_dot)(char *filename, struct s21_graph *g);
+  struct s21_graph (*load_graph_from_file)(const char *filename);
+  int (*export_graph_to_dot)(const char *filename, const struct s21_graph *g);
 
 } graph;
 
 graph graph_init();
-graph *graph_create() ;
-void print_matrix(graph *g);
-void print_dot(graph *graph);
 
 #endif
