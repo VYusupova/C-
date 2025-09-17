@@ -1,7 +1,7 @@
 #include "test.h"
 
 START_TEST(test_graph_init) {
-  s21_graph g;
+  graph g;
   ck_assert_ptr_nonnull(&g);
 
   g = graph_init();
@@ -12,14 +12,14 @@ START_TEST(test_graph_init) {
 END_TEST
 
 START_TEST(test_load_valid_file_1) {
-  s21_graph g = graph_init();
+  graph g = graph_init();
   char *filename = "test_valid.txt";
 
   FILE *f = fopen(filename, "w");
   fprintf(f, "3\n0 1 0\n1 0 1\n0 1 0");
   fclose(f);
 
-  g.load_graph_from_file(filename, &g);
+  g = g.load_graph_from_file(filename);
   ck_assert_int_eq(g.size, 3);
   ck_assert_int_eq(g.matrix[0][0], 0);
   ck_assert_int_eq(g.matrix[0][1], 1);
@@ -37,10 +37,10 @@ START_TEST(test_load_valid_file_1) {
 END_TEST
 
 START_TEST(test_load_valid_file_2) {
-  s21_graph g = graph_init();
-  char *filename = "test/file_test/t_1_load.txt";
+  graph g = graph_init();
+  char *filename = "file_test/test_sole_trev.txt";
 
-  g.load_graph_from_file(filename, &g);
+  g = g.load_graph_from_file(filename);
   ck_assert_int_eq(g.size, 11);
   ck_assert_int_eq(g.matrix[0][0], 0);
   ck_assert_int_eq(g.matrix[0][1], 29);
@@ -57,8 +57,8 @@ START_TEST(test_load_valid_file_2) {
 END_TEST
 
 START_TEST(test_load_nonexistent_file) {
-  s21_graph g = graph_init();
-  g.load_graph_from_file("nonexistent.txt", &g);
+  graph g = graph_init();
+  g = g.load_graph_from_file("filename.txt");
   ck_assert_int_eq(g.size, 0);
   ck_assert_ptr_null(g.matrix);
 
@@ -67,13 +67,9 @@ START_TEST(test_load_nonexistent_file) {
 END_TEST
 
 START_TEST(test_invalid_size_format) {
-  char *filename = "invalid_size.txt";
-  FILE *tmp = fopen(filename, "w");
-  fprintf(tmp, "not_a_number\n");
-  fclose(tmp);
-
-  s21_graph g = graph_init();
-  g.load_graph_from_file(filename, &g);
+  char *filename = "file_test/file_dot.txt";
+  graph g = graph_init();
+  g = g.load_graph_from_file(filename);
 
   ck_assert_int_eq(g.size, 0);
   ck_assert_ptr_null(g.matrix);
@@ -88,8 +84,8 @@ START_TEST(test_incomplete_size_read) {
   FILE *tmp = fopen(filename, "w");
   fclose(tmp);
 
-  s21_graph g = graph_init();
-  g.load_graph_from_file(filename, &g);
+  graph g = graph_init();
+  g = g.load_graph_from_file(filename);
   ck_assert_int_eq(g.size, 0);
   ck_assert_ptr_null(g.matrix);
 
@@ -104,8 +100,8 @@ START_TEST(test_negative_size) {
   fprintf(tmp, "-5\n");
   fclose(tmp);
 
-  s21_graph g = graph_init();
-  g.load_graph_from_file(filename, &g);
+  graph g = graph_init();
+  g = g.load_graph_from_file(filename);
 
   ck_assert_int_eq(g.size, 0);
   ck_assert_ptr_null(g.matrix);
@@ -123,9 +119,8 @@ START_TEST(test_partially_corrupted) {
   fprintf(tmp, "1 aa 3\n");
   fclose(tmp);
 
-  s21_graph g = graph_init();
-  g.load_graph_from_file(filename, &g);
-
+  graph g = graph_init();
+  g = g.load_graph_from_file(filename);
   ck_assert_int_eq(g.size, 0);
   ck_assert_ptr_null(g.matrix);
 
@@ -134,101 +129,100 @@ START_TEST(test_partially_corrupted) {
 }
 END_TEST
 
-// START_TEST(test_export_directed_graph) {
-//   s21_graph g = graph_init();
-//   char *filename = "test_export_directed.dot";
+START_TEST(test_export_directed_graph) {
+  graph g = graph_init();
+  char *filename = "file_test/test_export_dot.dot";
 
-//   FILE *f = fopen("temp.txt", "w");
-//   fprintf(f, "2\n0 5\n0 0");
-//   fclose(f);
-//   g.load_graph_from_file("temp.txt", &g);
+  FILE *f = fopen("temp.txt", "w");
+  fprintf(f, "2\n0 5\n0 0");
+  fclose(f);
+  g = g.load_graph_from_file("temp.txt");
+  ck_assert_int_eq(g.export_graph_to_dot(filename, &g), 0);
 
-//   ck_assert_int_eq(g.export_graph_to_dot(filename, &g), 0);
+  f = fopen(filename, "r");
+  char line[256];
+  ck_assert(fgets(line, sizeof(line), f));
+  ck_assert_str_eq(line, "digraph G {\n");
+  ck_assert(fgets(line, sizeof(line), f));
+  ck_assert_str_eq(line, "    1 -> 2 [weight=5];\n");
+  ck_assert(fgets(line, sizeof(line), f));
+  ck_assert_str_eq(line, "}\n");
+  fclose(f);
 
-//   f = fopen(filename, "r");
-//   char line[256];
-//   ck_assert(fgets(line, sizeof(line), f));
-//   ck_assert_str_eq(line, "digraph G {\n");
-//   ck_assert(fgets(line, sizeof(line), f));
-//   ck_assert_str_eq(line, "    1 -> 2 [weight=5];\n");
-//   ck_assert(fgets(line, sizeof(line), f));
-//   ck_assert_str_eq(line, "}\n");
-//   fclose(f);
+  g.del_graph(&g);
+  remove("temp.txt");
+  remove(filename);
+}
+END_TEST
 
-//   g.del_graph(&g);
-//   remove("temp.txt");
-//   remove(filename);
-// }
-// END_TEST
+START_TEST(test_export_undirected_graph) {
+  graph g = graph_init();
+  char *filename = "file_test/test_export_undirected.dot";
+  const char *expected_edges[] = {
+      "    1 -- 2 [weight=1];", "    1 -- 3 [weight=1];",
+      "    1 -- 5 [weight=1];", "    2 -- 3 [weight=1];",
+      "    2 -- 4 [weight=1];", "    3 -- 4 [weight=1];",
+      "    4 -- 5 [weight=1];", NULL};
 
-// START_TEST(test_export_undirected_graph) {
-//   s21_graph g = graph_init();
-//   char *filename = "test_export_undirected.dot";
-//   const char *expected_edges[] = {"1 -- 2 [weight=1];", "1 -- 3 [weight=1];",
-//                                   "1 -- 5 [weight=1];", "2 -- 3 [weight=1];",
-//                                   "2 -- 4 [weight=1];", "3 -- 4 [weight=1];",
-//                                   "4 -- 5 [weight=1];", NULL};
+  // Создаем тестовый файл с матрицей смежности
+  FILE *f = fopen("temp.txt", "w");
+  fprintf(f,
+          "5\n"
+          "0 1 1 0 1\n"
+          "1 0 1 1 0\n"
+          "1 1 0 1 0\n"
+          "0 1 1 0 1\n"
+          "1 0 0 1 0");
+  fclose(f);
 
-//   // Создаем тестовый файл с матрицей смежности
-//   FILE *f = fopen("temp.txt", "w");
-//   fprintf(f,
-//           "5\n"
-//           "0 1 1 0 1\n"
-//           "1 0 1 1 0\n"
-//           "1 1 0 1 0\n"
-//           "0 1 1 0 1\n"
-//           "1 0 0 1 0");
-//   fclose(f);
+  g = g.load_graph_from_file("temp.txt");
+  ck_assert_int_eq(g.export_graph_to_dot(filename, &g), 0);
 
-//   g.load_graph_from_file("temp.txt", &g);
-//   ck_assert_int_eq(g.export_graph_to_dot(filename, &g), 0);
+  // Проверяем содержимое DOT-файла
+  f = fopen(filename, "r");
+  ck_assert_ptr_nonnull(f);
 
-//   // Проверяем содержимое DOT-файла
-//   f = fopen(filename, "r");
-//   ck_assert_ptr_nonnull(f);
+  char line[256];
+  int edge_count = 0;
+  int header_found = 0;
+  int footer_found = 0;
 
-//   char line[256];
-//   int edge_count = 0;
-//   int header_found = 0;
-//   int footer_found = 0;
+  while (fgets(line, sizeof(line), f)) {
+    line[strcspn(line, "\n")] = '\0';
 
-//   while (fgets(line, sizeof(line), f)) {
-//     line[strcspn(line, "\n")] = '\0';
+    if (strcmp(line, "graph G {") == 0) {
+      header_found = 1;
+      continue;
+    }
 
-//     if (strcmp(line, "graph G {") == 0) {
-//       header_found = 1;
-//       continue;
-//     }
+    if (strcmp(line, "}") == 0) {
+      footer_found = 1;
+      continue;
+    }
+    int found = 0;
+    for (int i = 0; expected_edges[i]; i++) {
+      if (strstr(line, expected_edges[i]) != NULL) {
+        found = 1;
+        edge_count++;
+        break;
+      }
+    }
+    ck_assert(found == 1);
+  }
 
-//     if (strcmp(line, "}") == 0) {
-//       footer_found = 1;
-//       continue;
-//     }
-//     int found = 0;
-//     for (int i = 0; expected_edges[i]; i++) {
-//       if (strstr(line, expected_edges[i]) != NULL) {
-//         found = 1;
-//         edge_count++;
-//         break;
-//       }
-//     }
-//     ck_assert(found == 1);
-//   }
+  ck_assert_int_eq(header_found, 1);
+  ck_assert_int_eq(footer_found, 1);
+  ck_assert_int_eq(edge_count, 7);
 
-//   ck_assert_int_eq(header_found, 1);
-//   ck_assert_int_eq(footer_found, 1);
-//   ck_assert_int_eq(edge_count, 7);
-
-//   fclose(f);
-//   g.del_graph(&g);
-//   remove("temp.txt");
-//   remove(filename);
-// }
-// END_TEST
+  fclose(f);
+  g.del_graph(&g);
+  remove("temp.txt");
+  remove(filename);
+}
+END_TEST
 
 Suite *test_graph(void) {
-  Suite *s =
-      suite_create("\n\033[37;1m==========| S21_GRAPH |=========\033[0m");
+  Suite *s = suite_create("\n\033[35;107m TESTING graph \033[0m");
   TCase *tc = tcase_create("test_graph");
 
   suite_add_tcase(s, tc);
@@ -241,8 +235,8 @@ Suite *test_graph(void) {
   tcase_add_test(tc, test_incomplete_size_read);
   tcase_add_test(tc, test_negative_size);
   tcase_add_test(tc, test_partially_corrupted);
-  // tcase_add_test(tc, test_export_directed_graph);
-  // tcase_add_test(tc, test_export_undirected_graph);
+  tcase_add_test(tc, test_export_directed_graph);
+  tcase_add_test(tc, test_export_undirected_graph);
 
   return s;
 }
