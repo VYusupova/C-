@@ -36,8 +36,9 @@ https://github.com/lcoon21/s21_string/blob/main/src/s21_strerror.c
 ```bash
 PS1='\[\e[0;32m\]\u\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$\[\e[m\] '
 ```
-### Краткая таблица применяемых цветов:
+### Краткая таблица применяемых цветов:  
 
+<details>
 ```bash
 '\e[0;30m' # Черный
 '\e[0;31m' # Красный
@@ -48,8 +49,11 @@ PS1='\[\e[0;32m\]\u\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$\[\e[m\] '
 '\e[0;36m' # Бирюзовый
 '\e[0;37m' # Белый
 ```
+</details>
 
 ## 6. Алиасы в консоли
+
+<details>
 
 ```bash
 #My alias в файле .bashrc
@@ -59,7 +63,16 @@ alias push="git push origin develop"
 alias maze="git push origin lymondka"
 #alias ..="cd .."
 ```
+</details>
 
 ## 6. GIT
 0. `git clone`
 1. create fork `develop git branch <name>`  OR `git checkout -b <new_branch>`
+2.  **удалить** ветку в **локальном** репозитории и затем в **удаленном**
+```
+git checkout other-branch
+git branch -d your-branch
+# or если есть несоханенные не запушенные изменения то `git branch -D your-branch`
+git push origin --delete branch-name
+# or `git push origin :branch-name`
+```
