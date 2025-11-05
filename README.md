@@ -29,6 +29,9 @@ https://github.com/lcoon21/s21_string/blob/main/src/s21_strerror.c
 
 
 ## 4. покрасить консоль
+
+<details>
+ 
 1. проверить что файла нет `ls -la`
 1.1 он есть в /etc/skel/.bashrc пойти и проверить 1. cd /etc/skel/.bashrc 2. ls -la
 2. скопировать его себе `cp /etc/skel/.bashrc ~/`
@@ -36,9 +39,13 @@ https://github.com/lcoon21/s21_string/blob/main/src/s21_strerror.c
 ```bash
 PS1='\[\e[0;32m\]\u\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$\[\e[m\] '
 ```
+
+</details>
+
 ### Краткая таблица применяемых цветов:  
 
 <details>
+ 
 ```bash
 '\e[0;30m' # Черный
 '\e[0;31m' # Красный
@@ -49,7 +56,9 @@ PS1='\[\e[0;32m\]\u\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$\[\e[m\] '
 '\e[0;36m' # Бирюзовый
 '\e[0;37m' # Белый
 ```
+
 </details>
+
 
 ## 6. Алиасы в консоли
 
